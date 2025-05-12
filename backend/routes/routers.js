@@ -1,0 +1,1 @@
+export { default as productsRouter } from "./product.route.js";
