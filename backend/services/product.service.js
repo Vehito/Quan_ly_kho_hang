@@ -20,7 +20,7 @@ class ProductService {
         return product;
     }
 
-    #getClauses(filter) {
+    #getQueryArrClauses(filter) {
         const clauses = [];
         const values = [];
 
@@ -34,6 +34,33 @@ class ProductService {
             clauses: clauses.join(' AND '),
             values
         };
+    }
+
+    #getQueryClauses(filter) {
+        const clauses = [];
+        const values = [];
+
+        Object.entries(filter).forEach(([key, val]) => {
+            clauses.push(`${key} = ?`);
+            values.push(val);
+        });
+        return {
+            clauses: clauses.join(' AND '),
+            values
+        };
+    }
+
+    #getUpdateClauses(payload) {
+        const clauses = [];
+        const values = [];
+        Object.entries(payload).forEach(([key, val]) => {
+            clauses.push(`${key} = ?`);
+            values.push(val);
+        });
+        return {
+            clauses: clauses.join(', '),
+            values: values
+        }
     }
 
     async insert(payload) {
@@ -50,15 +77,42 @@ class ProductService {
         }
     }
 
-    async query(filter = {}) {
+    async query(filter) {
         const pool = MySQL.getPool();
-        const {clauses, values} = this.#getClauses(filter);
+        const {clauses, values} = this.#getQueryClauses(filter);
+        let query = `SELECT * FROM ${this.tableName}`;
+        if(clauses) {
+            query +=   ` WHERE ${clauses}`;
+        }
+        const [rows] = await pool.query(query, values);
+        return rows;
+    }
+
+    async queryArr(filter = {}) {
+        const pool = MySQL.getPool();
+        const {clauses, values} = this.#getQueryArrClauses(filter);
         let query = `SELECT * FROM ${this.tableName}`;
         if(clauses) {
             query += ` WHERE ${clauses}`;
         }
         const [rows] = await pool.query(query, values);
         return rows;
+    }
+
+    async update(id, payload) {
+        const pool = MySQL.getPool();
+        const {clauses, values} = this.#getUpdateClauses(payload);
+        values.push(id);
+        const update = `UPDATE ${this.tableName} SET ${clauses} WHERE id = ?`;
+        const [result] = await pool.query(update, values);
+        return result;
+    }
+
+    async delete(id) {
+        const pool = MySQL.getPool();
+        const deleteQuery = `DELETE FROM ${this.tableName} WHERE id = ?`;
+        const [result] = await pool.query(deleteQuery, id);
+        return result;
     }
 }
 

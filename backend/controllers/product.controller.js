@@ -26,11 +26,41 @@ export async function query(req, res, next) {
 
     try {
         const productService = new ProductService();
-        result = await productService.query(req.query);
+        if(req.params) {
+            result = await productService.query(req.params);
+        } else {
+            result = await productService.query(req.query);
+        }
         return res.send(result);
     } catch (error) {
         return next(
             new ApiError(500, `An error occured while quering the product: ${error}`)
         );
+    }
+}
+
+export async function update(req, res, next) {
+    let result = [];
+    try {
+        const productService = new ProductService();
+        result = productService.update(req.params.id, req.body);
+        return res.send(result);
+    } catch (error) {
+        return next(
+            new ApiError(500, `An error occured while updating the product: ${error}`)
+        );
+    }
+}
+
+export async function remove(req, res, next) {
+    let result = [];
+    try {
+        const productService = new ProductService();
+        result = productService.delete(req.params.id);
+        return res.send(result);
+    } catch (error) {
+        return next(
+            new ApiError(500, `An error occured while removing the product: ${error}`)
+        )
     }
 }
