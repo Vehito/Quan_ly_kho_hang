@@ -24,6 +24,10 @@ class MySQL {
     static getPool() {
         return this.pool;
     }
+
+    static getConnection() {
+        return this.pool.getConnection();
+    }
 }
 
 export default MySQL;
