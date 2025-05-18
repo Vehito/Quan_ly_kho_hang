@@ -16,6 +16,7 @@ app.use("/api/products", routers.productsRouter);
 app.use("/api/customers", routers.customersRouter);
 app.use("/api/positions", routers.positionsRouter);
 app.use("/api/employees", routers.employeesRouter);
+app.use("/api/suppliers", routers.suppliersRouter);
 
 app.use((req, res, next) => {
     return next(new ApiError(404, "Resource not found"));
