@@ -46,7 +46,7 @@ export async function update(req, res, next) {
         result = await sharedController
             .withTransaction(async (conn) => {
                 const productService = new ProductService();
-                return productService.update(req.params.id, req.body, conn);
+                return await productService.update(req.params.id, req.body, conn);
             });
         return res.send(result);
     } catch (error) {
@@ -62,7 +62,7 @@ export async function remove(req, res, next) {
         result = await sharedController
         .withTransaction(async (conn) => {
             const productService = new ProductService();
-            return productService.delete(req.params.id, conn);
+            return await productService.delete(req.params.id, conn);
         });
         return res.send(result);
     } catch (error) {

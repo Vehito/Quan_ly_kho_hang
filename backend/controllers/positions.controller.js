@@ -1,21 +1,21 @@
 import ApiError from "../api-error.js";
-import CustomersService from "../services/customers.service.js";
+import PositionsService from "../services/positions.service.js";
 import * as sharedController from "./controller.shared.js";
 
 export async function insert(req, res, next) {
-    if(!sharedController.isValid(req.body, ['name', 'address'])) {
-        return next(new ApiError(400, "Invalid customer data!"));
+    if(!sharedController.isValid(req.body, ['name', 'level'])) {
+        return next(new ApiError(400, "Invalid position data!"));
     }
     try {
         const result = await sharedController
         .withTransaction(async (conn) => {
-            const customersService = new CustomersService();
-            return await customersService.insert(req.body, conn);
+            const positionService = new PositionsService();
+            return await positionService.insert(req.body, conn);
         });
         return res.send(result);
     } catch (error) {
         return next(
-            new ApiError(500, `An error occured while inserting the customer: ${error}`)
+            new ApiError(500, `An error occured while inserting the position: ${error}`)
         )
     }
 }
@@ -25,17 +25,17 @@ export async function query(req, res, next) {
     try {
         result = await sharedController
             .withTransaction(async (conn) => {
-                const customersService = new CustomersService();
+                const positionService = new PositionsService();
                 if(req.params) {
-                    return await customersService.query(req.params, conn);
+                    return await positionService.query(req.params, conn);
                 } else {
-                    return await customersService.query(req.query, conn);
+                    return await positionService.query(req.query, conn);
                 }
             });
         return res.send(result);
     } catch (error) {
         return next(
-            new ApiError(500, `An error occured while quering the customer: ${error}`)
+            new ApiError(500, `An error occured while quering the position: ${error}`)
         );
     }
 }
@@ -45,13 +45,13 @@ export async function update(req, res, next) {
     try {
         result = await sharedController
             .withTransaction(async (conn) => {
-                const customersService = new CustomersService();
-                return await customersService.update(req.params.id, req.body, conn);
+                const positionService = new PositionsService();
+                return await positionService.update(req.params.id, req.body, conn);
             });
         return res.send(result);
     } catch (error) {
         return next(
-            new ApiError(500, `An error occured while updating the customer: ${error}`)
+            new ApiError(500, `An error occured while updating the position: ${error}`)
         );
     }
 }
@@ -61,13 +61,13 @@ export async function remove(req, res, next) {
     try {
         result = await sharedController
         .withTransaction(async (conn) => {
-            const customersService = new CustomersService();
-            return await customersService.delete(req.params.id, conn);
+            const positionService = new PositionsService();
+            return await positionService.delete(req.params.id, conn);
         });
         return res.send(result);
     } catch (error) {
         return next(
-            new ApiError(500, `An error occured while removing the customer: ${error}`)
+            new ApiError(500, `An error occured while removing the position: ${error}`)
         )
     }
 }

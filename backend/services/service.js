@@ -7,7 +7,7 @@ class Service {
         const {clauses, values} = this.getQueryClauses(filter);
         let query = `SELECT * FROM ${this.tableName}`;
         if(clauses) {
-            query +=   ` WHERE ${clauses}`;
+            query += ` WHERE ${clauses}`;
         }
         const [rows] = await conn.query(query, values);
         return rows;
