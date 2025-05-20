@@ -37,7 +37,7 @@ export async function query(req, res, next) {
         return res.send(result);
     } catch (error) {
         return next(
-            new ApiError(500, `An error occured while quering the employee: ${error}`)
+            new ApiError(500, `An error occured while querying the employee: ${error}`)
         );
     }
 }

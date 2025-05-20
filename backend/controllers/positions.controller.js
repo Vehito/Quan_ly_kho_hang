@@ -35,7 +35,7 @@ export async function query(req, res, next) {
         return res.send(result);
     } catch (error) {
         return next(
-            new ApiError(500, `An error occured while quering the position: ${error}`)
+            new ApiError(500, `An error occured while querying the position: ${error}`)
         );
     }
 }
