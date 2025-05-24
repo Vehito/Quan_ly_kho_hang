@@ -7,6 +7,13 @@ yarn-error.log*
 lerna-debug.log*
 .pnpm-debug.log*
 
+.DS_Store
+dist-ssr
+*.local
+
+/cypress/videos/
+/cypress/screenshots/
+
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
@@ -39,7 +46,8 @@ bower_components
 build/Release
 
 # Dependency directories
-backend/node_modules/
+node_modules/
+# frontend/node_modules/
 jspm_packages/
 
 # Snowpack dependency directory (https://snowpack.dev/)
@@ -134,3 +142,15 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Editor directories and files
+.vscode/
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+*.tsbuildinfo
