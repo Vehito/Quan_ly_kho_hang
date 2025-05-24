@@ -1,3 +1,4 @@
+import ApiError from "../api-error.js";
 import MySQL from "../utils/mysql.util.js";
 
 export async function withTransaction(callback) {
@@ -15,6 +16,9 @@ export async function withTransaction(callback) {
     }
 }
 
-export function isValid(payload, requiredFields = []) {
-    return requiredFields.every(field => payload[field]);
+export function isValid(payload, requiredFields = [], dataName = 'sent') {
+    const result = requiredFields.every(field => payload[field]);
+    if(!result) {
+        throw new ApiError(400, `Invalid ${dataName} data!`);
+    }
 }

@@ -3,9 +3,7 @@ import SuppliersService from "../services/suppliers.service.js";
 import * as sharedController from "./controller.shared.js";
 
 export async function insert(req, res, next) {
-    if(!sharedController.isValid(req.body, ['name', 'address', 'phone'])) {
-        return next(new ApiError(400, "Invalid supplier data!"));
-    }
+    sharedController.isValid(req.body, ['name', 'address', 'phone'], 'supplier');
     try {
         const result = await sharedController
         .withTransaction(async (conn) => {

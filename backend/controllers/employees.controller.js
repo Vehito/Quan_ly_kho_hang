@@ -3,11 +3,11 @@ import EmployeesService from "../services/employees.service.js";
 import * as sharedController from "./controller.shared.js";
 
 export async function insert(req, res, next) {
-    if(!sharedController
-            .isValid(req.body, ['name', 'position_id', 'birth', 
-            'phone', 'username', 'password', 'address'])) {
-        return next(new ApiError(400, "Invalid employee data!"));
-    }
+    sharedController.isValid(
+        req.body, 
+        ['name', 'position_id', 'birth', 'phone', 'username', 'password', 'address'],
+        'employee'
+    );
     try {
         const result = await sharedController
         .withTransaction(async (conn) => {
@@ -78,9 +78,7 @@ export async function remove(req, res, next) {
 }
 
 export async function vertifyEmployee(req, res, next) {
-    if(!sharedController.isValid(req.body, ['username', 'password'])) {
-        return next(new ApiError(400, 'Invalid Request'));
-    }
+    sharedController.isValid(req.body, ['username', 'password'], 'user');
     try {
         const result = await sharedController
         .withTransaction(async (conn) => {

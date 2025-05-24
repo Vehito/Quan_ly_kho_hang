@@ -3,9 +3,7 @@ import PositionsService from "../services/positions.service.js";
 import * as sharedController from "./controller.shared.js";
 
 export async function insert(req, res, next) {
-    if(!sharedController.isValid(req.body, ['name', 'level'])) {
-        return next(new ApiError(400, "Invalid position data!"));
-    }
+    sharedController.isValid(req.body, ['name', 'level'], 'position');
     try {
         const result = await sharedController
         .withTransaction(async (conn) => {

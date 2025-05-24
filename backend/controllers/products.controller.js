@@ -3,9 +3,7 @@ import ProductService from "../services/products.service.js";
 import * as sharedController from "./controller.shared.js";
 
 export async function insert(req, res, next) {
-    if(!sharedController.isValid(req.body, ['name', 'manufacturer', 'sale_price'])) {
-        return next(new ApiError(400, "Invalid product data!"));
-    }
+    sharedController.isValid(req.body, ['name', 'manufacturer', 'sale_price'], 'product');
     try {
         const result = await sharedController
         .withTransaction(async (conn) => {

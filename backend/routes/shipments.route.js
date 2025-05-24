@@ -9,7 +9,6 @@ route.route("/")
 
 route.route("/:id")
     .get(shipments.query)
-    // .put(shipments.update)
     .delete(shipments.remove);
 
 export default route;
