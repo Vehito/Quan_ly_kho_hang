@@ -9,10 +9,10 @@ class ProductsService extends Service {
         const product = {
             id: payload.id,
             name: payload.name,
-            salePrice: payload.sale_price,
+            sale_price: payload.sale_price,
             manufacturer: payload.manufacturer,
             quantity: payload.quantity ?? 0,
-            createAt: payload.create_at ?? new Date(),
+            created_at: payload.created_at ?? new Date(),
         };
         Object.keys(product).forEach(
             (key) => product[key] === undefined && delete product[key]
@@ -25,7 +25,7 @@ class ProductsService extends Service {
         const [result] = await conn.query(
             `INSERT INTO ${this.tableName} (name, sale_price, manufacturer, quantity, created_at)
             VALUES (?, ?, ?, ?, ?)`,
-            [product.name, product.salePrice, product.manufacturer, product.quantity, product.createAt]
+            [product.name, product.sale_price, product.manufacturer, product.quantity, product.created_at]
         );
         return {
             id: result.insertId,
