@@ -1,16 +1,18 @@
 import Model from "./model";
 
 class ShipmentsModel extends Model {
-    constructor() {
+    constructor(isImport) {
         super("/api/shipments");
+        this.isImport = isImport;
     }
 
     createIntance(data) {
-        return new Shipment(data);
+        return this.isImport ? 
+            new ImportShipment(data) : new ExportShipment(data);
     }
 }
 
-export default new ShipmentsModel();
+export default ShipmentsModel;
 
 export class Shipment {
     #id;
