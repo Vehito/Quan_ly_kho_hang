@@ -7,6 +7,12 @@ const routes = [
         name: "products",
         component: views.productsView
     },
+
+    {
+        path: "/:pathMatch(.*)*",
+        name: "notfound",
+        component: views.notFound
+    }
 ];
 
 const router = createRouter({
