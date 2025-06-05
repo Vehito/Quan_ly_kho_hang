@@ -7,7 +7,7 @@ import SideBar from "./components/SideBar.vue";
 	<div id="app">
 		<SideBar />
 		<AppHeader />
-		<div class="container mt-3 mct">
+		<div class="container mt-3">
 			<RouterView />
 		</div>
 	</div>
@@ -16,11 +16,8 @@ import SideBar from "./components/SideBar.vue";
 <style scoped>
 .page {
 	margin: auto;
-}
-/*main content wrapper*/
-.mct {
-  margin-left: 200px;
-  position: relative;
-  min-height: 100%;
+  	margin-left: 200px;
+	position: relative;
+  	min-height: 100%;
 }
 </style>

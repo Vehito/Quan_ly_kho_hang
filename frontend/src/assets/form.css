@@ -1,0 +1,23 @@
+.error-feedback {
+    color: red;
+}
+
+.form-group {
+    max-width: 350px;
+}
+
+.form-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    width: fit-content;
+    background-color: rgb(128, 128, 128, .1);
+    border-radius: 20px;
+}

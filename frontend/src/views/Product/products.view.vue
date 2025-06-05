@@ -10,6 +10,14 @@
                 :table-rows="products"
             />
         </div>
+
+        <div class="d-flex">
+            <button
+                class="btn btn-success"
+                @click="router.push({ name: 'product.create' })">
+                Thêm sản phẩm
+            </button>
+        </div>
     </div>
 </template>
 
@@ -17,6 +25,7 @@
 import CustomTable from '@/components/CustomTable.vue';
 import InputSearch from '@/components/InputSearch.vue';
 import productsController from '@/controllers/products.controller';
+import router from '@/router';
 import { onMounted, ref } from 'vue';
 
 const tableHeaders = [
@@ -41,7 +50,7 @@ async function getProducts() {
     }
 }
 
-onMounted( async () => {
+onMounted(async () => {
     await getProducts();
 })
 

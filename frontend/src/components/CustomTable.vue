@@ -19,7 +19,6 @@
         changedColumns: {type: Array, required: false},
         changingCondition: { type: Function, required: false }
     });
-    // const tableRows = defineModel([]);
     const emits = defineEmits(['clickBtn']);
 
 

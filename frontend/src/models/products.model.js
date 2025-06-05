@@ -28,6 +28,12 @@ export class Product {
         this.created_at = data.created_at
     }
 
+    static getEmptyObject() {
+        return new Product(
+            {name: '', sale_price: 0, manufacturer: ''}
+        );
+    }
+
     // get id() { 
     //     return this.#id; 
     // }

@@ -5,7 +5,20 @@ const routes = [
     {
         path: "/",
         name: "products",
-        component: views.productsView
+        component: views.ProductView
+    },
+
+    {
+        path: "/products/:id",
+        name: "product.edit",
+        component: views.ProductEditView,
+        props: true
+    },
+
+    {
+        path: "/products/create",
+        name: "product.create",
+        component: views.ProductEditView,
     },
 
     {
