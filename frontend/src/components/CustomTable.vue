@@ -9,8 +9,6 @@
 //      ]
         tableHeaders: { type: Array, required: true, default: [] },
         tableRows: { type: Array, required: true, default: [] },
-        btnContents: { type: Array, required: false, default: [] },
-        btnStyles: { type: Array, required: false, default: [] },
 
 //      changedTextStyles: ['text-danger', 'text-primary']
         changedTextStyles: { type: Array, required: false },
@@ -20,11 +18,6 @@
         changingCondition: { type: Function, required: false }
     });
     const emits = defineEmits(['clickBtn']);
-
-
-    function clickBtn(id, btnIndex) {
-        emits('clickBtn', id, btnIndex);
-    }
 
     function checkCondition(columnIndex, cellValue) {
         if(!props.changedColumns) return;
@@ -72,23 +65,8 @@
                     </span>
                 </td>
 
-                <td
-                    v-if="btnContents.length > 0"
-                >
-                    <div 
-                        v-for="(btnContent, index) in btnContents"
-                        class="d-flex flex-row justify-content-around"
-                    >
-
-                        <button
-                            :class="btnStyles[index]"
-                            class="btn"
-                            type="button"
-                            @click="clickBtn(tableRow._id, index)"
-                        >
-                            <span v-html="btnContent"></span>
-                        </button>
-                    </div>
+                <td>
+                    <slot name="custom" :row="tableRow"></slot>
                 </td>
             </tr>
         </tbody>

@@ -8,7 +8,18 @@
             <CustomTable 
                 :table-headers="tableHeaders"
                 :table-rows="products"
-            />
+            >
+                <template #custom="{ row }">
+                    <DropdownBtn
+                        :dropdown-items="['Thay đổi sản phẩm', 'Xóa sản phẩm']"
+                        @select:value="(selectedAction) => handleAction(selectedAction, row)"
+                    >
+                        <template #label>
+                            <i class="fa-solid fa-bars"></i>
+                        </template>
+                    </DropdownBtn>
+                </template>
+            </CustomTable>
         </div>
 
         <div class="d-flex">
@@ -24,6 +35,7 @@
 <script setup>
 import CustomTable from '@/components/CustomTable.vue';
 import InputSearch from '@/components/InputSearch.vue';
+import { DropdownBtn } from '@/utils/buttons.util';
 import productsController from '@/controllers/products.controller';
 import router from '@/router';
 import { onMounted, ref } from 'vue';
@@ -47,6 +59,14 @@ async function getProducts() {
         products.value = (await productsController.queryAll());
     } catch (error) {
         error.showAlert();
+    }
+}
+
+async function handleAction(selectedAction, row) {
+    switch(selectedAction) {
+        case"Thay đổi sản phẩm":
+            router.push({ name: 'product.edit', params: {id: row.id}})
+        break;
     }
 }
 

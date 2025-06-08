@@ -4,6 +4,7 @@
             Hiệu chỉnh sản phẩm
         </h4>
         <ProductForm 
+            v-if="product"
             :product="product"
             @submit:product="updateProduct"
             @delete:product="deleteProduct"
@@ -25,18 +26,18 @@
 import ProductForm from '@/components/forms/ProductForm.vue';
 import productsController from '@/controllers/products.controller';
 import router from '@/router';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
 const props = defineProps({
     id: { required: false, type: String }
 });
 
-let product = null;
+const product = ref(null);
 
 async function getProduct(id) {
     try {
-        product = await productsController.queryById(id);
+        product.value = await productsController.queryById(Number(id));
     } catch (error) {
         console.log(error);
         const route = useRoute();

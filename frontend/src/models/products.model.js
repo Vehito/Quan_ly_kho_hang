@@ -20,12 +20,12 @@ export class Product {
     // #quantity;
     // #created_at;
     constructor(data) {
-        this.id = data.id ?? null,
-        this.name = data.name,
-        this.sale_price = data.sale_price,
-        this.manufacturer = data.manufacturer,
-        this.quantity = data.quantity ?? null,
-        this.created_at = data.created_at
+        this.id = data.id ?? null;
+        this.name = data.name;
+        this.sale_price = data.sale_price;
+        this.manufacturer = data.manufacturer;
+        this.quantity = data.quantity ?? null;
+        this.created_at = data.created_at;
     }
 
     static getEmptyObject() {
