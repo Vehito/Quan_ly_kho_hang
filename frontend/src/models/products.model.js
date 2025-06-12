@@ -13,12 +13,6 @@ class ProductsModel extends Model {
 export default new ProductsModel();
 
 export class Product {
-    // #id;
-    // #name;
-    // #sale_price;
-    // #manufacturer; 
-    // #quantity;
-    // #created_at;
     constructor(data) {
         this.id = data.id ?? null;
         this.name = data.name;
@@ -34,22 +28,4 @@ export class Product {
         );
     }
 
-    // get id() { 
-    //     return this.#id; 
-    // }
-    // get name() {
-    //     return this.#name;
-    // }
-    // get sale_price() {
-    //     return this.#sale_price;
-    // }
-    // get manufacturer() {
-    //     return this.#manufacturer;
-    // }
-    // get quantity() {
-    //     return this.#quantity;
-    // }
-    // get created_at() {
-    //     return this.#created_at; 
-    // }
 }

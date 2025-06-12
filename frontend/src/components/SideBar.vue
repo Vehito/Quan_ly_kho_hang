@@ -1,6 +1,7 @@
 <script setup>
 const menuItems = [
-	{ label: "Sản phẩm", icon: "fas fa-box", name: "products" }
+	{ label: "Sản phẩm", icon: "fas fa-box", name: "products" },
+	{ label: "Nhân viên", icon: "fa-solid fa-users", name: "employees" },
 ]
 </script>
 

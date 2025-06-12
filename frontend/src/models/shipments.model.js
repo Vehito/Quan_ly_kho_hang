@@ -42,26 +42,16 @@ export class Shipment {
 
 export class ImportShipment extends Shipment{
     static isImport = true;
-    // #supplier_id;
     constructor(data) {
         super(data);
         this.supplier_id = data.supplier_id;
     }
-
-    // get supplier_id() {
-    //     return this.#supplier_id;
-    // }
 }
 
 export class ExportShipment extends Shipment {
     static isImport = false;
-    // #customer_id;
     constructor(data) {
         super(data);
         this.customer_id = data.customer_id;
     }
-
-    // get customer_id() {
-    //     return this.#customer_id;
-    // }
 }

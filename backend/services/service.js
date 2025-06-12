@@ -53,12 +53,13 @@ class Service {
         };
     }
 
-    getQueryClauses(filter) {
+    getQueryClauses(filter, tableName = '') {
         const clauses = [];
         const values = [];
 
+        if(tableName != '') tableName += '.';
         Object.entries(filter).forEach(([key, val]) => {
-            clauses.push(`${key} = ?`);
+            clauses.push(`${tableName}${key} = ?`);
             values.push(val);
         });
         return {
@@ -70,6 +71,7 @@ class Service {
     getUpdateClauses(payload) {
         const clauses = [];
         const values = [];
+
         Object.entries(payload).forEach(([key, val]) => {
             clauses.push(`${key} = ?`);
             values.push(val);

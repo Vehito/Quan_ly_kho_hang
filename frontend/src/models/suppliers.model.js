@@ -13,11 +13,6 @@ class SuppliersModel extends Model {
 export default new SuppliersModel();
 
 export class Supplier {
-    // #id;
-    // #name;
-    // #address;
-    // #phone; 
-    // #description;
     constructor(data) {
         this.id = data.id ?? null,
         this.name = data.name,
@@ -25,20 +20,4 @@ export class Supplier {
         this.phone = data.phone,
         this.description = data.description ?? null
     }
-
-    // get id() { 
-    //     return this.#id; 
-    // }
-    // get name() {
-    //     return this.#name;
-    // }
-    // get address() {
-    //     return this.#address;
-    // }
-    // get phone() {
-    //     return this.#phone;
-    // }
-    // get description() {
-    //     return this.#description;
-    // }
 }

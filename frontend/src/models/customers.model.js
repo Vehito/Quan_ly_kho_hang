@@ -21,13 +21,13 @@ export class Customer {
     // #due_date;
     // #status;
     constructor(data) {
-        this.id = data.id ?? null,
-        this.name = data.name,
-        this.company = data.company ?? null,
-        this.address = data.address,
-        this.debt = data.debt,
-        this.due_date = data.due_date ?? null,
-        this.status = data.status
+        this.id = data.id ?? null;
+        this.name = data.namenull;
+        this.company = data.company ?? null;
+        this.address = data.addressnull;
+        this.debt = data.debtnull;
+        this.due_date = data.due_date ?? null;
+        this.status = data.status;
     }
 
     get isOverdue() {

@@ -22,6 +22,12 @@ const routes = [
     },
 
     {
+        path: "/employees",
+        name: "employees",
+        component: views.EmployeeView,
+    },
+
+    {
         path: "/:pathMatch(.*)*",
         name: "notfound",
         component: views.notFound
