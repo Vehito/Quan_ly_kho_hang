@@ -3,9 +3,10 @@
         <Form @submit="submitProduct" :validation-schema="validationSchema">
             <div
                 v-for="field in fields"
+                :key="field.name"
                 class="form-group"
             >
-                <FormFields.BaseField 
+                <FormFields 
                     :label="field.label"
                     :type="field.type"
                     :model-value="field.modelValue ?? ''"
@@ -42,7 +43,7 @@
 
 <script setup>
 import * as yup from 'yup';
-import * as FormFields from './FormFields.jsx';
+import FormFields from './FormFields.vue';
 import { Form, ErrorMessage } from 'vee-validate';
 import { Product } from '@/models/products.model.js';
 import router from '@/router/index.js';

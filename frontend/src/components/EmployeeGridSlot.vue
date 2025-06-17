@@ -16,7 +16,7 @@ function onClick() {
 </script>
 
 <template>
-    <div class="card" @click="onClick">
+    <div class="card m-2" @click="onClick">
         <img src="../assets/imgs/default-avatar.jpg" alt="Image" class="card-img-top">
         <div class="card-body">
             <h6 class="card-title">{{ name }}</h6>
@@ -29,7 +29,7 @@ function onClick() {
 .card {
     display: flex;
     align-items: center;
-    max-width: 200px;
+    width: 175px;
     height: min-content;
     border: solid 2px;
     border-radius: 10px;
@@ -42,6 +42,7 @@ function onClick() {
     }
     .card-body {
         background-color: rgb(128, 128, 128, 0.3);
+        width: 100%;
     }
 }
 

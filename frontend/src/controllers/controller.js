@@ -14,7 +14,7 @@ class Controller {
         try {
             return await this.#model.insert(data);
         } catch (error) {
-            throw new ErrorAlert(error.status, error.data.message);
+            throw new ErrorAlert(error.status, error.response.data.message);
         }
     }
 
@@ -22,7 +22,7 @@ class Controller {
         try {
             return await this.#model.queryById(id);
         } catch (error) {
-            throw new ErrorAlert(error.status, error.data.message);
+            throw new ErrorAlert(error.status, error.response.data.message);
         }
     }
 
@@ -30,7 +30,7 @@ class Controller {
         try {
             return await this.#model.queryAll(filter);
         } catch (error) {
-            throw new ErrorAlert(error.status, error.data.message);
+            throw new ErrorAlert(error.status, error.response.data.message);
         }
     }
 
@@ -38,7 +38,7 @@ class Controller {
         try {
             return await this.#model.update(id, data);
         } catch (error) {
-            throw new ErrorAlert(error.status, error.data.message);
+            throw new ErrorAlert(error.status, error.response.data.message);
         }
     }
 
@@ -46,7 +46,7 @@ class Controller {
         try {
             return await this.#model.delete(id);
         } catch (error) {
-            throw new ErrorAlert(error.status, error.data.message);
+            throw new ErrorAlert(error.status, error.response.data.message);
         }
     }
 }

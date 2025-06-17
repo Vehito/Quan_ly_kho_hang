@@ -21,11 +21,20 @@
         </div>
         <div class="mt-3 col-12 col-md-4">
             <EmployeeCard
+                class="sticky-top"
                 v-if="filteredEmployees[activeIndex]"
                 :employee="activeEmployee()"
             />
         </div>
+        <div class="d-flex">
+            <button
+                class="btn btn-success"
+                @click="router.push({ name: 'employee.create' })">
+                Thêm nhân viên
+            </button>
+        </div>
     </div>
+
 </template>
 
 <script setup>

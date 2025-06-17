@@ -7,33 +7,25 @@ const props = defineProps({
 
 const model = defineModel('activeIndex');
 
-const emits = defineEmits(["update:activeIndex"]);
-
-function updateActiveIndex(index) {
-    emits('update:activeIndex', index);
-};
-
 </script>
 
 <template>
-    <div class="grid-view d-flex align-content-between flex-wrap">
-        <h5
-            v-if="listItems.length===0"
-            class="text-center"
-        >Không tồn tại thông tin nào</h5>
-        <div v-else>
-            <div
-                v-for="(item, index) in listItems"
+    <h5
+        v-if="listItems.length===0"
+        class="text-center"
+    >Không tồn tại thông tin nào</h5>
+    <div class="grid-view d-flex justify-content-center align-content-between flex-wrap" v-else>
+        <div
+            v-for="(item, index) in listItems"
+            :key="index"
+            @click="model = index"
+        >
+            <slot
+                name="custom"
                 :key="index"
-                @click="model = index"
-            >
-                <slot
-                    name="custom"
-                    :key="index"
-                    :data="item"
-                    :isActive="index === activeIndex"
-                ></slot>
-            </div>
+                :data="item"
+                :isActive="index === activeIndex"
+            ></slot>
         </div>
     </div>
 </template>

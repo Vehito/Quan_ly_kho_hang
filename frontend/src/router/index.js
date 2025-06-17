@@ -26,6 +26,17 @@ const routes = [
         name: "employees",
         component: views.EmployeeView,
     },
+    {
+        path: "/employees/create",
+        name: "employee.create",
+        component: views.EmployeeEditView,
+    },
+    {
+        path: "/employees/:id",
+        name: "employee.edit",
+        component: views.EmployeeEditView,
+        props: true
+    },
 
     {
         path: "/:pathMatch(.*)*",
