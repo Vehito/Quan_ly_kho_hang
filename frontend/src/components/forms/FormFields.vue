@@ -47,6 +47,7 @@ const emits = defineEmits(["update:modelValue"]);
             :id="name"
             :placeholder="placeholder"
             rows="3"
+            :value="modelValue"
             @input="e=> emits('update:modelValue', e.target.value)"
         ></textarea>
     </div>
@@ -56,7 +57,7 @@ const emits = defineEmits(["update:modelValue"]);
         <Field
             class="form-control"
             :type="type"
-            value modelValue
+            :value="modelValue"
             @update:modelValue="value => emits('update:modelValue', value)"
             :placeholder="placeholder"
             :name="name"

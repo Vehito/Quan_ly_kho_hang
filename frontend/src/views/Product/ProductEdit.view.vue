@@ -33,6 +33,8 @@ const props = defineProps({
     id: { required: false, type: String }
 });
 
+const route = useRoute();
+
 const product = ref(null);
 
 async function getProduct(id) {
@@ -40,7 +42,6 @@ async function getProduct(id) {
         product.value = await productsController.queryById(Number(id));
     } catch (error) {
         console.log(error);
-        const route = useRoute();
         router.push({
             name: "notfound",
             params: {

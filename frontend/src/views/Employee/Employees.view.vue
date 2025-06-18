@@ -24,6 +24,7 @@
                 class="sticky-top"
                 v-if="filteredEmployees[activeIndex]"
                 :employee="activeEmployee()"
+                @select="onSelect"
             />
         </div>
         <div class="d-flex">
@@ -86,6 +87,14 @@ function activeEmployee() {
     if (activeIndex.value < 0) return null;
     const e = filteredEmployees.value[activeIndex.value];
     return filteredEmployees.value[activeIndex.value];
+}
+
+function onSelect(selectedOption, id) {
+    switch(selectedOption) {
+        case 'Thay đổi':
+            router.push({name: 'employee.edit', params: {id: id}});
+        break;
+    }
 }
 
 

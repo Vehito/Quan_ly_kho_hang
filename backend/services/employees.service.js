@@ -47,11 +47,12 @@ class EmployeesService extends Service {
         const { clauses, values } = this.getQueryClauses(filter, this.tableName);
         let query = `SELECT employees.id, employees.name, employees.position_id,
             employees.birth, employees.phone, employees.username, employees.address,
-            positions.name AS position_name, positions.level AS level FROM ${this.tableName}`;
+            positions.name AS position_name, positions.level AS level 
+            FROM ${this.tableName}`;
+        query += ' JOIN positions ON employees.position_id = positions.id'
         if(clauses) {
             query += ` WHERE ${clauses}`;
         }
-        query += ' JOIN positions ON employees.position_id = positions.id'
         const [rows] = await conn.query(query, values);
         return rows;
     }

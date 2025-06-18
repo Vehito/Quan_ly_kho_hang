@@ -37,6 +37,8 @@ const props = defineProps({
     id: { required: false, type: String }
 });
 
+const route = useRoute();
+
 const employee = ref(null);
 const positions = ref(null);
 
@@ -45,7 +47,6 @@ async function getEmployee(id) {
         employee.value = await employeesController.queryById(Number(id));
     } catch (error) {
         console.log(error);
-        const route = useRoute();
         router.push({
             name: "notfound",
             params: {
@@ -79,7 +80,7 @@ async function createEmployee(data) {
 
 async function updateEmployee(data) {
     try {
-        await employeesController.update(employee.id, data);
+        await employeesController.update(employee.value.id, data);
         router.push({ name: "employees" });
     } catch (error) {
         error.showAlert();

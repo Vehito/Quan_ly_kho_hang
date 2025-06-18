@@ -61,5 +61,6 @@ function select(selectedOption) {
 }
 .card {
     border: solid 1px rgba(0, 0, 255);
+    font-size: 1rem;
 }
 </style>

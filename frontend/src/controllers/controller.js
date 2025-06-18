@@ -49,6 +49,13 @@ class Controller {
             throw new ErrorAlert(error.status, error.response.data.message);
         }
     }
+
+    deleteAttribute(data, nameAttribute = []) {
+        nameAttribute.forEach((attr) => {
+            delete data[attr];
+        });
+        return data;
+    }
 }
 
 export default Controller;
