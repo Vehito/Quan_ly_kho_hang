@@ -10,29 +10,21 @@
         tableHeaders: { type: Array, required: true, default: [] },
         tableRows: { type: Array, required: true, default: [] },
 
-//      changedTextStyles: ['text-danger', 'text-primary']
-        changedTextStyles: { type: Array, required: false },
-
-//      changedColumns: [0, 3, 5]
-        changedColumns: {type: Array, required: false},
+//      changeContents: { keyA: 'valueA', keyB: 'valueB',... }
+        changeColumns: { type: Array, required: false, default: [] },
         changingCondition: { type: Function, required: false }
     });
     const emits = defineEmits(['clickBtn']);
 
-    function checkCondition(columnIndex, cellValue) {
-        if(!props.changedColumns) return;
-        const changedColumns = props.changedColumns;
-        const shouldChange = 
-            changedColumns.includes(columnIndex) &&
-            props.changingCondition(cellValue);
-        return shouldChange ? 
-            props.changedTextStyles[changedColumns.indexOf(columnIndex)] : ''
+    function checkCondition(key, cellValue) {
+        if(props.changeColumns.find((col) => col === key) === undefined) return;
+        return props.changingCondition(key, cellValue);
     }
 </script>
 
 <template>
-    <table class="table table-bordered">
-        <thead class="thead-dark">
+    <table class="table table-sm table-bordered table-hover">
+        <thead class="thead-light">
             <th
                 scope="col"
                 v-for="(tableHeader, index) in tableHeaders"
@@ -59,7 +51,7 @@
                     :class="typeof(tableRow[header.key]) === 'string' ? 'text-left' : 'text-right'"
                 >
                     <span 
-                        :class="checkCondition(index, tableRow[header.key])"
+                        :class="checkCondition(header.key, tableRow[header.key])"
                     >
                         {{ tableRow[header.key] }}
                     </span>
@@ -72,11 +64,11 @@
         </tbody>
     </table>
 </template>
-
+<!-- 
 <style scoped>
 td, th {
     width: 50px;
     height: 20px;
     padding: 5px;
 }
-</style>
+</style> -->

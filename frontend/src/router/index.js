@@ -37,6 +37,11 @@ const routes = [
         component: views.EmployeeEditView,
         props: true
     },
+    {
+        path: "/customers",
+        name: "customers",
+        component: views.CustomerView,
+    },
 
     {
         path: "/:pathMatch(.*)*",

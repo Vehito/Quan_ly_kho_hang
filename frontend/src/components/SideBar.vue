@@ -2,6 +2,7 @@
 const menuItems = [
 	{ label: "Sản phẩm", icon: "fas fa-box", name: "products" },
 	{ label: "Nhân viên", icon: "fa-solid fa-users", name: "employees" },
+	{ label: "Khách hàng", icon: "fas fa-shopping-cart", name: "customers" },
 ]
 </script>
 
