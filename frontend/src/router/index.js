@@ -20,7 +20,6 @@ const routes = [
         name: "product.create",
         component: views.ProductEditView,
     },
-
     {
         path: "/employees",
         name: "employees",
@@ -52,6 +51,11 @@ const routes = [
         name: "customer.edit",
         component: views.CustomerEditView,
         props: true
+    },
+    {
+        path: "/suppliers",
+        name: "suppliers",
+        component: views.SupplierView,
     },
 
     {
