@@ -7,6 +7,11 @@ class EmployeesController extends Controller {
         super(employeesModel);
     }
 
+    async insert(data) {
+        data.birth = date_helperUtil.formatDateForMySQL(data.birth);
+        await super.insert(data);
+    }
+
     async update(id, data) {
         data.birth = date_helperUtil.formatDateForMySQL(data.birth);
         const editedData = super.deleteAttribute(data, ['position_name', 'password']);

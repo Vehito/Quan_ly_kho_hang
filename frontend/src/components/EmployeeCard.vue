@@ -16,7 +16,7 @@ const data = [
 const emits = defineEmits(['select']);
 
 function select(selectedOption) {
-    emits('select', selectedOption, props.employee.id);
+    emits('select', selectedOption, props.employee);
 }
 </script>
 

@@ -42,6 +42,17 @@ const routes = [
         name: "customers",
         component: views.CustomerView,
     },
+    {
+        path: "/customers/create",
+        name: "customer.create",
+        component: views.CustomerEditView,
+    },
+    {
+        path: "/customers/:id",
+        name: "customer.edit",
+        component: views.CustomerEditView,
+        props: true
+    },
 
     {
         path: "/:pathMatch(.*)*",

@@ -89,10 +89,19 @@ function activeEmployee() {
     return filteredEmployees.value[activeIndex.value];
 }
 
-function onSelect(selectedOption, id) {
+async function onSelect(selectedOption, employee) {
     switch(selectedOption) {
         case 'Thay đổi':
-            router.push({name: 'employee.edit', params: {id: id}});
+            router.push({name: 'employee.edit', params: {id: employee.id}});
+        break;
+        case "Xóa nhân viên":
+            const reply = window.confirm(`Bạn có muốn xóa nhân viên ${employee.name}?`);
+            if(!reply) {
+                return false;
+            } else {
+                await employeesController.delete(employee.id);
+                await getEmployees();
+            }
         break;
     }
 }

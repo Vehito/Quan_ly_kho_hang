@@ -64,8 +64,17 @@ async function getProducts() {
 
 async function handleAction(selectedAction, row) {
     switch(selectedAction) {
-        case"Thay đổi sản phẩm":
+        case "Thay đổi sản phẩm":
             router.push({ name: 'product.edit', params: {id: row.id}})
+        break;
+        case "Xóa sản phẩm":
+            const reply = window.confirm(`Bạn có muốn xóa sản phẩm ${row.name}?`);
+            if(!reply) {
+                return false;
+            } else {
+                await productsController.delete(row.id);
+                await getProducts();
+            }
         break;
     }
 }

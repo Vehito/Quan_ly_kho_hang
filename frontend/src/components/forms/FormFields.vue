@@ -6,12 +6,12 @@ const props = defineProps({
     type: {
         default: "text",
         type: String,
-        validator: (type) => ['text', 'date', 'number', 'tel', 'password', 'select', 'textarea'].includes(type)
+        validator: (type) => ['text', 'date', 'number', 'tel', 'password', 'select', 'textarea', 'hidden'].includes(type)
     },
     modelValue: {
         required: true,
         default: "",
-        type: [String, Number, Date]
+        type: [String, Number, Date, Boolean]
     },
     placeholder: { default: 'Điền thông tin tại đây', type: String },
     name: { required: true, type: String },
@@ -24,32 +24,35 @@ const emits = defineEmits(["update:modelValue"]);
 <template>
     <div v-if="type==='select'">
         <label class="form-label" :for="name">{{ label }}</label>
-        <select
+        <Field
             class="form-control"
+            as="select"
             :value="modelValue ?? ''"
             :name="name"
             :id="name"
-            @change="e => emits('update:modelValue', e.target.value)"
+            @update:modelValue="value => emits('update:modelValue', value)"
+            @change=""
         >
             <option disabled>--{{ placeholder ?? label }}--</option>
             <option 
                 v-for="option in options"
                 :key="option.id"
                 :value="option.id">{{ option.name }}</option>
-        </select>
+        </Field>
     </div>
 
     <div v-else-if="type==='textarea'">
         <label class="form-label" :for="name">{{ label }}</label>
-        <textarea
+        <Field
             class="form-control"
+            as="textarea"
             :name="name"
             :id="name"
             :placeholder="placeholder"
             rows="3"
             :value="modelValue"
             @input="e=> emits('update:modelValue', e.target.value)"
-        ></textarea>
+        />
     </div>
 
     <div v-else>

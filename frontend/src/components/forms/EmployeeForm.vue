@@ -1,11 +1,6 @@
 <template>
     <div class="form-container">
-        <Form @submit="submitEmployee" 
-            :validation-schema="{
-                schema: getValidationSchema,
-                context: { isNew: !props.employee?.id }
-            }"
-        >
+        <Form @submit="submitEmployee" :validation-schema="validationSchema">
             <div class="row">
                 <div class="col-12 col-md-6">
                     <div
@@ -70,7 +65,7 @@
 <script setup>
 import * as yup from 'yup';
 import FormFields from './FormFields.vue';
-import { Form, ErrorMessage } from 'vee-validate';
+import { Form, ErrorMessage, useForm } from 'vee-validate';
 import { Employee } from '@/models/employees.model.js';
 import router from '@/router/index.js';
 import date_helperUtil from '@/utils/date_helper.util';
@@ -84,7 +79,6 @@ const emits = defineEmits(['submit:employee', 'delete:employee']);
 
 let localEmployee = props.employee ?? Employee.getEmptyObject();
 let confirmPassword = '';
-const isNew = props.employee
 
 const fields = [
     { 
@@ -174,48 +168,47 @@ if(!props.employee) {
 const leftFields = props.employee ? fields.slice(0, 3) : fields.slice(0, 4);
 const rightFields = props.employee ? fields.slice(3, 6) : fields.slice(4, 8);
 
-function getValidationSchema(context) {
-    return yup.object().shape({
-        name: yup
-            .string()
-            .required("Tên phải có giá trị")
-            .min(2, "Tên phải có ít nhất 2 ký tự")
-            .max(50, "Tên có nhiều nhất 50 ký tự"),
-        birth: yup
-            .date()
-            .required("Sinh nhật phải có giá trị")
-            .typeError("Sai định dạng"),
-        phone: yup
-            .number()
-            .typeError("Số điện thoại phải là số")
-            .required("Nhà sản xuất phải có giá trị")
-            .test("len", "Số điện thoại phải có đúng 10 chữ số", 
-                val => val && val.toString().length === 9),
-        username: yup
-            .string()
-            .required("Tên đăng nhập phải có giá trị")
-            .min(2, "Tên đăng nhập phải có ít nhất 2 ký tự")
-            .max(50, "Tên đăng nhập có nhiều nhất 50 ký tự"),
-        password: yup.string().when('$isNew', {
-            is: true,
-            then: schema => 
-                schema.required("Mật khẩu phải có giá trị")
-                    .min(8, "Mật khẩu phải có ít nhất 8 ký tự")
-                    .max(50, "Mật khẩu có nhiều nhất 50 ký tự"),
-            otherwise: schema => schema.notRequired()
-        }),
-        confirmPassword: yup.string().when('$isNew', {
-            is: true,
-            then: schema =>
-                schema.required("Mật khẩu phải có giá trị")
-                    .min(8, "Mật khẩu phải có ít nhất 8 ký tự")
-                    .max(50, "Mật khẩu có nhiều nhất 50 ký tự")
-                    .test("confirmPassword", "Mật khẩu nhập lại không trùng khớp",
-                        val => val === localEmployee.password),
-            otherwise: schema => schema.notRequired()
-        }),
-    });
-}
+const validationSchema = yup.object().shape({
+    name: yup
+        .string()
+        .required("Tên phải có giá trị")
+        .min(2, "Tên phải có ít nhất 2 ký tự")
+        .max(50, "Tên có nhiều nhất 50 ký tự"),
+    birth: yup
+        .date()
+        .required("Sinh nhật phải có giá trị")
+        .typeError("Sai định dạng"),
+    phone: yup
+        .number()
+        .typeError("Số điện thoại phải là số")
+        .required("Nhà sản xuất phải có giá trị")
+        .test("len", "Số điện thoại phải có đúng 10 chữ số", 
+            val => val && val.toString().length === 9),
+    address: yup
+        .string()
+        .required("Địa chỉ phải có giá trị")
+        .min(2, "Địa chỉ ít nhất 2 ký tự")
+        .max(100, "Địa chỉ cao nhất 100 ký tự"),
+    username: yup
+        .string()
+        .required("Tên đăng nhập phải có giá trị")
+        .min(2, "Tên đăng nhập phải có ít nhất 2 ký tự")
+        .max(50, "Tên đăng nhập có nhiều nhất 50 ký tự"),
+    password: !props.employee?.id
+        ? yup.string()
+            .required("Mật khẩu phải có giá trị")
+            .min(8, "Mật khẩu phải có ít nhất 8 ký tự")
+            .max(50, "Mật khẩu có nhiều nhất 50 ký tự")
+        : yup.string().notRequired(),
+    confirmPassword: !props.employee?.id
+        ? yup.string()
+            .required("Mật khẩu phải có giá trị")
+            .min(8, "Mật khẩu phải có ít nhất 8 ký tự")
+            .max(50, "Mật khẩu có nhiều nhất 50 ký tự")
+            .test("confirmPassword", "Mật khẩu nhập lại không trùng khớp",
+                    val => val === localEmployee.password)
+        : yup.string().notRequired(),
+});
 
 function submitEmployee() {
     emits('submit:employee', localEmployee);

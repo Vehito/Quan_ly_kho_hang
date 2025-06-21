@@ -48,7 +48,7 @@ const tableHeaders = [
     { name: "Công ty", key: "company"},
     { name: "Địa chỉ", key: "address"},
     { name: "Số nợ", key: "debt"},
-    { name: "Ngày trả", key: "due_date"},
+    { name: "Ngày trả", key: "text_due_date"},
     { name: "Tình trạng", key: "text_status"},
 ]
 
@@ -79,10 +79,19 @@ async function getCustomers() {
     }
 }
 
-async function handleAction(selectedAction, row) {
+async function handleAction(selectedAction, customer) {
     switch(selectedAction) {
         case"Thay đổi khách hàng":
-            router.push({ name: 'customer.edit', params: {id: row.id}})
+            router.push({ name: 'customer.edit', params: {id: customer.id}})
+        break;
+        case "Xóa khách hàng":
+            const reply = window.confirm(`Bạn có muốn xóa khách hàng ${customer.name}?`);
+            if(!reply) {
+                return false;
+            } else {
+                await customersController.delete(customer.id);
+                await getCustomers();
+            }
         break;
     }
 }
