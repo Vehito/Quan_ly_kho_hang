@@ -41,7 +41,7 @@ import router from '@/router';
 import { onMounted, ref } from 'vue';
 
 const tableHeaders = [
-    { name: "Mã nhà cung cấp", key: "id"},
+    { name: "Mã hiệu", key: "id"},
     { name: "Tên nhà cung cấp", key: "name"},
     { name: "Địa chỉ", key: "address"},
     { name: "Số điện thoại", key: "phone"},

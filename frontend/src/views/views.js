@@ -5,4 +5,5 @@ export {default as EmployeeEditView} from './Employee/EmployeeEdit.view.vue'
 export {default as CustomerView} from './Customer/Customers.view.vue'
 export {default as CustomerEditView} from './Customer/CustomerEdit.view.vue'
 export {default as SupplierView} from './Supplier/Suppliers.view.vue'
+export {default as SupplierEditView} from './Supplier/SupplierEdit.view.vue'
 export {default as notFound} from './NotFound.vue';

@@ -181,7 +181,7 @@ const validationSchema = yup.object().shape({
     phone: yup
         .number()
         .typeError("Số điện thoại phải là số")
-        .required("Nhà sản xuất phải có giá trị")
+        .required("Số điện thoại phải có giá trị")
         .test("len", "Số điện thoại phải có đúng 10 chữ số", 
             val => val && val.toString().length === 9),
     address: yup
