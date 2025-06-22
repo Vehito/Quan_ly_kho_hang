@@ -1,6 +1,7 @@
 <script setup>
 const menuItems = [
 	{ label: "Sản phẩm", icon: "fas fa-box", name: "products" },
+	{ label: "Đơn nhập", icon: "fas fa-warehouse", name: "import_shipments" },
 	{ label: "Nhân viên", icon: "fa-solid fa-users", name: "employees" },
 	{ label: "Khách hàng", icon: "fas fa-shopping-cart", name: "customers" },
 	{ label: "Nhà cung cấp", icon: "fas fa-industry", name: "suppliers" },

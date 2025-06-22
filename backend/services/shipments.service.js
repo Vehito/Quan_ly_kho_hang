@@ -32,6 +32,20 @@ class ShipmentsService extends Service {
             ...result
         };
     }
+
+    async query(filter, conn) {
+        const { clauses, values } = this.getQueryClauses(filter, this.tableName);
+        let query = `SELECT import_shipments.*,
+            suppliers.name AS supplier_name, employees.name AS employee_name
+            FROM ${this.tableName}`;
+        query += ' JOIN suppliers ON import_shipments.supplier_id = suppliers.id';
+        query += ' JOIN employees ON import_shipments.created_by = employees.id';
+        if(clauses) {
+            query += ` WHERE ${clauses}`;
+        }
+        const [rows] = await conn.query(query, values);
+        return rows;
+    }
 }
 
 export default ShipmentsService;

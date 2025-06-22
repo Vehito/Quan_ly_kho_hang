@@ -28,16 +28,17 @@ async function insertShipmentItems(listItem = [], isImport) {
     });
 }
 
-function checkValidType(isImport) {
-    if(typeof isImport === "boolean") {
-        return;
+function getBoolFromString(isImport) {
+    if(isImport === "true") {
+        return true;
+    } else if(isImport === "false") {
+        return false;
     }
     throw new ApiError(400, "Invalid shipment data!");
 }
 
 export async function insert(req, res, next) {
     const isImport = req.body.isImport;
-    checkValidType(isImport);
     checkValidShipmentItems(req.body.listItem);
     try {
         const object = getObject(isImport);
@@ -58,8 +59,9 @@ export async function insert(req, res, next) {
 
 export async function query(req, res, next) {
     let result = [];
-    checkValidType(req.body.isImport);
-    const isImport = req.body.isImport;
+    let { isImport, needItems, ...filter } = req.query;
+    isImport = getBoolFromString(isImport);
+    needItems = getBoolFromString(needItems);
     try {
         result = await sharedController
             .withTransaction(async (conn) => {
@@ -69,14 +71,18 @@ export async function query(req, res, next) {
                 const { params } = req.params;
                 if(params) {
                     result = await shipmentService.query(params, conn);
-                    result[0].listItem = 
-                        await shipmentItemService.query({shipment_id: params.value}, conn);
+                    if(needItems) {
+                        result[0].listItem =
+                            await shipmentItemService.query({shipment_id: params.value}, conn);
+                    }
                 } else {
-                    result = await shipmentService.query(req.query, conn);
-                    await result.forEach(async (shipment) => {
-                        shipment.listItem = 
-                            await shipmentItemService.query({shipment_id: shipment.id}, conn);
-                    });
+                    result = await shipmentService.query(filter, conn);
+                    if(needItems) {
+                        for (const shipment of result) {
+                            shipment.listItem = 
+                                await shipmentItemService.query({shipment_id: shipment.id}, conn);
+                        }
+                    }
                 }
                 return result;
             });
@@ -89,8 +95,7 @@ export async function query(req, res, next) {
 }
 
 export async function remove(req, res, next) {
-    checkValidType(req.body.isImport);
-    const isImport = req.body.isImport;
+    const isImport = getBoolFromString(req.query.isImport);
     let result = [];
     try {
         result = await sharedController

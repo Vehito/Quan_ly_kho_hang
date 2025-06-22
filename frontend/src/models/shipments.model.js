@@ -10,34 +10,23 @@ class ShipmentsModel extends Model {
         return this.isImport ? 
             new ImportShipment(data) : new ExportShipment(data);
     }
+
+    async queryAll(filter = {}) {
+        filter.isImport = this.isImport;
+        return await super.queryAll(filter);
+    }
 }
 
 export default ShipmentsModel;
 
 export class Shipment {
-    // #id;
-    // #created_at;
-    // #created_by;
-    // #description;
     constructor(data) {
-        this.id = data.id ?? null,
-        this.created_at = data.created_at ?? new Date(),
-        this.created_by = data.created_by,
+        this.id = data.id ?? null;
+        this.created_at = data.created_at ?? new Date();
+        this.created_by = data.created_by;
+        this.employee_name = data.employee_name;
         this.description = data.description ?? null;
     }
-
-    // get id() { 
-    //     return this.#id; 
-    // }
-    // get created_at() {
-    //     return this.#created_at;
-    // }
-    // get created_by() {
-    //     return this.#created_by;
-    // }
-    // get description() {
-    //     return this.#description;
-    // }
 }
 
 export class ImportShipment extends Shipment{
@@ -45,6 +34,7 @@ export class ImportShipment extends Shipment{
     constructor(data) {
         super(data);
         this.supplier_id = data.supplier_id;
+        this.supplier_name = data.supplier_name;
     }
 }
 

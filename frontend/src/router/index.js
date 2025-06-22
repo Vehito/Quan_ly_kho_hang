@@ -68,6 +68,11 @@ const routes = [
         component: views.SupplierEditView,
         props: true
     },
+    {
+        path: "/import_shipments",
+        name: "import_shipments",
+        component: views.ImportShipmentView,
+    },
 
     {
         path: "/:pathMatch(.*)*",
