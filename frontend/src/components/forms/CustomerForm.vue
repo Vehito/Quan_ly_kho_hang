@@ -1,6 +1,6 @@
 <template>
     <div class="form-container">
-        <Form @submit="submitCustomer" 
+        <Form @submit="submitCustomer"
             :validation-schema="validationSchema"
         >
             <div

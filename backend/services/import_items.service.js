@@ -26,7 +26,7 @@ class ImportItemsService extends Service {
         const [result] = await conn.query(
             `INSERT INTO ${this.tableName} (shipment_id, product_id, mfg, exp, quantity, stoke, price)
             VALUES (?, ?, ?, ?, ?, ?, ?)`,
-            Object.values[importItem]
+            Object.values(importItem)
         );
         return {
             id: result.insertId,

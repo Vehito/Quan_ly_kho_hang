@@ -14,18 +14,23 @@ function getShipmentItemService(isImport) {
 
 function checkValidShipmentItems(listItem = [], isImport) {
     const requiredFields = isImport ? 
-        ['shipment_id', 'product_id', 'mfg', 'exp', 'quantity', 'price'] : 
-        ['shipment_id', 'product_id', 'import_shipment_id', 'quantity', 'price'];
+        ['product_id', 'mfg', 'exp', 'quantity', 'price'] : 
+        ['product_id', 'import_shipment_id', 'quantity', 'price'];
     for (const index in listItem) {
         sharedController.isValid(listItem[index], requiredFields, 'shipment item')
     }
 }
 
-async function insertShipmentItems(listItem = [], isImport) {
+async function insertShipmentItems(shipmentId, listItem = [], isImport, conn) {
     const shipmentItemService = getShipmentItemService(isImport);
-    listItem.forEach(async (item) => {
-        await shipmentItemService.insert(item);
-    });
+    try {
+        for (const item of listItem) {
+            item.shipment_id = shipmentId;
+            await shipmentItemService.insert(item, conn);
+        }
+    } catch (error) {
+        throw new ApiError(500, `An error occurred while inserting the shipment item: ${error}`);
+    }
 }
 
 function getBoolFromString(isImport) {
@@ -39,16 +44,17 @@ function getBoolFromString(isImport) {
 
 export async function insert(req, res, next) {
     const isImport = req.body.isImport;
-    checkValidShipmentItems(req.body.listItem);
+    checkValidShipmentItems(req.body.listItem, isImport);
     try {
         const object = getObject(isImport);
         sharedController.isValid(req.body, [object, 'created_by'], 'shipment');
         const result = await sharedController
             .withTransaction(async (conn) => {
                 const shipmentService = new ShipmentsService(isImport);
-                return await shipmentService.insert(req.body, conn);
+                const result = await shipmentService.insert(req.body, conn);
+                await insertShipmentItems(result.id, req.body.listItem, isImport, conn);
+                return result;
             });
-        await insertShipmentItems(req.body.listItem);
         return res.send(result);
     } catch (error) {
         return next(

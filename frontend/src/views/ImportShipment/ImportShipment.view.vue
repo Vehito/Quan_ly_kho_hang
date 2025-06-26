@@ -5,21 +5,23 @@
         </div>
 
         <div class="col-12 text-center mt-3">
-            <CustomTable 
-                :table-headers="tableHeaders"
-                :table-rows="shipments"
-            >
-                <template #custom="{ row }">
-                    <DropdownBtn
-                        :dropdown-items="['Thay đổi đơn hàng', 'Xóa đơn hàng']"
-                        @select:value="(selectedAction) => handleAction(selectedAction, row)"
-                    >
-                        <template #label>
-                            <i class="fa-solid fa-bars"></i>
-                        </template>
-                    </DropdownBtn>
-                </template>
-            </CustomTable>
+            <LoadingScreen :is-loading="isLoading">
+                <CustomTable 
+                    :table-headers="tableHeaders"
+                    :table-rows="shipments"
+                >
+                    <template #custom="{ row }">
+                        <DropdownBtn
+                            :dropdown-items="['Thay đổi đơn hàng', 'Xóa đơn hàng']"
+                            @select:value="(selectedAction) => handleAction(selectedAction, row)"
+                        >
+                            <template #label>
+                                <i class="fa-solid fa-bars"></i>
+                            </template>
+                        </DropdownBtn>
+                    </template>
+                </CustomTable>
+            </LoadingScreen>
         </div>
 
         <div class="d-flex">
@@ -39,15 +41,17 @@ import { DropdownBtn } from '@/utils/buttons.util';
 import ShipmentsController from '@/controllers/shipments.controller';
 const shipmentsController = new ShipmentsController(true);
 import router from '@/router';
+import LoadingScreen from '@/components/loading/LoadingScreen.vue';
 import { onMounted, ref } from 'vue';
 
 const tableHeaders = [
     { name: "Mã đơn hàng", key: "id" },
     { name: "Nhà cung cấp", key: "supplier_name" },
     { name: "Người tạo", key: "employee_name" },
-    { name: "Ngày tạo", key: "created_at" },
+    { name: "Ngày tạo", key: "text_created_at" },
 ]
 
+const isLoading = ref(true);
 const searchText = ref('');
 const shipments = ref([]);
 
@@ -60,6 +64,8 @@ async function getShipments() {
         shipments.value = (await shipmentsController.queryAll());
     } catch (error) {
         error.showAlert();
+    } finally {
+        isLoading.value = false;
     }
 }
 

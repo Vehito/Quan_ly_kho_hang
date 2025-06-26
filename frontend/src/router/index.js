@@ -57,7 +57,7 @@ const routes = [
         name: "suppliers",
         component: views.SupplierView,
     },
-        {
+    {
         path: "/suppliers/create",
         name: "supplier.create",
         component: views.SupplierEditView,
@@ -72,6 +72,11 @@ const routes = [
         path: "/import_shipments",
         name: "import_shipments",
         component: views.ImportShipmentView,
+    },
+    {
+        path: "/import_shipments/create",
+        name: "import_shipment.create",
+        component: views.ImportShipmentEditView,
     },
 
     {

@@ -16,7 +16,7 @@ import SideBar from "./components/SideBar.vue";
 <style scoped>
 .page {
 	margin: auto;
-  	margin-left: 200px;
+  	margin-left: 150px;
 	position: relative;
   	min-height: 100%;
 }
