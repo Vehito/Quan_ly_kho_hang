@@ -3,13 +3,13 @@ import Service from "./service.js";
 class ShipmentsService extends Service {
     constructor(isImport) {
         super(isImport ? "import_shipments" : "export_shipments");
-        this.object = isImport ? "supplier_id" : "customer_id";
+        this.object = isImport ? "supplier" : "customer";
     }
 
     #extractShipmentData(payload) {
         const shipment = {
             id: payload.id,
-            [this.object]: payload[this.object],
+            [`${this.object}_id`]: payload[`${this.object}_id`],
             created_at: payload.created_at ?? new Date(),
             created_by: payload.created_by,
             description: payload.description ?? null
@@ -23,9 +23,9 @@ class ShipmentsService extends Service {
     async insert(payload, conn) {
         const shipment = this.#extractShipmentData(payload);
         const [result] = await conn.query(
-            `INSERT INTO ${this.tableName} (${this.object}, created_at, created_by, description)
+            `INSERT INTO ${this.tableName} (${this.object}_id, created_at, created_by, description)
             VALUES (?, ?, ?, ?)`,
-            [shipment[this.object], shipment.created_at, shipment.created_by, shipment.description]
+            [shipment[`${this.object}_id`], shipment.created_at, shipment.created_by, shipment.description]
         );
         return {
             id: result.insertId,
@@ -35,11 +35,11 @@ class ShipmentsService extends Service {
 
     async query(filter, conn) {
         const { clauses, values } = this.getQueryClauses(filter, this.tableName);
-        let query = `SELECT import_shipments.*,
-            suppliers.name AS supplier_name, employees.name AS employee_name
+        let query = `SELECT ${this.tableName}.*,
+            ${this.object}s.name AS ${this.object}_name, employees.name AS employee_name
             FROM ${this.tableName}`;
-        query += ' JOIN suppliers ON import_shipments.supplier_id = suppliers.id';
-        query += ' JOIN employees ON import_shipments.created_by = employees.id';
+        query += ` JOIN ${this.object}s ON ${this.tableName}.${this.object}_id = ${this.object}s.id`;
+        query += ` JOIN employees ON ${this.tableName}.created_by = employees.id`;
         if(clauses) {
             query += ` WHERE ${clauses}`;
         }

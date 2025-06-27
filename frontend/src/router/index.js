@@ -84,6 +84,11 @@ const routes = [
         component: views.ImportShipmentDetailView,
         props: true
     },
+    {
+        path: "/export_shipments",
+        name: "export_shipments",
+        component: views.ExportShipmentView,
+    },
 
     {
         path: "/:pathMatch(.*)*",

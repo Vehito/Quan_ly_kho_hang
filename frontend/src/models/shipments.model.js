@@ -62,7 +62,6 @@ export class ImportShipment extends Shipment{
     static isImport = true;
     constructor(data) {
         super(data);
-        this.listItem = (data.listItem ?? [{}]).map(item => new ImportItem(item));;
         this.supplier_id = data.supplier_id;
         this.supplier_name = data.supplier_name;
     }
@@ -77,6 +76,7 @@ export class ExportShipment extends Shipment {
     constructor(data) {
         super(data);
         this.customer_id = data.customer_id;
+        this.customer_name = data.customer_name;
     }
 
     createItemInstance(data) {
