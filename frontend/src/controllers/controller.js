@@ -18,9 +18,9 @@ class Controller {
         }
     }
 
-    async queryById(id) {
+    async queryById(id, filter = {}) {
         try {
-            return await this.#model.queryById(id);
+            return await this.#model.queryById(Number(id), filter);
         } catch (error) {
             throw new ErrorAlert(error.status, error.response.data.message);
         }

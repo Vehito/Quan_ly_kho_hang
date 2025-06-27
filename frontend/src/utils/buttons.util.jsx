@@ -9,7 +9,7 @@ export const DropdownBtn = defineComponent({
         return () => (
             <div class="dropdown">
                 <button 
-                    class="btn btn-secondary dropdown-toggle"
+                    class="btn btn-block btn-primary dropdown-toggle"
                     type="button"
                     id="dropdownMenuButton"
                     data-toggle="dropdown" 

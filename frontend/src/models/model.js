@@ -16,8 +16,8 @@ class Model {
         return data;    
     }
 
-    async queryById(id) {
-        const data = (await this.#api.get(`/${id}`)).data[0];
+    async queryById(id, filter = {}) {
+        const data = (await this.#api.get(`/${id}`, { params: filter })).data[0];
         return this.createIntance(data);
     }
 

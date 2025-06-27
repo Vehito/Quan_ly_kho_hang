@@ -74,12 +74,12 @@ export async function query(req, res, next) {
                 const shipmentService = new ShipmentsService(isImport);
                 const shipmentItemService = getShipmentItemService(isImport);
                 let result = [];
-                const { params } = req.params;
+                const { params } = req;
                 if(params) {
                     result = await shipmentService.query(params, conn);
                     if(needItems) {
                         result[0].listItem =
-                            await shipmentItemService.query({shipment_id: params.value}, conn);
+                            await shipmentItemService.query({shipment_id: params.id}, conn);
                     }
                 } else {
                     result = await shipmentService.query(filter, conn);

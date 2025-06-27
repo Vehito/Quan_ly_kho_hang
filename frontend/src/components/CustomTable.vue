@@ -42,7 +42,7 @@
                 :key="index"
             >
                 <th scope="row">
-                    {{ Object.values(tableRow)[0] ?? tableRow.values().next().value }}
+                    {{ tableRow[Object.values(tableHeaders)[0].key] }}
                 </th>
 
                 <td
@@ -57,9 +57,7 @@
                     </span>
                 </td>
 
-                <td>
-                    <slot name="custom" :row="tableRow"></slot>
-                </td>
+                <slot name="custom" :row="tableRow"></slot>
             </tr>
         </tbody>
     </table>

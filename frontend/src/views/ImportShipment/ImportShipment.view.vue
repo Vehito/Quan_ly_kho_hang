@@ -11,14 +11,11 @@
                     :table-rows="shipments"
                 >
                     <template #custom="{ row }">
-                        <DropdownBtn
-                            :dropdown-items="['Thay đổi đơn hàng', 'Xóa đơn hàng']"
-                            @select:value="(selectedAction) => handleAction(selectedAction, row)"
+                        <button class="btn btn-block btn-info"
+                            @click="router.push({ name: 'import_shipment.detail', params: { id: row.id } })"
                         >
-                            <template #label>
-                                <i class="fa-solid fa-bars"></i>
-                            </template>
-                        </DropdownBtn>
+                            Xem chi tiết
+                        </button>
                     </template>
                 </CustomTable>
             </LoadingScreen>
@@ -37,7 +34,6 @@
 <script setup>
 import CustomTable from '@/components/CustomTable.vue';
 import InputSearch from '@/components/InputSearch.vue';
-import { DropdownBtn } from '@/utils/buttons.util';
 import ShipmentsController from '@/controllers/shipments.controller';
 const shipmentsController = new ShipmentsController(true);
 import router from '@/router';

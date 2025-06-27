@@ -1,6 +1,5 @@
 import ShipmentsModel from "@/models/shipments.model";
 import Controller from "./controller";
-import date_helperUtil from "@/utils/date_helper.util";
 
 class ShipmentsController extends Controller {
     constructor(isImport) {
@@ -10,6 +9,11 @@ class ShipmentsController extends Controller {
     async queryAll(filter = {}, needItems = false) {
         filter.needItems = needItems;
         return await super.queryAll(filter);
+
+    }
+
+    async queryById(id, needItems = false) {
+        return await super.queryById(id, {needItems: needItems})
     }
 }
 

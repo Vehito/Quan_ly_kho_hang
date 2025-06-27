@@ -78,6 +78,12 @@ const routes = [
         name: "import_shipment.create",
         component: views.ImportShipmentEditView,
     },
+    {
+        path: "/import_shipments/:id",
+        name: "import_shipment.detail",
+        component: views.ImportShipmentDetailView,
+        props: true
+    },
 
     {
         path: "/:pathMatch(.*)*",

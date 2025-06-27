@@ -1,5 +1,5 @@
 <template>
-  	<div class="loading-overlay" v-if="isLoading">
+  	<div class="loading-overlay text-center" v-if="isLoading">
     	<div class="spinner-border text-primary" role="status">
       		<span class="visually-hidden"></span>
     	</div>
