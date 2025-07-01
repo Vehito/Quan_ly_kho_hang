@@ -34,14 +34,14 @@ class ImportItemsService extends Service {
         };
     }
 
-    async query(filter, conn) {
+    async query(filter, conn, available = false) {
         const { clauses, values } = this.getQueryClauses(filter, this.tableName);
         let query = `SELECT ${this.tableName}.*,
             products.name AS product_name 
             FROM ${this.tableName}`;
         query += ` JOIN products ON ${this.tableName}.product_id = products.id`;
         if(clauses) {
-            query += ` WHERE ${clauses}`;
+            query += ` WHERE ${clauses} ${available===true ? (" AND "+this.tableName+".stoke > 0") : ""}`;
         }
         const [rows] = await conn.query(query, values);
         return rows;

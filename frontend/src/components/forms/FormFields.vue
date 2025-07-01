@@ -44,6 +44,17 @@ const emits = defineEmits(["update:modelValue"]);
                 </Field>
             </div>
 
+            <div v-else-if="type==='hidden'">
+                <Field
+                    class="form-control"
+                    :name="name"
+                    :id="name"
+                    hidden
+                    :model-value="modelValue ?? ''"
+                    disable
+                />
+            </div>
+
             <div v-else-if="type==='textarea'">
                 <Field
                     class="form-control"

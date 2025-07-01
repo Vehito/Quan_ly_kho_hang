@@ -63,6 +63,28 @@ export async function insert(req, res, next) {
     }
 }
 
+export async function queryShipmentItem(req, res, next) {
+    let result = [];
+    let { isImport, available, ...filter } = req.query;
+    isImport = getBoolFromString(isImport);
+    isImport === true ? available = getBoolFromString(available) : available;
+    try {
+        result = await sharedController
+            .withTransaction(async (conn) => {
+                const shipmentItemService = getShipmentItemService(isImport);
+                let result = [];
+                result = isImport ? await shipmentItemService.query(filter, conn, available)
+                                  : await shipmentItemService.query(filter, conn);
+                return result;
+            });
+        return res.send(result);
+    } catch (error) {
+        return next(
+            new ApiError(500, `An error occured while querying the shipment items: ${error}`)
+        );
+    }
+}
+
 export async function query(req, res, next) {
     let result = [];
     let { isImport, needItems, ...filter } = req.query;

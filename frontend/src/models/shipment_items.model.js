@@ -1,4 +1,24 @@
 import date_helperUtil from "@/utils/date_helper.util";
+import Model from "./model";
+
+class ShipmentItemModel extends Model {
+    constructor(isImport) {
+        super("/api/shipments/shipment_items");
+        this.isImport = isImport;
+    }
+
+    createIntance(data) {
+        return this.isImport ? 
+            new ImportItem(data) : new ExportItem(data);
+    }
+
+    async queryAll(filter = {}) {
+        filter.isImport = this.isImport;
+        return await super.queryAll(filter);
+    }
+}
+
+export default ShipmentItemModel;
 
 export class ShipmentItem {
     constructor(data) {
@@ -13,11 +33,16 @@ export class ShipmentItem {
 export class ImportItem extends ShipmentItem {
     constructor(data) {
         super(data);
-        this.mfg = data.mfg,
+        this.id = this.shipment_id;
+        this.mfg = data.mfg;
         this.text_mfg = date_helperUtil.getStringDate(this.mfg);
-        this.exp = data.exp,
+        this.exp = data.exp;
         this.text_exp = date_helperUtil.getStringDate(this.exp);
-        this.stoke = data.stoke
+        this.stoke = data.stoke;
+    }
+
+    get name() {
+        return `Tồn kho:${this.stoke}-NSX:${this.text_mfg}-HSD:${this.text_exp}`;
     }
 
     static getEmptyObject() {
@@ -36,6 +61,7 @@ export class ImportItem extends ShipmentItem {
 export class ExportItem extends ShipmentItem {
     constructor(data) {
         super(data);
+        this.id = this.shipment_id;
         this.import_shipment_id = data.import_shipment_id
     }
 }

@@ -42,7 +42,7 @@ import { onMounted, ref } from 'vue';
 
 const tableHeaders = [
     { name: "Mã đơn hàng", key: "id" },
-    { name: "Nhà cung cấp", key: "supplier_name" },
+    { name: "Khách hàng", key: "customer_name" },
     { name: "Người tạo", key: "employee_name" },
     { name: "Ngày tạo", key: "text_created_at" },
 ]

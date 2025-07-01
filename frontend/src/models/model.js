@@ -17,8 +17,12 @@ class Model {
     }
 
     async queryById(id, filter = {}) {
-        const data = (await this.#api.get(`/${id}`, { params: filter })).data[0];
-        return this.createIntance(data);
+        const data = (await this.#api.get(`/${id}`, { params: filter })).data;
+        if(data.length > 1) {
+            return Array.isArray(data) 
+                ? data.map((item) => this.createIntance(item)) : [];
+        }
+        return this.createIntance(data[0]);
     }
 
     async queryAll(filter = {}) {
