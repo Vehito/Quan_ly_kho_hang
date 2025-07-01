@@ -11,4 +11,5 @@ export {default as ImportShipmentEditView} from './ImportShipment/ImportShipment
 export {default as ImportShipmentDetailView} from './ImportShipment/ImportShipmentDetail.view.vue'
 export {default as ExportShipmentView} from './ExportShipment/ExportShipment.view.vue'
 export {default as ExportShipmentEditView} from './ExportShipment/ExportShipmentEdit.vue'
+export {default as ExportShipmentDetailView} from './ExportShipment/ExportShipmentDetail.vue'
 export {default as notFound} from './NotFound.vue';

@@ -35,11 +35,13 @@ class ExportItemsService extends Service {
     async query(filter, conn) {
         const { clauses, values } = this.getQueryClauses(filter, this.tableName);
         let query = `SELECT ${this.tableName}.*,
-            products.name AS product_name 
+            products.name AS product_name,
+            import_items.mfg AS mfg, import_items.exp AS exp
             FROM ${this.tableName}`;
         query += ` JOIN products ON ${this.tableName}.product_id = products.id`;
+        query += ` JOIN import_items ON ${this.tableName}.product_id = import_items.product_id AND ${this.tableName}.import_shipment_id = import_items.shipment_id`;
         if(clauses) {
-            query += ` WHERE ${clauses} ${available===true ? (" AND "+this.tableName+".stoke > 0") : ""}`;
+            query += ` WHERE ${clauses}`;
         }
         const [rows] = await conn.query(query, values);
         return rows;

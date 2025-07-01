@@ -62,6 +62,10 @@ export class ExportItem extends ShipmentItem {
     constructor(data) {
         super(data);
         this.id = this.shipment_id;
-        this.import_shipment_id = data.import_shipment_id
+        this.import_shipment_id = data.import_shipment_id;
+        this.mfg = data.mfg;
+        this.text_mfg = date_helperUtil.getStringDate(this.mfg);
+        this.exp = data.exp;
+        this.text_exp = date_helperUtil.getStringDate(this.exp);
     }
 }
