@@ -4,7 +4,7 @@
             <InputSearch v-model="searchText" v-on:submit="searchSubmit"/>
         </div>
 
-        <div class="col-12 text-center mt-3">
+        <div class="col-12 mt-3">
             <LoadingScreen :is-loading="isLoading">
                 <CustomTable 
                     :table-headers="tableHeaders"

@@ -32,6 +32,18 @@ class ProductsService extends Service {
             ...result,
         };
     }
+
+    async adjustQuantity(id, quantity, conn) {
+        const update = 
+            `UPDATE ${this.tableName} 
+            SET quantity = CASE
+                WHEN (quantity + ?) >= 0
+                THEN quantity + ?
+            END
+            WHERE id = ?`;
+        const result = await conn.query(update, [quantity, quantity, id]);
+        return result;
+    }
 }
 
 export default ProductsService;

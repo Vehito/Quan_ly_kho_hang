@@ -23,50 +23,49 @@
 </script>
 
 <template>
-    <table class="table table-sm table-bordered table-hover">
-        <thead class="thead-light">
-            <th
-                scope="col"
-                v-for="(tableHeader, index) in tableHeaders"
-                :key="index"
-                class="text-center"
-            >
-                {{ tableHeader.name }}
-            </th>
-
-        </thead>
-
-        <tbody>
-            <tr
-                v-for="(tableRow, index) in tableRows"
-                :key="index"
-            >
-                <th scope="row">
-                    {{ tableRow[Object.values(tableHeaders)[0].key] }}
-                </th>
-
-                <td
-                    v-for="(header, index) in tableHeaders.slice(1)"
+    <div class="table-container shadow">
+        <table class="table table-sm table-bordered table-hover">
+            <thead class="thead-light">
+                <th
+                    scope="col"
+                    v-for="(tableHeader, index) in tableHeaders"
                     :key="index"
-                    :class="typeof(tableRow[header.key]) === 'string' ? 'text-left' : 'text-right'"
                 >
-                    <span 
-                        :class="checkCondition(header.key, tableRow[header.key])"
-                    >
-                        {{ tableRow[header.key] }}
-                    </span>
-                </td>
+                    {{ tableHeader.name }}
+                </th>
+            </thead>
 
-                <slot name="custom" :row="tableRow"></slot>
-            </tr>
-        </tbody>
-    </table>
+            <tbody>
+                <tr
+                    v-for="(tableRow, index) in tableRows"
+                    :key="index"
+                >
+                    <th scope="row" class="text-center">
+                        {{ tableRow[Object.values(tableHeaders)[0].key] }}
+                    </th>
+
+                    <td
+                        v-for="(header, index) in tableHeaders.slice(1)"
+                        :key="index"
+                    >
+                        <span 
+                            :class="checkCondition(header.key, tableRow[header.key])"
+                        >
+                            {{ tableRow[header.key] }}
+                        </span>
+                    </td>
+
+                    <slot name="custom" :row="tableRow"></slot>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </template>
-<!-- 
+
 <style scoped>
-td, th {
-    width: 50px;
-    height: 20px;
-    padding: 5px;
+.table-container {
+    border: 1px rgb(128, 128, 128, .5) solid;
+    padding: 10px;
+    border-radius: 10px;
 }
-</style> -->
+</style>

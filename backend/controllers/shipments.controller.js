@@ -3,6 +3,7 @@ import ShipmentsService from "../services/shipments.service.js";
 import ImportItemsService from "../services/import_items.service.js";
 import ExportItemsService from "../services/export_items.service.js";
 import * as sharedController from "./controller.shared.js";
+import ProductsService from "../services/products.service.js";
 
 function getObject(isImport) {
     return isImport ? "supplier_id" : "customer_id";
@@ -23,10 +24,15 @@ function checkValidShipmentItems(listItem = [], isImport) {
 
 async function insertShipmentItems(shipmentId, listItem = [], isImport, conn) {
     const shipmentItemService = getShipmentItemService(isImport);
+    const productService = new ProductsService();
+    let quantity = 0;
     try {
         for (const item of listItem) {
             item.shipment_id = shipmentId;
             await shipmentItemService.insert(item, conn);
+            await productService.adjustQuantity(
+                item.product_id, isImport ? item.quantity : -item.quantity, conn
+            );
         }
     } catch (error) {
         throw new ApiError(500, `An error occurred while inserting the shipment item: ${error}`);
