@@ -96,13 +96,25 @@ export async function login(req, res, next) {
                 return (await employeeService.query(req.body, conn))[0];
             });
             const token = jwt.sign(
-                { id: user.id, level: user.level },
+                { id: user.id, name: user.name, 
+                position_name: user.position_name, level: user.level },
                 process.env.SECRET,
                 { expiresIn: '15m' });
             const refreshToken = jwt.sign(
                 {id: user.id}, process.env.SECRET,
                 { expiresIn: '7d' });
-            return res.send({ token, refreshToken })
+            res.cookie('token', token, {
+                httpOnly: true,
+                sameSite: 'Strict',
+                maxAge: 15 * 60 * 1000 // 15 phút
+            });
+
+            res.cookie('refreshToken', refreshToken, {
+                httpOnly: true,
+                sameSite: 'Strict',
+                maxAge: 7 * 24 * 60 * 60 * 1000 // 7 ngày
+            });
+            res.status(200).json({ success: true, user });
         } else {
             return next(
                 new ApiError(400, 'Sai thông tin đăng nhập')
@@ -113,6 +125,38 @@ export async function login(req, res, next) {
             new ApiError(500, `An error occured while vertifying the employee: ${error}`)
         )
     }
+}
+
+export function refreshToken(req, res, next) {
+    const refreshToken = req.cookies.refreshToken;
+    if(!refreshToken) {
+        return next(
+            new ApiError(500, `There's no refresh token`)
+        );
+    }
+
+    jwt.verify(refreshToken, REFRESH_SECRET, (err, decoded) => {
+        if (err) {
+            return res.status(403).json({ message: 'Invalid refresh token' });
+        }
+
+        const newAccessToken = jwt.sign(
+            { id: decoded.id, name: decoded.name, 
+                position_name: decoded.position_name, level: decoded.level },
+            process.env.SECRET,
+            { expiresIn: '15m' }
+        );
+
+        // Gắn access token mới vào cookie
+        res.cookie('token', newAccessToken, {
+            httpOnly: true,
+            sameSite: 'Strict',
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 15 * 60 * 1000 // 15 phút
+        });
+
+        return res.sendStatus(200); // hoặc res.json(...) nếu frontend cần
+    });
 }
 
 export async function changePassword(req, res, next) {
