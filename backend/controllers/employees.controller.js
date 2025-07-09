@@ -1,6 +1,9 @@
 import ApiError from "../api-error.js";
+import * as jwt from 'jsonwebtoken';
 import EmployeesService from "../services/employees.service.js";
 import * as sharedController from "./controller.shared.js";
+import dotenv from "dotenv";
+dotenv.config();
 
 export async function insert(req, res, next) {
     sharedController.isValid(
@@ -77,16 +80,34 @@ export async function remove(req, res, next) {
     }
 }
 
-export async function vertifyEmployee(req, res, next) {
+export async function login(req, res, next) {
     sharedController.isValid(req.body, ['username', 'password'], 'user');
     try {
-        const result = await sharedController
+        const isValid = await sharedController
         .withTransaction(async (conn) => {
             const employeeService = new EmployeesService();
             return await employeeService
                 .vertifyEmployee(req.body.username, req.body.password, conn);
         });
-        return res.send(result);
+        if(isValid) {
+            const user = await sharedController
+            .withTransaction(async (conn) => {
+                const employeeService = new EmployeesService();
+                return (await employeeService.query(req.body, conn))[0];
+            });
+            const token = jwt.sign(
+                { id: user.id, level: user.level },
+                process.env.SECRET,
+                { expiresIn: '15m' });
+            const refreshToken = jwt.sign(
+                {id: user.id}, process.env.SECRET,
+                { expiresIn: '7d' });
+            return res.send({ token, refreshToken })
+        } else {
+            return next(
+                new ApiError(400, 'Sai thông tin đăng nhập')
+            );
+        }
     } catch (error) {
         return next(
             new ApiError(500, `An error occured while vertifying the employee: ${error}`)

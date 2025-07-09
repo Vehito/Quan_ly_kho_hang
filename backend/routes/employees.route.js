@@ -13,7 +13,4 @@ route.route("/:id")
     .patch(employees.changePassword)
     .delete(employees.remove);
 
-route.route("/vertify")
-    .post(employees.vertifyEmployee);
-
 export default route;
