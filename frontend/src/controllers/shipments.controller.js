@@ -18,8 +18,21 @@ class ShipmentsController extends Controller {
     }
 
     async queryAllShipmentItems(filter = {}) {
-        const shipmentItemModel = new ShipmentItemModel(this.isImport);
-        return await shipmentItemModel.queryAll(filter);
+        try {
+            const shipmentItemModel = new ShipmentItemModel(this.isImport);
+            return await shipmentItemModel.queryAll(filter);
+        } catch (error) {
+            throw new ErrorAlert(error.status, error.response.data.message);
+        }
+    }
+
+    async insert(data) {
+        try {
+            const shipmentsModel = new ShipmentsModel(this.isImport, 'create');
+            return await shipmentsModel.insert(data);
+        } catch (error) {
+            throw new ErrorAlert(error.status, error.response.data.message);
+        }
     }
 }
 

@@ -37,13 +37,17 @@ class Service {
         return result;
     }
 
-    getQueryArrClauses(filter) {
+    getQueryArrClauses(filter, tableName= '', keys = []) {
         const clauses = [];
         const values = [];
 
-        Object.entries(filter).forEach(([key, arr]) => {
+        if(tableName != '') tableName += '.';
+        const entries = keys.length > 0
+            ? keys.map((key) => [key, filter[key]])
+            : Object.entries(filter);
+        entries.forEach(([key, arr]) => {
             if(Array.isArray(arr) && arr.length > 0) {
-                clauses.push(`${key} IN (${arr.map(() => '?').join(', ')})`);
+                clauses.push(`${tableName + key} IN (${arr.map(() => '?').join(', ')})`);
                 values.push(...arr);
             }
         });

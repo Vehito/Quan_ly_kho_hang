@@ -3,8 +3,8 @@ import Model from "./model";
 import { ExportItem, ImportItem, ShipmentItem } from "./shipment_items.model";
 
 class ShipmentsModel extends Model {
-    constructor(isImport) {
-        super("/api/shipments");
+    constructor(isImport, extend = '') {
+        super(`/api/shipments/${extend}`);
         this.isImport = isImport;
     }
 
@@ -15,17 +15,27 @@ class ShipmentsModel extends Model {
 
     async queryAll(filter = {}) {
         filter.isImport = this.isImport;
-        return await super.queryAll(filter);
+        return await super.insert(filter);
     }
 
     async queryById(id, filter = {}) {
         filter.isImport = this.isImport;
-        return await super.queryById(id, filter);
+        const data = (await this.api.post(`/${id}`, filter)).data;
+        if(data.length > 1) {
+            return Array.isArray(data) 
+                ? data.map((item) => this.createIntance(item)) : [];
+        }
+        return this.createIntance(data[0]);
     }
 
     async insert(data) {
         data.isImport = this.isImport;
         return await super.insert(data);
+    }
+
+    async queryForReport(filter) {
+        filter.isImport = this.isImport;
+        return await super.insert(filter);
     }
 }
 
@@ -39,6 +49,7 @@ export class Shipment {
         this.created_by = data.created_by;
         this.employee_name = data.employee_name;
         this.description = data.description ?? null;
+        this.total = data.total;
         this.listItem = this.buildListItems(data.listItem);
     }
 

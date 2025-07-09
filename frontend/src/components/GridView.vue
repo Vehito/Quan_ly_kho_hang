@@ -14,7 +14,11 @@ const model = defineModel('activeIndex');
         v-if="listItems.length===0"
         class="text-center"
     >Không tồn tại thông tin nào</h5>
-    <div class="grid-view shadow d-flex justify-content-center align-content-between flex-wrap" v-else>
+    <div class="grid-view shadow d-flex justify-content-center align-content-between flex-wrap scrollspy-example" 
+        data-spy="scroll"
+        data-offset="0"
+        v-else
+    >
         <div
             v-for="(item, index) in listItems"
             :key="index"

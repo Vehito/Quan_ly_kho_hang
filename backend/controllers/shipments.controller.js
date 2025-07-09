@@ -93,30 +93,20 @@ export async function queryShipmentItem(req, res, next) {
 
 export async function query(req, res, next) {
     let result = [];
-    let { isImport, needItems, ...filter } = req.query;
-    isImport = getBoolFromString(isImport);
-    needItems = getBoolFromString(needItems);
+    let { isImport, needItems, ...filter } = req.body;
     try {
         result = await sharedController
             .withTransaction(async (conn) => {
                 const shipmentService = new ShipmentsService(isImport);
-                const shipmentItemService = getShipmentItemService(isImport);
                 let result = [];
                 const { id } = req.params;
+                const queryFunc = needItems
+                    ? shipmentService.queryForReport.bind(shipmentService)
+                    : shipmentService.query.bind(shipmentService)
                 if(id) {
-                    result = await shipmentService.query({id: id}, conn);
-                    if(needItems) {
-                        result[0].listItem =
-                            await shipmentItemService.query({shipment_id: id}, conn);
-                    }
+                    result = await queryFunc({id: id}, conn);
                 } else {
-                    result = await shipmentService.query(filter, conn);
-                    if(needItems) {
-                        for (const shipment of result) {
-                            shipment.listItem = 
-                                await shipmentItemService.query({shipment_id: shipment.id}, conn);
-                        }
-                    }
+                    result = await queryFunc(filter, conn);
                 }
                 return result;
             });
@@ -126,6 +116,24 @@ export async function query(req, res, next) {
             new ApiError(500, `An error occured while querying the shipment: ${error}`)
         );
     }
+}
+
+export async function queryForReport(req, res, next) {
+    const { isImport, ...filter } = req.body;
+    let result = [];
+    try {
+        result = await sharedController
+        .withTransaction(async (conn) =>{
+            const shipmentService = new ShipmentsService(isImport);
+            return await shipmentService.queryForReport(filter, conn);
+        });
+        return res.send(result);
+    } catch (error) {
+        return next(
+            new ApiError(500, `An error occured while querying the shipment: ${error}`)
+        )
+    }
+
 }
 
 export async function remove(req, res, next) {

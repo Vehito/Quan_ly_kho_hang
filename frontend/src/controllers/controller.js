@@ -2,17 +2,15 @@ import Model from "@/models/model";
 import ErrorAlert from "@/utils/error_alert.util";
 
 class Controller {
-    #model;
-
     constructor(
         model = new Model(),
     ) {
-        this.#model = model
+        this.model = model
     }
 
     async insert(data) {
         try {
-            return await this.#model.insert(data);
+            return await this.model.insert(data);
         } catch (error) {
             throw new ErrorAlert(error.status, error.response.data.message);
         }
@@ -20,7 +18,7 @@ class Controller {
 
     async queryById(id, filter = {}) {
         try {
-            return await this.#model.queryById(Number(id), filter);
+            return await this.model.queryById(Number(id), filter);
         } catch (error) {
             throw new ErrorAlert(error.status, error.response.data.message);
         }
@@ -28,7 +26,7 @@ class Controller {
 
     async queryAll(filter = {}) {
         try {
-            return await this.#model.queryAll(filter);
+            return await this.model.queryAll(filter);
         } catch (error) {
             throw new ErrorAlert(error.status, error.response.data.message);
         }
@@ -36,7 +34,7 @@ class Controller {
 
     async update(id, data) {
         try {
-            return await this.#model.update(id, data);
+            return await this.model.update(id, data);
         } catch (error) {
             throw new ErrorAlert(error.status, error.response.data.message);
         }
@@ -44,7 +42,7 @@ class Controller {
 
     async delete(id) {
         try {
-            return await this.#model.delete(id);
+            return await this.model.delete(id);
         } catch (error) {
             throw new ErrorAlert(error.status, error.response.data.message);
         }

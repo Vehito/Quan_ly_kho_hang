@@ -8,28 +8,30 @@ const props = defineProps({
     type: {
         default: "text",
         type: String,
-        validator: (type) => ['text', 'date', 'number', 'tel', 'password', 'select', 'textarea', 'hidden'].includes(type)
+        validator: (type) => ['text', 'date', 'number', 'tel', 'password', 'select', 'textarea', 'checkbox', 'hidden'].includes(type)
     },
     modelValue: {
-        required: true,
+        required: false,
         default: "",
         type: [String, Number, Date, Boolean, null]
     },
     placeholder: { default: 'Điền thông tin tại đây', type: String },
     name: { required: true, type: String },
     icon: { type: String, required: false },
+    disabled: { type: Boolean, default: false },
 });
 
 const emits = defineEmits(["update:modelValue"]);
 </script>
 
 <template>
-    <label class="form-label" :for="name">{{ label }}</label>
+    <label class="form-label" :for="name"><strong>{{ label }}</strong></label>
     <LoadingField :isLoading="isLoading">
         <template #custom-field>
             <div v-if="type==='select'">
                 <Field
                     class="form-control"
+                    :disabled="disabled"
                     as="select"
                     :value="modelValue ?? ''"
                     :name="name"
@@ -59,6 +61,7 @@ const emits = defineEmits(["update:modelValue"]);
                 <Field
                     class="form-control"
                     as="textarea"
+                    :disabled="disabled"
                     :name="name"
                     :id="name"
                     :placeholder="placeholder"
@@ -68,11 +71,32 @@ const emits = defineEmits(["update:modelValue"]);
                 />
             </div>
 
+            <div v-else-if="type === 'checkbox'">
+                <div class="row">
+                    <div v-for="(option, index) in options" class="col" :key="index">
+                        <Field
+                            type="checkbox"
+                            :name="name"
+                            :value="option.id"
+                            :disabled="disabled"
+                            v-slot="{ field }"
+                        >
+                            <input 
+                                @input="e => emits('update:modelValue', { value: e.target.checked ? option.id : undefined, index: index })"
+                                type="checkbox" v-bind="field" :checked="option.checked ?? false" />
+                            {{ option.name }}
+                        </Field>
+                        <hr>
+                    </div>
+                </div>
+            </div>
+
             <div v-else>
                 <Field
                     class="form-control"
                     :type="type"
                     :value="modelValue"
+                    :disabled="disabled"
                     @update:modelValue="value => emits('update:modelValue', value)"
                     :placeholder="placeholder"
                     :name="name"

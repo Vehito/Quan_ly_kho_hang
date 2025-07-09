@@ -100,6 +100,11 @@ const routes = [
         component: views.ExportShipmentDetailView,
         props: true
     },
+    {
+        path: "/report",
+        name: "report",
+        component: views.ReportView
+    },
 
     {
         path: "/:pathMatch(.*)*",

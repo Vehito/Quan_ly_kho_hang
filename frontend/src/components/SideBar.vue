@@ -6,6 +6,7 @@ const menuItems = [
 	{ label: "Nhân viên", icon: "fa-solid fa-users", name: "employees" },
 	{ label: "Khách hàng", icon: "fas fa-shopping-cart", name: "customers" },
 	{ label: "Nhà cung cấp", icon: "fas fa-industry", name: "suppliers" },
+	{ label: "Thống kê", icon: "fa-solid fa-chart-simple", name: "report" },
 ]
 </script>
 
