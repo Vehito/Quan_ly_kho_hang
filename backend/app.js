@@ -3,10 +3,15 @@ import cors from "cors";
 import * as routers from "./routes/routers.js"
 import ApiError from "./api-error.js";
 import * as auth from "./utils/auth.util.js";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
-app.use(cors());
+app.use(cookieParser());
+
+app.use(cors({
+    credentials: true,
+}));
 app.use(express.json());
 
 app.get("/", (req, res) => {

@@ -5,6 +5,7 @@ class Model {
     constructor(baseURL) {
         this.api = axios.create({
             baseURL,
+            withCredentials: true,
             headers: {
                 "Content-Type": "application/json",
                 Accept: "application/json"

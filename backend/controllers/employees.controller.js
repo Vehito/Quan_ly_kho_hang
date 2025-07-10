@@ -1,5 +1,5 @@
 import ApiError from "../api-error.js";
-import * as jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 import EmployeesService from "../services/employees.service.js";
 import * as sharedController from "./controller.shared.js";
 import dotenv from "dotenv";
@@ -151,7 +151,6 @@ export function refreshToken(req, res, next) {
         res.cookie('token', newAccessToken, {
             httpOnly: true,
             sameSite: 'Strict',
-            secure: process.env.NODE_ENV === 'production',
             maxAge: 15 * 60 * 1000 // 15 phút
         });
 

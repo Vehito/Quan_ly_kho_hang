@@ -1,7 +1,13 @@
 import { createWebHistory, createRouter } from "vue-router";
 import * as views from '../views/views.js'
+import { useUserStore } from "@/utils/pinia.util.js";
 
 const routes = [
+    {
+        path: "/login",
+        name: "login",
+        component: views.LoginView
+    },
     {
         path: "/",
         name: "products",
@@ -116,6 +122,19 @@ const routes = [
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes
+});
+
+router.beforeEach((to, from, next) => {
+    const publicPages = ['/login'];
+    const authRequired = !publicPages.includes(to.path);
+    
+    const userStore = useUserStore();
+
+    if(authRequired && !userStore.isLoggedIn) {
+        return next({name: 'login'});
+    }
+
+    next();
 });
 
 export default router;

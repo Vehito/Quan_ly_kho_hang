@@ -30,7 +30,7 @@ const emits = defineEmits(["update:modelValue"]);
         <template #custom-field>
             <div v-if="type==='select'">
                 <Field
-                    class="form-control"
+                    class="form-control shadow"
                     :disabled="disabled"
                     as="select"
                     :value="modelValue ?? ''"
@@ -59,7 +59,7 @@ const emits = defineEmits(["update:modelValue"]);
 
             <div v-else-if="type==='textarea'">
                 <Field
-                    class="form-control"
+                    class="form-control shadow"
                     as="textarea"
                     :disabled="disabled"
                     :name="name"
@@ -75,6 +75,7 @@ const emits = defineEmits(["update:modelValue"]);
                 <div class="row">
                     <div v-for="(option, index) in options" class="col" :key="index">
                         <Field
+                            class="form-control shadow"
                             type="checkbox"
                             :name="name"
                             :value="option.id"
@@ -93,7 +94,7 @@ const emits = defineEmits(["update:modelValue"]);
 
             <div v-else>
                 <Field
-                    class="form-control"
+                    class="form-control shadow"
                     :type="type"
                     :value="modelValue"
                     :disabled="disabled"

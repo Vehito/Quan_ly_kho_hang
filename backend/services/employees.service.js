@@ -59,8 +59,10 @@ class EmployeesService extends Service {
 
     async vertifyEmployee(username, enteredPassword, conn) {
         const query = `SELECT password FROM ${this.tableName} WHERE username = ?`;
-        const [result] = await conn.query(query, username);
-        return await bcrypt.compare(enteredPassword, result[0].password);
+        const result = (await conn.query(query, username))[0];
+        if(!result[0].password) return false;
+        return enteredPassword===result[0].password;
+        // return await bcrypt.compare(enteredPassword, result[0].password);
     }
 
     async changePassword(id, enteredPassword, conn) {
