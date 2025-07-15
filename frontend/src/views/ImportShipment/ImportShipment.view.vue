@@ -1,7 +1,12 @@
 <template>
     <div class="page row">
-        <div class="col">
-            <InputSearch v-model="searchText" v-on:submit="searchSubmit"/>
+        <div class="col-12">
+            <FilterMenu
+                :product-fields="true"
+                :time-fields="true"
+                :supplier-fields="true"
+                @update:values="updateData"
+            />
         </div>
 
         <div class="col-12 mt-3">
@@ -33,7 +38,7 @@
 
 <script setup>
 import CustomTable from '@/components/CustomTable.vue';
-import InputSearch from '@/components/InputSearch.vue';
+import FilterMenu from '@/components/FilterMenu.vue';
 import ShipmentsController from '@/controllers/shipments.controller';
 const shipmentsController = new ShipmentsController(true);
 import router from '@/router';
@@ -48,11 +53,23 @@ const tableHeaders = [
 ]
 
 const isLoading = ref(true);
-const searchText = ref('');
 const shipments = ref([]);
 
-function searchSubmit(text) {
-    console.log(text);
+async function updateData(values) {
+    try {
+        isLoading.value = true;
+        const conditions = {};
+        Object.keys(values).forEach((key) => {
+            if(values[key]) {
+                conditions[key] = values[key];
+            }
+        })
+        shipments.value = await shipmentsController.queryAll(conditions, true);
+    } catch (error) {
+        error?.showAlert();
+    } finally {
+        isLoading.value = false;
+    }
 }
 
 async function getShipments() {
@@ -62,23 +79,6 @@ async function getShipments() {
         error.showAlert();
     } finally {
         isLoading.value = false;
-    }
-}
-
-async function handleAction(selectedAction, shipment) {
-    switch(selectedAction) {
-        case"Thay đổi đơn hàng":
-            router.push({ name: 'import_shipment.edit', params: {id: shipment.id}})
-        break;
-        case "Xóa đơn hàng":
-            const reply = window.confirm(`Bạn có muốn xóa đơn hàng ${shipment.name}?`);
-            if(!reply) {
-                return false;
-            } else {
-                await shipmentsController.delete(shipment.id);
-                await getShipments();
-            }
-        break;
     }
 }
 

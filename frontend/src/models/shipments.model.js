@@ -15,7 +15,10 @@ class ShipmentsModel extends Model {
 
     async queryAll(filter = {}) {
         filter.isImport = this.isImport;
-        return await super.insert(filter);
+        const shipments = await super.insert(filter);
+        return shipments.map((shipment) => {
+            return this.createIntance(shipment);
+        })
     }
 
     async queryById(id, filter = {}) {

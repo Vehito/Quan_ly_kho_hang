@@ -317,30 +317,6 @@ function getChartObject() {
     chartObject.value.datasets = finalDataSets;
     chartObject.value.labels = finalLabels;
 }
-function getDataSets() {
-    if(isImport.value===null) { 
-        return [
-            new DataSets({
-                label: 'Đơn nhập',
-                data: importShipments.value.map((shipment) => shipment.total),
-                backgroundColor: 'blue'
-            }),
-            new DataSets({
-                label: 'Đơn xuất',
-                data: exportShipments.value.map((shipment) => shipment.total),
-                backgroundColor: 'green'
-            })
-        ];
-    } else {
-        return new DataSets({
-            label: isImport ? 'Đơn nhập': 'Đơn xuất',
-            data: (isImport.value 
-                ? importShipments.value : exportShipments.value)
-                .map((shipment) => shipment.total),
-            backgroundColor: isImport ? 'blue' : 'green'
-        })
-    }
-}
 function handlePeriodField(value) {
     if(value !== 'custom') {
         const { start, end, range } = date_helperUtil.getPeriod(value);

@@ -24,7 +24,7 @@ export async function query(req, res, next) {
         result = await sharedController
             .withTransaction(async (conn) => {
                 const productService = new ProductService();
-                if(req.params) {
+                if(req.params?.id) {
                     return await productService.query(req.params, conn);
                 } else {
                     return await productService.query(req.query, conn);

@@ -2,7 +2,7 @@ import Service from "./service.js";
 
 class CustomersService extends Service {
     constructor() {
-        super('customers');
+        super('customers', ['id', 'name', 'company']);
     }
 
     #extractCustomerData(payload) {

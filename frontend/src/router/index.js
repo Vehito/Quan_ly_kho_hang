@@ -13,18 +13,21 @@ const routes = [
         name: "products",
         component: views.ProductView
     },
-
     {
         path: "/products/:id",
         name: "product.edit",
         component: views.ProductEditView,
         props: true
     },
-
     {
         path: "/products/create",
         name: "product.create",
         component: views.ProductEditView,
+    },
+    {
+        path: "/products/expire",
+        name: "product.expire",
+        component: views.ExpireProductView,
     },
     {
         path: "/employees",

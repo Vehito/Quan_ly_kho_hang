@@ -1,25 +1,27 @@
 <template>
     <div class="page row">
-        <div class="col">
+        <div class="col -12">
             <InputSearch v-model="searchText" v-on:submit="searchSubmit"/>
         </div>
 
         <div class="col-12 mt-3">
-            <CustomTable 
-                :table-headers="tableHeaders"
-                :table-rows="products"
-            >
-                <template #custom="{ row }">
-                    <DropdownBtn
-                        :dropdown-items="['Thay đổi sản phẩm', 'Xóa sản phẩm']"
-                        @select:value="(selectedAction) => handleAction(selectedAction, row)"
-                    >
-                        <template #label>
-                            <i class="fa-solid fa-bars"></i>
-                        </template>
-                    </DropdownBtn>
-                </template>
-            </CustomTable>
+            <LoadingScreen :is-loading="isLoading">
+                <CustomTable 
+                    :table-headers="tableHeaders"
+                    :table-rows="products"
+                >
+                    <template #custom="{ row }">
+                        <DropdownBtn
+                            :dropdown-items="['Thay đổi sản phẩm', 'Xóa sản phẩm']"
+                            @select:value="(selectedAction) => handleAction(selectedAction, row)"
+                        >
+                            <template #label>
+                                <i class="fa-solid fa-bars"></i>
+                            </template>
+                        </DropdownBtn>
+                    </template>
+                </CustomTable>
+            </LoadingScreen>
         </div>
 
         <div class="d-flex">
@@ -36,9 +38,12 @@
 import CustomTable from '@/components/CustomTable.vue';
 import InputSearch from '@/components/InputSearch.vue';
 import { DropdownBtn } from '@/utils/buttons.util';
+import FilterMenu from '@/components/FilterMenu.vue';
+
 import productsController from '@/controllers/products.controller';
 import router from '@/router';
 import { onMounted, ref } from 'vue';
+import LoadingScreen from '@/components/loading/LoadingScreen.vue';
 
 const tableHeaders = [
     { name: "Mã sản phẩm", key: "id"},
@@ -48,17 +53,27 @@ const tableHeaders = [
 ]
 
 const searchText = ref('');
-let products = ref([]);
+const products = ref([]);
+const isLoading = ref(true);
 
-function searchSubmit(text) {
-    console.log(text);
+async function searchSubmit(text) {
+    try {
+        isLoading.value = true;
+        products.value = (await productsController.queryAll({name: text}));
+    } catch (error) {
+        error?.showAlert();
+    } finally {
+        isLoading.value = false;
+    }
 }
 
 async function getProducts() {
     try {
         products.value = (await productsController.queryAll());
     } catch (error) {
-        error.showAlert();
+        error?.showAlert();
+    } finally {
+        isLoading.value = false;
     }
 }
 

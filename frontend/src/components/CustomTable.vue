@@ -24,7 +24,10 @@
 
 <template>
     <div class="table-container shadow">
-        <table class="table table-sm table-bordered table-hover">
+        <div v-if="tableRows.length===0" class="text-center">
+            <h5>Không có thông tin</h5>
+        </div>
+        <table v-else class="table table-sm table-bordered table-hover">
             <thead class="thead-light">
                 <th
                     scope="col"

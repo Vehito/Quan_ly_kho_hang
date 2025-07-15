@@ -42,6 +42,7 @@ class ShipmentsService extends Service {
             FROM ${this.tableName}`;
         query += ` JOIN ${this.object}s ON ${this.tableName}.${this.object}_id = ${this.object}s.id`;
         query += ` JOIN employees ON ${this.tableName}.created_by = employees.id`;
+        // query += ` JOIN ${this.items} ON ${this.tableName}.id = ${this.items}.shipment_id`
         if(clauses) {
             query += ` WHERE ${clauses}`;
         }
@@ -52,7 +53,8 @@ class ShipmentsService extends Service {
     async queryForReport(filter, conn) {
         const { clauses, values } = this.#getConditionsForReport(filter);
         const itemTable = this.isImport ? 'import_items' : 'export_items';
-        const json_object = this.isImport 
+        const available = filter.available;
+        const json_object = this.isImport
             ? `JSON_OBJECT(
                         'shipment_id', ${itemTable}.shipment_id,
                         'product_id', ${itemTable}.product_id,
@@ -90,9 +92,9 @@ class ShipmentsService extends Service {
             query += `\nJOIN import_items ON export_items.product_id = import_items.product_id AND export_items.import_shipment_id = import_items.shipment_id`
         }
         if(clauses) {
-            query += ` WHERE ${clauses}`;
+            query += ` WHERE ${clauses} ${available ? ' AND import_items.stoke > 0' : ''}`;
         }
-        query += ` GROUP BY ${this.tableName}.id`
+        query += `\nGROUP BY ${this.tableName}.id`
         const [rows] = await conn.query(query, values);
         rows
         return rows;
@@ -110,6 +112,14 @@ class ShipmentsService extends Service {
         if(filter.start && filter.end) {
             clauses += ` ${clauses ? 'AND' : ''} ${this.tableName}.created_at BETWEEN ? AND ?`;
             values.push(filter.start, filter.end);
+        }
+        if(filter.exp) {
+            clauses += ` ${clauses ? 'AND' : ''} import_items.exp BETWEEN ? AND ?`;
+            values.push(filter.exp.start, filter.exp.end);
+        }
+        if(filter.mfg) {
+            clauses += ` ${clauses ? 'AND' : ''} import_items.mfg BETWEEN ? AND ?`;
+            values.push(filter.mfg.start, filter.mfg.end);
         }
         return {
             clauses: clauses,

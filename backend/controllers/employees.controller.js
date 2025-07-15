@@ -99,14 +99,14 @@ export async function login(req, res, next) {
                 { id: user.id, name: user.name, 
                 position_name: user.position_name, level: user.level },
                 process.env.SECRET,
-                { expiresIn: '15m' });
+                { expiresIn: '60m' });
             const refreshToken = jwt.sign(
                 {id: user.id}, process.env.SECRET,
                 { expiresIn: '7d' });
             res.cookie('token', token, {
                 httpOnly: true,
                 sameSite: 'Strict',
-                maxAge: 15 * 60 * 1000 // 15 phút
+                maxAge: 60 * 60 * 1000 // 60 phút
             });
 
             res.cookie('refreshToken', refreshToken, {

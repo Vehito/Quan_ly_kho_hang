@@ -1,10 +1,11 @@
 class Service {
-    constructor(tableName) {
+    constructor(tableName, likeClauses = []) {
         this.tableName = tableName;
+        this.likeClauses = likeClauses;
     };
 
     async query(filter, conn) {
-        const {clauses, values} = this.getQueryClauses(filter);
+        const {clauses, values} = this.getQueryClauses(filter, this.tableName, this.likeClauses);
         let query = `SELECT * FROM ${this.tableName}`;
         if(clauses) {
             query += ` WHERE ${clauses}`;
@@ -57,14 +58,19 @@ class Service {
         };
     }
 
-    getQueryClauses(filter, tableName = '') {
+    getQueryClauses(filter, tableName = '', likeClauses = []) {
         const clauses = [];
         const values = [];
 
         if(tableName != '') tableName += '.';
         Object.entries(filter).forEach(([key, val]) => {
-            clauses.push(`${tableName}${key} = ?`);
-            values.push(val);
+            if(likeClauses.includes(key)) {
+                clauses.push(`${tableName}${key} LIKE ?`);
+                values.push(`%${val}%`);
+            } else {
+                clauses.push(`${tableName}${key} = ?`);
+                values.push(val);
+            }
         });
         return {
             clauses: clauses.join(' AND '),

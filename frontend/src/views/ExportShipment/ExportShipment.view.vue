@@ -1,7 +1,12 @@
 <template>
     <div class="page row">
-        <div class="col">
-            <InputSearch v-model="searchText" v-on:submit="searchSubmit"/>
+        <div class="col-12">
+            <FilterMenu
+                :product-fields="true"
+                :time-fields="true"
+                :customer-fields="true"
+                @update:values="updateData"
+            />
         </div>
 
         <div class="col-12 mt-3">
@@ -33,7 +38,7 @@
 
 <script setup>
 import CustomTable from '@/components/CustomTable.vue';
-import InputSearch from '@/components/InputSearch.vue';
+import FilterMenu from '@/components/FilterMenu.vue';
 import ShipmentsController from '@/controllers/shipments.controller';
 const shipmentsController = new ShipmentsController(false);
 import router from '@/router';
@@ -48,11 +53,23 @@ const tableHeaders = [
 ]
 
 const isLoading = ref(true);
-const searchText = ref('');
 const shipments = ref([]);
 
-function searchSubmit(text) {
-    console.log(text);
+async function updateData(values) {
+    try {
+        isLoading.value = true;
+        const conditions = {};
+        Object.keys(values).forEach((key) => {
+            if(values[key]) {
+                conditions[key] = values[key];
+            }
+        })
+        shipments.value = await shipmentsController.queryAll(conditions, true);
+    } catch (error) {
+        error?.showAlert();
+    } finally {
+        isLoading.value = false;
+    }
 }
 
 async function getShipments() {

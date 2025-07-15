@@ -1,12 +1,17 @@
 <script setup>
+const emits = defineEmits(['click:index']);
+
+function onClick(index) {
+	emits('click:index', index);
+}
 const menuItems = [
-	{ label: "Sản phẩm", icon: "fas fa-box", name: "products" },
-	{ label: "Đơn nhập", icon: "fas fa-warehouse", name: "import_shipments" },
-	{ label: "Đơn xuất", icon: "fa-solid fa-truck", name: "export_shipments" },
-	{ label: "Nhân viên", icon: "fa-solid fa-users", name: "employees" },
-	{ label: "Khách hàng", icon: "fas fa-shopping-cart", name: "customers" },
-	{ label: "Nhà cung cấp", icon: "fas fa-industry", name: "suppliers" },
-	{ label: "Thống kê", icon: "fa-solid fa-chart-simple", name: "report" },
+    { label: "Sản phẩm", icon: "fas fa-box", name: "products" },
+    { label: "Đơn nhập", icon: "fas fa-warehouse", name: "import_shipments" },
+    { label: "Đơn xuất", icon: "fa-solid fa-truck", name: "export_shipments" },
+    { label: "Nhân viên", icon: "fa-solid fa-users", name: "employees" },
+    { label: "Khách hàng", icon: "fas fa-shopping-cart", name: "customers" },
+    { label: "Nhà cung cấp", icon: "fas fa-industry", name: "suppliers" },
+    { label: "Thống kê", icon: "fa-solid fa-chart-simple", name: "report" },
 ]
 </script>
 
@@ -30,11 +35,12 @@ const menuItems = [
 			<div class="side-menu-container">
 				<ul class="nav navbar-nav">
 					<RouterLink
-						v-for="item in menuItems"
+						v-for="(item, index) in menuItems"
 						:key="item.name"
 						:to="{ name: item.name }"
 						v-slot="{ isActive }"
-						>
+						@click="onClick(index)"
+					>
 						<li :class="{ active: isActive }">
 							<a class="nav-link">
 							<strong><i :class="item.icon"></i> {{ item.label }}</strong>
@@ -64,7 +70,7 @@ body {
 
 /*main side bar*/
 .msb {
-  width: 220px;
+  width: 200px;
   background-color: #F5F7F9;
   position: fixed;
   left: 0;
