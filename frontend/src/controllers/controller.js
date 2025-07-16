@@ -32,6 +32,14 @@ class Controller {
         }
     }
 
+    async queryCount(filter = {}) {
+        try {
+            return await this.model.queryCount(filter);
+        } catch (error) {
+            throw new ErrorAlert(error.status, error.response.data.message);
+        }
+    }
+
     async update(id, data) {
         try {
             return await this.model.update(id, data);

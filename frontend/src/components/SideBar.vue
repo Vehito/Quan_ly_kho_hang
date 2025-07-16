@@ -19,37 +19,37 @@ const menuItems = [
 
 <!--msb: main sidebar-->
 <div class="msb" id="msb">
-		<nav class="navbar navbar-default" role="navigation">
-			<div class="navbar-header">
-				<div class="brand-wrapper">
-					<!-- Brand -->
-					<div class="brand-name-wrapper">
-						<a class="navbar-brand" href="/">
-							Kho hàng thực phẩm
-						</a>
-					</div>
+	<nav class="navbar navbar-default" role="navigation">
+		<div class="navbar-header">
+			<div class="brand-wrapper">
+				<!-- Brand -->
+				<div class="brand-name-wrapper">
+					<a class="navbar-brand" href="/">
+						Kho hàng thực phẩm
+					</a>
 				</div>
 			</div>
+		</div>
 
-			<!-- Main Menu -->
-			<div class="side-menu-container">
-				<ul class="nav navbar-nav">
-					<RouterLink
-						v-for="(item, index) in menuItems"
-						:key="item.name"
-						:to="{ name: item.name }"
-						v-slot="{ isActive }"
-						@click="onClick(index)"
-					>
-						<li :class="{ active: isActive }">
-							<a class="nav-link">
-							<strong><i :class="item.icon"></i> {{ item.label }}</strong>
-							</a>
-						</li>
-						</RouterLink>
-				</ul>
-			</div><!-- /.navbar-collapse -->
-		</nav>  
+		<!-- Main Menu -->
+		<div class="side-menu-container">
+			<ul class="nav navbar-nav">
+				<RouterLink
+					v-for="(item, index) in menuItems"
+					:key="item.name"
+					:to="{ name: item.name }"
+					v-slot="{ isActive }"
+					@click="onClick(index)"
+				>
+					<li :class="{ active: isActive }">
+						<a class="nav-link">
+						<strong><i :class="item.icon"></i> {{ item.label }}</strong>
+						</a>
+					</li>
+				</RouterLink>
+			</ul>
+		</div><!-- /.navbar-collapse -->
+	</nav>  
 </div>
 </template>
 
@@ -70,7 +70,7 @@ body {
 
 /*main side bar*/
 .msb {
-  width: 200px;
+  width: 220px;
   background-color: #F5F7F9;
   position: fixed;
   left: 0;

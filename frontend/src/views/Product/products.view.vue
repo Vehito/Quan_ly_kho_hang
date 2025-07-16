@@ -22,6 +22,7 @@
                     </template>
                 </CustomTable>
             </LoadingScreen>
+            <Pagination :is-loading="pageLoading" :item-quantity="numberOfItems" @on-click:index="changePage" />
         </div>
 
         <div class="d-flex">
@@ -38,7 +39,7 @@
 import CustomTable from '@/components/CustomTable.vue';
 import InputSearch from '@/components/InputSearch.vue';
 import { DropdownBtn } from '@/utils/buttons.util';
-import FilterMenu from '@/components/FilterMenu.vue';
+import Pagination from '@/components/Pagination.vue';
 
 import productsController from '@/controllers/products.controller';
 import router from '@/router';
@@ -55,25 +56,39 @@ const tableHeaders = [
 const searchText = ref('');
 const products = ref([]);
 const isLoading = ref(true);
+const numberOfItems = ref(0);
+const pageLoading = ref(true);
+
+const conditions = {name: '', limit: 10, offset: 0};
 
 async function searchSubmit(text) {
+    conditions.offset = 0;
+    conditions.name = text;
+    await getCount();
+    await getProducts();
+}
+async function changePage(index) {
+    conditions.offset = 10 * (index-1);
+    await getProducts();
+}
+async function getProducts() {
     try {
         isLoading.value = true;
-        products.value = (await productsController.queryAll({name: text}));
+        products.value = (await productsController.queryAll(conditions));
     } catch (error) {
         error?.showAlert();
     } finally {
         isLoading.value = false;
     }
 }
-
-async function getProducts() {
+async function getCount() {
     try {
-        products.value = (await productsController.queryAll());
+        pageLoading.value = false;
+        numberOfItems.value = (await productsController.queryCount({name: conditions.name}));
     } catch (error) {
         error?.showAlert();
     } finally {
-        isLoading.value = false;
+        pageLoading.value = false;
     }
 }
 
@@ -96,6 +111,7 @@ async function handleAction(selectedAction, row) {
 
 onMounted(async () => {
     await getProducts();
+    await getCount();
 })
 
 </script>

@@ -26,6 +26,8 @@ export async function query(req, res, next) {
                 const productService = new ProductService();
                 if(req.params?.id) {
                     return await productService.query(req.params, conn);
+                } else if(req.query?.itemLength) {
+                    return await productService.queryCount(req.query, conn);
                 } else {
                     return await productService.query(req.query, conn);
                 }

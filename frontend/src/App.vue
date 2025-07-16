@@ -11,28 +11,23 @@ function updateSidebarIndex(index) {
 </script>
 
 <template>
-	<div id="app" class="container">
-		<div class="row">
-			<div class="col">
-				<SideBar @click:index="index => updateSidebarIndex(index)"/>
-			</div>
-			<div class="col-10">
-				<AppHeader :sidebar-index="sidebarIndex"/>
-				<div class="mt-3">
-					<RouterView />
-				</div>
-			</div>
+	<div id="app container">
+		<SideBar @click:index="index => updateSidebarIndex(index)"/>
+		<AppHeader :sidebar-index="sidebarIndex"/>
+		<div class="page">
+			<RouterView />
 		</div>
 	</div>
 </template>
 
 <style scoped>
-/* .page {
+.page {
 	margin: auto;
-  	margin-left: 150px;
+  	margin-left: 110px;
 	position: relative;
   	min-height: 100%;
-} */
+	padding: 10px;
+}
 
 .fields {
     border: .5px solid rgb(128, 128, 128, .5);

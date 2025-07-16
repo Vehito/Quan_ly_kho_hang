@@ -34,7 +34,7 @@ const menuItems = computed(() => {
 
 <style scoped>
 nav {
-    /* margin-left: 220px; */
+    margin-left: 200px;
     height: 80px;
 }
 </style>

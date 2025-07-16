@@ -32,6 +32,11 @@ class Model {
             ? data.map((item) => this.createIntance(item)) : [];
     }
 
+    async queryCount(filter = {}, extend = '') {
+        const data = (await this.api.get(`/${extend}`, {params: {itemLength: true, ...filter}})).data;
+        return data;
+    }
+
     async insert(data, extend = '') {
         return (await this.api.post(`/${extend}`, data)).data;
     }

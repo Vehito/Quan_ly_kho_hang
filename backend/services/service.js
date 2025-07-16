@@ -5,13 +5,28 @@ class Service {
     };
 
     async query(filter, conn) {
-        const {clauses, values} = this.getQueryClauses(filter, this.tableName, this.likeClauses);
+        const { limit, offset, ...conditions } = filter;
+        const {clauses, values} = this.getQueryClauses(conditions, this.tableName, this.likeClauses);
         let query = `SELECT * FROM ${this.tableName}`;
         if(clauses) {
             query += ` WHERE ${clauses}`;
         }
+        if(limit > 0) {
+            query += `\nLIMIT ${limit} ${offset>0 ? ('OFFSET ' + offset) : ''}`
+        }
         const [rows] = await conn.query(query, values);
         return rows;
+    }
+
+    async queryCount(filter, conn) {
+        const { itemLength, ...conditions } = filter;
+        const {clauses, values} = this.getQueryClauses(conditions, this.tableName, this.likeClauses);
+        let query = `SELECT COUNT(*) AS length FROM ${this.tableName}`;
+        if(clauses) {
+            query += ` WHERE ${clauses}`;
+        }
+        const [rows] = await conn.query(query, values);
+        return rows[0].length;
     }
 
     async queryArr(filter = {}, conn) {
