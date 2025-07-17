@@ -34,6 +34,7 @@ class Controller {
 
     async queryCount(filter = {}) {
         try {
+            filter.itemLength = true;
             return await this.model.queryCount(filter);
         } catch (error) {
             throw new ErrorAlert(error.status, error.response.data.message);

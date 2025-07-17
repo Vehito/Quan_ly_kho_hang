@@ -50,10 +50,31 @@ class ShipmentsService extends Service {
         return rows;
     }
 
-    async queryForReport(filter, conn) {
+    async queryCount(filter, conn) {
         const { clauses, values } = this.#getConditionsForReport(filter);
         const itemTable = this.isImport ? 'import_items' : 'export_items';
         const available = filter.available;
+        let query = `SELECT COUNT(*) AS length
+            FROM ${this.tableName}
+            JOIN ${itemTable} ON ${this.tableName}.id = ${itemTable}.shipment_id
+            JOIN ${this.object}s ON ${this.tableName}.${this.object}_id = ${this.object}s.id
+            JOIN products ON ${itemTable}.product_id = products.id
+            JOIN employees ON ${this.tableName}.created_by = employees.id`;
+        if(!this.isImport) {
+            query += `\nJOIN import_items ON export_items.product_id = import_items.product_id AND export_items.import_shipment_id = import_items.shipment_id`
+        }
+        if(clauses) {
+            query += ` WHERE ${clauses} ${available ? ' AND import_items.stoke > 0' : ''}`;
+        }
+        // query += `\nGROUP BY ${this.tableName}.id`
+        const [rows] = await conn.query(query, values);
+        return rows[0].length;
+    }
+
+    async queryForReport(filter, conn) {
+        const { available, limit, offset, ...conditions } = filter;
+        const { clauses, values } = this.#getConditionsForReport(conditions);
+        const itemTable = this.isImport ? 'import_items' : 'export_items';
         const json_object = this.isImport
             ? `JSON_OBJECT(
                         'shipment_id', ${itemTable}.shipment_id,
@@ -95,8 +116,10 @@ class ShipmentsService extends Service {
             query += ` WHERE ${clauses} ${available ? ' AND import_items.stoke > 0' : ''}`;
         }
         query += `\nGROUP BY ${this.tableName}.id`
+        if(limit>0) {
+            query += `\nLIMIT ${limit} ${offset>0 ? ('OFFSET ' + offset) : ''}`
+        }
         const [rows] = await conn.query(query, values);
-        rows
         return rows;
     }
 

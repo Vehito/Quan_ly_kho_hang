@@ -24,9 +24,12 @@ export async function query(req, res, next) {
         result = await sharedController
             .withTransaction(async (conn) => {
                 const customersService = new CustomersService();
-                if(req.params) {
+                if(req.params?.id) {
                     return await customersService.query(req.params, conn);
-                } else {
+                } else if(req.query?.itemLength) {
+                    return await customersService.queryCount(req.query, conn);
+                }
+                else {
                     return await customersService.query(req.query, conn);
                 }
             });

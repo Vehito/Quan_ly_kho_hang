@@ -24,6 +24,7 @@
                     </template>
                 </CustomTable>
             </LoadingScreen>
+            <Pagination :is-loading="pageLoading" :item-quantity="numberOfItems" @on-click:index="changePage" />
         </div>
 
         <div class="d-flex">
@@ -39,31 +40,37 @@
 <script setup>
 import CustomTable from '@/components/CustomTable.vue';
 import FilterMenu from '@/components/FilterMenu.vue';
-import ShipmentsController from '@/controllers/shipments.controller';
-const shipmentsController = new ShipmentsController(false);
 import router from '@/router';
 import LoadingScreen from '@/components/loading/LoadingScreen.vue';
+import Pagination from '@/components/Pagination.vue';
+
 import { onMounted, ref } from 'vue';
+
+import ShipmentsController from '@/controllers/shipments.controller';
+const shipmentsController = new ShipmentsController(false);
 
 const tableHeaders = [
     { name: "Mã đơn hàng", key: "id" },
     { name: "Khách hàng", key: "customer_name" },
     { name: "Người tạo", key: "employee_name" },
     { name: "Ngày tạo", key: "text_created_at" },
-]
+];
+const conditions = {start: null, end: null, product_id: null, customer_id: null, limit: 10, offset: 0};
 
 const isLoading = ref(true);
 const shipments = ref([]);
+const numberOfItems = ref(0);
+const pageLoading = ref(true);
 
-async function updateData(values) {
+async function updateData(values = {}) {
     try {
         isLoading.value = true;
-        const conditions = {};
         Object.keys(values).forEach((key) => {
             if(values[key]) {
                 conditions[key] = values[key];
             }
-        })
+        });
+        await getCount();
         shipments.value = await shipmentsController.queryAll(conditions, true);
     } catch (error) {
         error?.showAlert();
@@ -71,19 +78,36 @@ async function updateData(values) {
         isLoading.value = false;
     }
 }
-
+async function changePage(index) {
+    conditions.offset = 10 * (index-1);
+    await updateData();
+}
 async function getShipments() {
     try {
-        shipments.value = (await shipmentsController.queryAll());
+        shipments.value = (await shipmentsController.queryAll(conditions, true));
     } catch (error) {
         error.showAlert();
     } finally {
         isLoading.value = false;
     }
 }
+async function getCount() {
+    try {
+        pageLoading.value = true;
+        numberOfItems.value = await shipmentsController.queryCount({
+            start: conditions.start, end: conditions.end,
+            product_id: conditions.product_id, supplier_id: conditions.supplier_id
+        });
+    } catch (error) {
+        error?.showAlert();
+    } finally {
+        pageLoading.value = false;
+    }
+}
 
 onMounted(async () => {
     await getShipments();
+    await getCount();
 })
 
 </script>

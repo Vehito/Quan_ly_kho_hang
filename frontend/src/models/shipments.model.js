@@ -21,6 +21,12 @@ class ShipmentsModel extends Model {
         })
     }
 
+    async queryCount(filter = {}) {
+        filter.isImport = this.isImport;
+        const data = (await this.api.post('/', filter)).data;
+        return data;
+    }
+
     async queryById(id, filter = {}) {
         filter.isImport = this.isImport;
         const data = (await this.api.post(`/${id}`, filter)).data;

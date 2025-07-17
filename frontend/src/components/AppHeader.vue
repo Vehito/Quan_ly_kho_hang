@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar navbar-expand navbar-dark bg-primary">
+    <nav class="navbar navbar-expand navbar-dark bg-light">
         <div class="mr-auto navbar-nav">
             <li v-for="item in menuItems" class="nav-item text-center">
                 <RouterLink :to="{ name: item.name}" class="nav-link">

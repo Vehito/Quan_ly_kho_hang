@@ -5,23 +5,26 @@
         </div>
 
         <div class="col-12 mt-3">
-            <CustomTable 
-                :table-headers="tableHeaders"
-                :table-rows="customers"
-                :change-columns="changeColumns"
-                :changing-condition="checkCondition"
-            >
-                <template #custom="{ row }">
-                    <DropdownBtn
-                        :dropdown-items="['Thay đổi khách hàng', 'Xóa khách hàng']"
-                        @select:value="(selectedAction) => handleAction(selectedAction, row)"
-                    >
-                        <template #label>
-                            <i class="fa-solid fa-bars"></i>
-                        </template>
-                    </DropdownBtn>
-                </template>
-            </CustomTable>
+            <LoadingScreen :is-loading="isLoading">
+                <CustomTable 
+                    :table-headers="tableHeaders"
+                    :table-rows="customers"
+                    :change-columns="changeColumns"
+                    :changing-condition="checkCondition"
+                >
+                    <template #custom="{ row }">
+                        <DropdownBtn
+                            :dropdown-items="['Thay đổi khách hàng', 'Xóa khách hàng']"
+                            @select:value="(selectedAction) => handleAction(selectedAction, row)"
+                        >
+                            <template #label>
+                                <i class="fa-solid fa-bars"></i>
+                            </template>
+                        </DropdownBtn>
+                    </template>
+                </CustomTable>
+            </LoadingScreen>
+            <Pagination :is-loading="pageLoading" :item-quantity="numberOfItems" @on-click:index="changePage" />
         </div>
 
         <div class="d-flex">
@@ -38,9 +41,12 @@
 import CustomTable from '@/components/CustomTable.vue';
 import InputSearch from '@/components/InputSearch.vue';
 import { DropdownBtn } from '@/utils/buttons.util';
-import customersController from '@/controllers/customers.controller';
 import router from '@/router';
 import { onMounted, ref } from 'vue';
+import LoadingScreen from '@/components/loading/LoadingScreen.vue';
+import Pagination from '@/components/Pagination.vue';
+
+import customersController from '@/controllers/customers.controller';
 
 const tableHeaders = [
     { name: "Mã khách hàng", key: "id"},
@@ -52,9 +58,14 @@ const tableHeaders = [
     { name: "Tình trạng", key: "text_status"},
 ]
 
-const searchText = ref('');
 const customers = ref([]);
-const changeColumns = ['text_status']
+const isLoading = ref(true);
+const numberOfItems = ref(0);
+const pageLoading = ref(true);
+
+const searchText = ref('');
+const changeColumns = ['text_status'];
+const conditions = {name: '', limit: 10, offset: 0};
 
 function checkCondition(key, cellValue) {
     switch(key) {
@@ -63,22 +74,40 @@ function checkCondition(key, cellValue) {
                 return "text-success";
             }
             return "text-warning";
-        break;
     }
 }
 
-function searchSubmit(text) {
-    console.log(text);
+async function searchSubmit(text) {
+    conditions.offset = 0;
+    conditions.name = text;
+    await getCount();
+    await getCustomers();
 }
 
+async function changePage(index) {
+    conditions.offset = 10 * (index-1);
+    await getCustomers();
+}
 async function getCustomers() {
     try {
-        customers.value = (await customersController.queryAll());
+        isLoading.value = true;
+        customers.value = (await customersController.queryAll(conditions));
     } catch (error) {
-        error.showAlert();
+        error?.showAlert();
+    } finally {
+        isLoading.value = false;
     }
 }
-
+async function getCount() {
+    try {
+        pageLoading.value = true;
+        numberOfItems.value = (await customersController.queryCount({name: conditions.name}));
+    } catch (error) {
+        error?.showAlert();
+    } finally {
+        pageLoading.value = false;
+    }
+}
 async function handleAction(selectedAction, customer) {
     switch(selectedAction) {
         case"Thay đổi khách hàng":
@@ -97,6 +126,7 @@ async function handleAction(selectedAction, customer) {
 }
 
 onMounted(async () => {
+    await getCount();
     await getCustomers();
 })
 

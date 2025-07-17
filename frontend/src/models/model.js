@@ -33,7 +33,7 @@ class Model {
     }
 
     async queryCount(filter = {}, extend = '') {
-        const data = (await this.api.get(`/${extend}`, {params: {itemLength: true, ...filter}})).data;
+        const data = (await this.api.get(`/${extend}`, {params: filter})).data;
         return data;
     }
 

@@ -93,7 +93,7 @@ export async function queryShipmentItem(req, res, next) {
 
 export async function query(req, res, next) {
     let result = [];
-    let { isImport, needItems, ...filter } = req.body;
+    let { isImport, needItems, itemLength, ...filter } = req.body;
     try {
         result = await sharedController
             .withTransaction(async (conn) => {
@@ -105,6 +105,8 @@ export async function query(req, res, next) {
                     : shipmentService.query.bind(shipmentService)
                 if(id) {
                     result = await queryFunc({id: id}, conn);
+                } else if(itemLength) {
+                    result = await shipmentService.queryCount(filter, conn);
                 } else {
                     result = await queryFunc(filter, conn);
                 }
