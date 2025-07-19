@@ -3,7 +3,7 @@
     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
     {{ btnText ?? 'Loading...' }}
 </button>
-<slot v-else name="custom-btn"></slot>
+<slot v-else></slot>
 </template>
 
 <script setup>

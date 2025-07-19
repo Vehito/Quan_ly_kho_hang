@@ -4,6 +4,16 @@
             <InputSearch v-model="searchText" v-on:submit="searchSubmit"/>
         </div>
 
+        <div class="col-12">
+            <div class="float-right">
+                <PDF_Btn
+                    :table-headers="PDF_Btn_content.tableHeaders"
+                    :load-func="PDF_Btn_content.loadFunc"
+                    :file-name="PDF_Btn_content.fileName"
+                    :table-title="PDF_Btn_content.tableTitle"
+                />
+            </div>
+        </div>
         <div class="col-12 mt-3">
             <LoadingScreen :is-loading="isLoading">
                 <CustomTable 
@@ -40,6 +50,7 @@ import CustomTable from '@/components/CustomTable.vue';
 import InputSearch from '@/components/InputSearch.vue';
 import { DropdownBtn } from '@/utils/buttons.util';
 import Pagination from '@/components/Pagination.vue';
+import PDF_Btn from '@/components/PDF_Btn.vue';
 
 import productsController from '@/controllers/products.controller';
 import router from '@/router';
@@ -51,7 +62,14 @@ const tableHeaders = [
     { name: "Tên sản phẩm", key: "name"},
     { name: "Giá bán", key: "sale_price"},
     { name: "Tồn kho", key: "quantity"}
-]
+];
+const PDF_Btn_content = {
+    tableHeaders: tableHeaders,
+    fileName: 'Danh_sach_san_pham.pdf',
+    tableTitle: 'Danh sách sản phẩm',
+    loadFunc: async () => await productsController
+        .queryAll({name: conditions.name})
+}
 
 const searchText = ref('');
 const products = ref([]);

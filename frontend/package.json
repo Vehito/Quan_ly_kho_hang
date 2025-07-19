@@ -14,6 +14,8 @@
     "axios": "^1.9.0",
     "bootstrap": "^4.6.2",
     "chart.js": "^4.5.0",
+    "jspdf": "^3.0.1",
+    "jspdf-autotable": "^5.0.2",
     "pinia": "^3.0.3",
     "popper.js": "^1.16.1",
     "primevue": "^4.3.5",
@@ -27,6 +29,7 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.5",
     "@vitejs/plugin-vue-jsx": "^4.2.0",
+    "jspdf-font": "^1.0.7",
     "vite": "^5.3.1"
   }
 }
