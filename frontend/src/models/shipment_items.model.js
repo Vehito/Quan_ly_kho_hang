@@ -27,6 +27,7 @@ export class ShipmentItem {
         this.product_name = data.product_name;
         this.quantity = data.quantity;
         this.price = data.price;
+        this.formatted_price = this.price?.toLocaleString('vi-VN');
     }
 }
 

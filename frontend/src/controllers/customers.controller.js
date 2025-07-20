@@ -8,13 +8,13 @@ class CustomersController extends Controller {
     }
 
     async insert(data) {
-        const editedData = super.deleteAttribute(data, ['text_status', 'text_due_date']);
+        const editedData = super.deleteAttribute(data, ['text_status', 'text_due_date', 'formatted_debt']);
         return await super.insert(editedData);
     }
 
     async update(id, data) {
         data.due_date = date_helperUtil.formatDateForMySQL(data.due_date);
-        const editedData = super.deleteAttribute(data, ['text_status', 'text_due_date']);
+        const editedData = super.deleteAttribute(data, ['text_status', 'text_due_date', 'formatted_debt']);
         return await super.update(id, editedData);
     }
 }

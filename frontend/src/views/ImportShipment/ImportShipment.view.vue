@@ -16,11 +16,14 @@
                     :table-rows="shipments"
                 >
                     <template #custom="{ row }">
-                        <button class="btn btn-block btn-info"
-                            @click="router.push({ name: 'import_shipment.detail', params: { id: row.id } })"
+                        <DropdownBtn
+                            :dropdown-items="['Chi tiết đơn hàng', 'Xuất PDF']"
+                            @select:value="(selectedAction) => handleAction(selectedAction, row)"
                         >
-                            Xem chi tiết
-                        </button>
+                            <template #label>
+                                <i class="fa-solid fa-bars"></i>
+                            </template>
+                        </DropdownBtn>
                     </template>
                 </CustomTable>
             </LoadingScreen>
@@ -43,8 +46,10 @@ import FilterMenu from '@/components/FilterMenu.vue';
 import router from '@/router';
 import LoadingScreen from '@/components/loading/LoadingScreen.vue';
 import Pagination from '@/components/Pagination.vue';
+import { DropdownBtn } from '@/utils/buttons.util';
 
 import { onMounted, ref } from 'vue';
+import { shipmentPdfExport } from '@/utils/PDF_export';
 
 import ShipmentsController from '@/controllers/shipments.controller';
 const shipmentsController = new ShipmentsController(true);
@@ -91,7 +96,6 @@ async function getShipments() {
         isLoading.value = false;
     }
 }
-
 async function getCount() {
     try {
         pageLoading.value = true;
@@ -103,6 +107,23 @@ async function getCount() {
         error?.showAlert();
     } finally {
         pageLoading.value = false;
+    }
+}
+async function handleAction(selectedAction, row) {
+    switch(selectedAction) {
+        case "Chi tiết đơn hàng":
+            router.push({ name: 'import_shipment.detail', params: {id: row.id}})
+        break;
+        case "Xuất PDF":
+            shipmentPdfExport(row, [
+                { name: 'Sản phẩm', key: 'product_name' },
+                { name: 'Số lượng', key: 'quantity' },
+                { name: 'Giá mua', key: 'fomatted_price' },
+                { name: 'Ngày sản xuất', key: 'text_mfg' },
+                { name: 'Hạn sử dụng', key: 'text_exp' },
+                { name: 'Tồn kho', key: 'stoke' },
+            ], true);
+        break;
     }
 }
 

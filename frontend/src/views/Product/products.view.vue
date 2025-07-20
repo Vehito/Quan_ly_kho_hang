@@ -60,7 +60,7 @@ import LoadingScreen from '@/components/loading/LoadingScreen.vue';
 const tableHeaders = [
     { name: "Mã sản phẩm", key: "id"},
     { name: "Tên sản phẩm", key: "name"},
-    { name: "Giá bán", key: "sale_price"},
+    { name: "Giá bán", key: "formatted_sale_price"},
     { name: "Tồn kho", key: "quantity"}
 ];
 const PDF_Btn_content = {

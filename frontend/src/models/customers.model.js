@@ -20,6 +20,7 @@ export class Customer {
         this.company = data.company ?? null;
         this.address = data.address;
         this.debt = data.debt;
+        this.formatted_debt = this.debt?.toLocaleString('vi-VN');
         this.due_date = data.due_date ?? null;
         this.text_due_date = this.due_date ? date_helperUtil.getStringDate(this.due_date) : '';
         this.status = data.status;

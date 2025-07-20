@@ -4,6 +4,16 @@
             <InputSearch v-model="searchText" v-on:submit="searchSubmit"/>
         </div>
 
+        <div class="col-12">
+            <div class="float-right">
+                <PDF_Btn
+                    :table-headers="PDF_Btn_content.tableHeaders"
+                    :load-func="PDF_Btn_content.loadFunc"
+                    :file-name="PDF_Btn_content.fileName"
+                    :table-title="PDF_Btn_content.tableTitle"
+                />
+            </div>
+        </div>
         <div class="col-12 mt-3">
             <LoadingScreen :is-loading="isLoading">
                 <CustomTable 
@@ -45,6 +55,7 @@ import router from '@/router';
 import { onMounted, ref } from 'vue';
 import LoadingScreen from '@/components/loading/LoadingScreen.vue';
 import Pagination from '@/components/Pagination.vue';
+import PDF_Btn from '@/components/PDF_Btn.vue';
 
 import customersController from '@/controllers/customers.controller';
 
@@ -62,6 +73,14 @@ const customers = ref([]);
 const isLoading = ref(true);
 const numberOfItems = ref(0);
 const pageLoading = ref(true);
+const PDF_Btn_content = {
+    tableHeaders: tableHeaders,
+    fileName: 'Danh_sach_khach_hang.pdf',
+    tableTitle: 'Danh sách khách hàng',
+    loadFunc: async () => await customersController
+        .queryAll({name: conditions.name})
+}
+
 
 const searchText = ref('');
 const changeColumns = ['text_status'];

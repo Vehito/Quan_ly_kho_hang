@@ -17,6 +17,7 @@ export class Product {
         this.id = data.id ?? null;
         this.name = data.name;
         this.sale_price = data.sale_price;
+        this.formatted_sale_price = this.sale_price?.toLocaleString('vi-VN');
         this.manufacturer = data.manufacturer;
         this.quantity = data.quantity ?? null;
         this.created_at = data.created_at;

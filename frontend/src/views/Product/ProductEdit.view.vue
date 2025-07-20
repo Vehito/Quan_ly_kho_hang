@@ -64,7 +64,7 @@ async function createProduct(data) {
 
 async function updateProduct(data) {
     try {
-        await productsController.update(product.id, data);
+        await productsController.update(product.value.id, data);
         router.push({ name: "products" });
     } catch (error) {
         error.showAlert();
