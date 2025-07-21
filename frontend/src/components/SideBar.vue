@@ -1,18 +1,66 @@
 <script setup>
-const emits = defineEmits(['click:index']);
+import { useRoute } from 'vue-router';
+import { watch, computed } from 'vue';
+const route = useRoute();
+const emits = defineEmits(['click:listItem']);
 
-function onClick(index) {
-	emits('click:index', index);
-}
 const menuItems = [
-    { label: "Sản phẩm", icon: "fas fa-box", name: "products" },
-    { label: "Đơn nhập", icon: "fas fa-warehouse", name: "import_shipments" },
-    { label: "Đơn xuất", icon: "fa-solid fa-truck", name: "export_shipments" },
-    { label: "Nhân viên", icon: "fa-solid fa-users", name: "employees" },
-    { label: "Khách hàng", icon: "fas fa-shopping-cart", name: "customers" },
-    { label: "Nhà cung cấp", icon: "fas fa-industry", name: "suppliers" },
-    { label: "Thống kê", icon: "fa-solid fa-chart-simple", name: "report" },
-]
+    { label: "Sản phẩm", icon: "fa	s fa-box", name: "products", 
+		listItem: [
+            {label: 'Danh sách SP', icon: 'fa-solid fa-box', name: 'products'},
+            {label: 'Tạo sản phẩm', icon: 'fa-solid fa-circle-plus', name: 'product.create'},
+            {label: 'Sản phẩm hết hạn', icon: 'fa-solid fa-clock', name: 'product.expire'},
+        ]
+	},
+    { label: "Đơn nhập", icon: "fas fa-warehouse", name: "import_shipments",
+		listItem: [
+            {label: 'Danh sách nhập hàng', icon: 'fas fa-warehouse', name: 'import_shipments'},
+            {label: 'Tạo đơn nhập', icon: 'fa-solid fa-circle-plus', name: 'import_shipment.create'},
+        ],
+	},
+    { label: "Đơn xuất", icon: "fa-solid fa-truck", name: "export_shipments",
+		listItem: [
+            {label: 'Danh sách xuất hàng', icon: 'fa-solid fa-truck', name: 'export_shipments'},
+            {label: 'Tạo đơn xuất', icon: 'fa-solid fa-circle-plus', name: 'export_shipment.create'},
+        ],
+	},
+    { label: "Nhân viên", icon: "fa-solid fa-users", name: "employees",
+		listItem: [
+            {label: 'Danh sách nhân viên', icon: 'fa-solid fa-users', name: 'employees'},
+            {label: 'Thêm nhân viên', icon: 'fa-solid fa-circle-plus', name: 'employee.create'},
+        ],
+	},
+    { label: "Khách hàng", icon: "fas fa-shopping-cart", name: "customers",
+		listItem: [
+            {label: 'Danh sách khách hàng', icon: 'fas fa-shopping-cart', name: 'customers'},
+            {label: 'Thêm khách hàng', icon: 'fa-solid fa-circle-plus', name: 'customer.create'},
+        ],
+	},
+    { label: "Nhà cung cấp", icon: "fas fa-industry", name: "suppliers",
+		listItem: [
+            {label: 'Danh sách nhà cung cấp', icon: 'fas fa-industry', name: 'suppliers'},
+            {label: 'Thêm nhà cung cấp', icon: 'fa-solid fa-circle-plus', name: 'supplier.create'},
+        ],
+	},
+    { label: "Thống kê", icon: "fa-solid fa-chart-simple", name: "report",
+		listItem: [
+            {label: 'Xuất/Nhập', icon: 'fa-solid fa-money-bill-transfer', name: 'report'},
+        ],
+	},
+];
+
+const activeIndex = computed(() => {
+	const index = menuItems.findIndex(item => item.name === route.name);
+	if(index !== -1) {
+		return index;
+	}
+});
+
+watch(activeIndex, (newIndex) => {
+	if(newIndex > -1) {
+		emits('click:listItem', menuItems[newIndex].listItem);
+	}
+});
 </script>
 
 <template>
@@ -24,9 +72,9 @@ const menuItems = [
 			<div class="brand-wrapper">
 				<!-- Brand -->
 				<div class="brand-name-wrapper">
-					<a class="navbar-brand" href="/">
-						Kho hàng thực phẩm
-					</a>
+					<strong>
+						<a class="navbar-brand" href="/">Kho hàng thực phẩm</a>
+					</strong>
 				</div>
 			</div>
 		</div>
@@ -39,7 +87,6 @@ const menuItems = [
 					:key="item.name"
 					:to="{ name: item.name }"
 					v-slot="{ isActive }"
-					@click="onClick(index)"
 				>
 					<li :class="{ active: isActive }">
 						<a class="nav-link">

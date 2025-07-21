@@ -1,41 +1,49 @@
 <template>
-    <ul class="nav nav-tabs p-3">
-        <li v-for="(item, index) in menuItems" 
+<ul class="nav nav-tabs p-3 d-flex justify-content-between align-items-center">
+    <div v-if="userStore.isLoggedIn" class="d-flex">
+        <li v-for="(item, index) in listItem" 
             :key="index"
             class="nav-item"
         >
-            <RouterLink :to="{ name: item.name}"
-                class="nav-link" :class="{active: index===active}"
+            <RouterLink :to="{ name: item.name }"
+                class="nav-link" :class="{ active: index === active }"
                 @click="onClick(index)"
             >
                 <strong>{{ item.label }} <i :class="item.icon"></i></strong>
             </RouterLink>
         </li>
-    </ul>
+    </div>
+    
+    <div>
+        <AvatarBtn/>
+    </div>
+</ul>
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { RouterLink } from 'vue-router';
+import { useUserStore } from '@/utils/pinia.util';
+const userStore = useUserStore();
+import AvatarBtn from './AvatarBtn.vue';
 
 const props = defineProps({
-    sidebarIndex: { type: Number, default: 0 }
+    listItem: { type: Array, default: [] }
 });
+
 const active = ref(0);
-const menuItems = computed(() => {
-    const listItems = [
-        [
-            {label: 'Danh sách SP', icon: 'fa-solid fa-box', name: 'products'},
-            {label: 'Sản phẩm hết hạn', icon: 'fa-solid fa-clock', name: 'product.expire'},
-        ]
-    ];
-    active.value = 0;
-    return listItems[props.sidebarIndex];
-});
 
 function onClick(index) {
     active.value = index;
 }
+
+watch(
+    () => props.listItem,
+    () => {
+        active.value = 0;
+    },
+    { immediate: false, deep: false }
+);
 
 onMounted(() => {
     active.value = 0;
@@ -60,7 +68,7 @@ li.nav-item {
     .active {
         border: 1px gray solid;
         border-bottom: none;
-        color: rgb(79, 255, 79);
+        color: rgb(79, 135, 255);
     }
 }
 </style>

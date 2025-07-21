@@ -3,17 +3,17 @@ import AppHeader from "@/components/AppHeader.vue";
 import SideBar from "./components/SideBar.vue";
 import { ref } from "vue";
 
-const sidebarIndex = ref(0);
+const listItem = ref([]);
 
-function updateSidebarIndex(index) {
-	sidebarIndex.value = index;
+function updateSidebarIndex(list) {
+	listItem.value = list;
 }
 </script>
 
 <template>
 	<div id="app container">
-		<SideBar @click:index="index => updateSidebarIndex(index)"/>
-		<AppHeader :sidebar-index="sidebarIndex"/>
+		<SideBar @click:list-item="listItem => updateSidebarIndex(listItem)"/>
+		<AppHeader :list-item="listItem"/>
 		<div class="page">
 			<RouterView />
 		</div>

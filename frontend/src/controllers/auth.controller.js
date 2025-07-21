@@ -14,6 +14,14 @@ class AuthController extends Controller {
             throw new ErrorAlert(error.status, error.response.data.message);
         }
     }
+    
+    async logout() {
+        try {
+            return (await this.model.logout());
+        } catch (error) {
+            throw new ErrorAlert(error.status, error.response.data.message);
+        }
+    }
 
     async refreshToken() {
         try {

@@ -11,6 +11,11 @@ class AuthModel extends Model {
         return data;
     }
 
+    async logout() {
+        const data = (await this.api.get('/logout')).data;
+        return data.success;
+    }
+
     async refreshToken() {
         const data = (await this.api.post(`${this.refreshTokenURL}`)).data;
         return data;

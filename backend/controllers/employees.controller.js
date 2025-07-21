@@ -127,6 +127,19 @@ export async function login(req, res, next) {
     }
 }
 
+export function logout(req, res, next) {
+    res.clearCookie('token', {
+        httpOnly: true,
+        sameSite: 'Strict'
+    });
+    res.clearCookie('refreshToken', {
+        httpOnly: true,
+        sameSite: 'Strict'
+    });
+
+    return res.status(200).json({ success: true });
+}
+
 export function refreshToken(req, res, next) {
     const refreshToken = req.cookies.refreshToken;
     if(!refreshToken) {
