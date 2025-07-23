@@ -30,6 +30,14 @@ class AuthController extends Controller {
             throw new ErrorAlert(error.status, error.response.data.message);
         }
     }
+
+    async changePassword(id, username, oldPwd, newPwd) {
+        try {
+            return (await this.model.changePassword(id, username, oldPwd, newPwd));
+        } catch (error) {
+            throw new ErrorAlert(error.status, error.response.data.message);
+        }
+    }
 }
 
 export default new AuthController();

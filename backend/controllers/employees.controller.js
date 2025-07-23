@@ -93,11 +93,12 @@ export async function login(req, res, next) {
             const user = await sharedController
             .withTransaction(async (conn) => {
                 const employeeService = new EmployeesService();
-                return (await employeeService.query(req.body, conn))[0];
+                return (await employeeService.query({username: req.body.username}, conn))[0];
             });
             const token = jwt.sign(
                 { id: user.id, name: user.name, 
-                position_name: user.position_name, level: user.level },
+                position_name: user.position_name, 
+                level: user.level, username: user.username },
                 process.env.SECRET,
                 { expiresIn: '60m' });
             const refreshToken = jwt.sign(
@@ -155,7 +156,8 @@ export function refreshToken(req, res, next) {
 
         const newAccessToken = jwt.sign(
             { id: decoded.id, name: decoded.name, 
-                position_name: decoded.position_name, level: decoded.level },
+                position_name: decoded.position_name,
+                level: decoded.level, username: decoded.username },
             process.env.SECRET,
             { expiresIn: '15m' }
         );
@@ -172,15 +174,21 @@ export function refreshToken(req, res, next) {
 }
 
 export async function changePassword(req, res, next) {
-    if(!req.body.password) {
-        return next(new ApiError(400, 'Invalid Request'));
-    }
     let result;
     try {
         result = await sharedController
         .withTransaction(async (conn) => {
             const employeeService = new EmployeesService();
-            return await employeeService.changePassword(req.params.id, req.body.password, conn);
+            const isValid = await employeeService.vertifyEmployee(req.body.username, req.body.old_password, conn);
+            if(isValid) {
+                const result = await employeeService.changePassword(req.params.id, req.body.new_password, conn);
+                if(result[0].changedRows === 1) {
+                    return true;
+                }
+                throw new ApiError(400, 'Invalid request');;
+            } else {
+                throw new ApiError(400, 'Invalid input');
+            }
         });
         return res.send(result);
     } catch (error) {

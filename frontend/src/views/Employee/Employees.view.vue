@@ -27,13 +27,6 @@
                 @select="onSelect"
             />
         </div>
-        <div class="d-flex">
-            <button
-                class="btn btn-success"
-                @click="router.push({ name: 'employee.create' })">
-                Thêm nhân viên
-            </button>
-        </div>
     </div>
 
 </template>

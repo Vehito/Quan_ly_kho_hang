@@ -29,14 +29,6 @@
             </LoadingScreen>
             <Pagination :is-loading="pageLoading" :item-quantity="numberOfItems" @on-click:index="changePage" />
         </div>
-
-        <div class="d-flex">
-            <button
-                class="btn btn-success"
-                @click="router.push({ name: 'import_shipment.create' })">
-                Thêm đơn hàng
-            </button>
-        </div>
     </div>
 </template>
 

@@ -12,4 +12,7 @@ route.route("/logout")
 route.route("/refresh")
     .post(employees.refreshToken);
 
+route.route("/change_password/:id")
+    .post(employees.changePassword)
+
 export default route;

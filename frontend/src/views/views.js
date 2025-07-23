@@ -15,4 +15,5 @@ export {default as ExportShipmentEditView} from './ExportShipment/ExportShipment
 export {default as ExportShipmentDetailView} from './ExportShipment/ExportShipmentDetail.vue'
 export {default as ReportView} from './Reports/Report.view.vue'
 export {default as LoginView} from './Auth/Login.view.vue'
+export {default as ChangePasswordView} from './Auth/ChangePassword.view.vue'
 export {default as notFound} from './NotFound.vue';

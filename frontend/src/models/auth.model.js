@@ -20,6 +20,10 @@ class AuthModel extends Model {
         const data = (await this.api.post(`${this.refreshTokenURL}`)).data;
         return data;
     }
+    async changePassword(id, username, oldPwd, newPwd) {
+        const data = (await this.api.post(`/change_password/${id}`, {username: username, old_password: oldPwd, new_password: newPwd})).data;
+        return data;
+    }
 }
 
 export default new AuthModel();

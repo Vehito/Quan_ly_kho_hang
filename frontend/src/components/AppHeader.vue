@@ -21,7 +21,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { RouterLink } from 'vue-router';
 import { useUserStore } from '@/utils/pinia.util';
 const userStore = useUserStore();

@@ -35,6 +35,7 @@ const dropdownBtnContent = {
                 }
             break;
             case "Đổi mật khẩu":
+                router.push({name: 'change_password', params: { id: userStore.id }});
             break;
         }
     }

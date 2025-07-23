@@ -9,6 +9,12 @@ const routes = [
         component: views.LoginView
     },
     {
+        path: "/change_password/:id",
+        name: "change_password",
+        component: views.ChangePasswordView,
+        props: true
+    },
+    {
         path: "/",
         name: "products",
         component: views.ProductView

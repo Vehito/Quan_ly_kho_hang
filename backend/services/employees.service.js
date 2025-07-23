@@ -61,8 +61,7 @@ class EmployeesService extends Service {
         const query = `SELECT password FROM ${this.tableName} WHERE username = ?`;
         const result = (await conn.query(query, username))[0];
         if(!result[0].password) return false;
-        return enteredPassword===result[0].password;
-        // return await bcrypt.compare(enteredPassword, result[0].password);
+        return await bcrypt.compare(enteredPassword, result[0].password);
     }
 
     async changePassword(id, enteredPassword, conn) {

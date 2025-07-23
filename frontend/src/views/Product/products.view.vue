@@ -34,14 +34,6 @@
             </LoadingScreen>
             <Pagination :is-loading="pageLoading" :item-quantity="numberOfItems" @on-click:index="changePage" />
         </div>
-
-        <div class="d-flex">
-            <button
-                class="btn btn-success"
-                @click="router.push({ name: 'product.create' })">
-                Thêm sản phẩm
-            </button>
-        </div>
     </div>
 </template>
 

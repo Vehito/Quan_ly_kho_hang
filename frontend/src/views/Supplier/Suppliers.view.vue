@@ -21,14 +21,6 @@
                 </template>
             </CustomTable>
         </div>
-
-        <div class="d-flex">
-            <button
-                class="btn btn-success"
-                @click="router.push({ name: 'supplier.create' })">
-                Thêm nhà cung cấp
-            </button>
-        </div>
     </div>
 </template>
 
