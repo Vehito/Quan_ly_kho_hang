@@ -45,10 +45,10 @@ const menuItems = [
     { label: "Thống kê", icon: "fa-solid fa-chart-simple", name: "report",
 		listItem: [
             {label: 'Xuất/Nhập', icon: 'fa-solid fa-money-bill-transfer', name: 'report'},
+            {label: 'Sản phẩm', icon: 'fa-solid fa-boxes-packing', name: 'product_report'},
         ],
 	},
 ];
-
 const activeIndex = computed(() => {
 	const index = menuItems.findIndex(item => item.name === route.name);
 	if(index !== -1) {

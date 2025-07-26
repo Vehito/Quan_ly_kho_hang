@@ -1,39 +1,12 @@
 <template>
     <div class="page">
-        <div class="row mt-1">
-            <div v-for="field in timeFields" class="col-lg-3 col shadow-sm fields mr-3 mt-2">
-                <FormFields
-                    :label="field.label"
-                    :type="field.type"
-                    :model-value="field.modelValue"
-                    :placeholder="field.placeholder"
-                    :options="field.options"
-                    :disabled="field.disabled?.value"
-                    :name="field.name"
-                    @update:model-value="field.updateModelValue"
-                />
-            </div>
-            <button @click="handleSubmit"
-                 class="btn btn-outline-success mt-2 lietke col-lg-2 col" type="button">
-                Liệt kê
-            </button>
-        </div>
-        <hr>
-        <ButtonCollapse
-            :btn-texts="collapses.btnTexts"
-            :btn-classes="collapses.btnClasses"
-            :ids="collapses.ids">
-            <template #default="{ index }">
-                <FormFields
-                    :label="checkboxFields[index].label"
-                    :type="checkboxFields[index].type"
-                    :is-loading="checkboxFields[index].isLoading.value"
-                    :name="checkboxFields[index].name"
-                    :options="checkboxFields[index].options.value"
-                    @update:model-value="checkboxFields[index].updateModelValue"
-                />
-            </template>
-        </ButtonCollapse>
+        <FilterMenu
+            :product-fields="true"
+            :time-fields="true"
+            :supplier-fields="true"
+            :customer-fields="true"
+            @update:values="updateData"
+        />
         <div class="row mt-2">
             <div class="col-lg-3 col-12">
                 <div v-for="(card, index) in cards" :key="index" class="row-lg">
@@ -61,18 +34,14 @@
 
 <script setup>
 // components
-import { onMounted, ref } from 'vue';
+import { onMounted, ref} from 'vue';
 import LineChart from '@/components/charts/LineChart.vue';
 import Card from '@/components/Card.vue';
 import LoadingScreen from '@/components/loading/LoadingScreen.vue';
-import FormFields from '@/components/forms/FormFields.vue';
-import ButtonCollapse from '@/components/ButtonCollapse.vue';
+import FilterMenu from '@/components/FilterMenu.vue';
 
 // controller
 import ShipmentsController from '@/controllers/shipments.controller';
-import suppliersController from '@/controllers/suppliers.controller';
-import productsController from '@/controllers/products.controller';
-import customersController from '@/controllers/customers.controller';
 const importShipmentController = new ShipmentsController(true);
 const exportShipmentController = new ShipmentsController(false);
 
@@ -84,27 +53,18 @@ import { ExportShipment, ImportShipment } from '@/models/shipments.model';
 
 // ref
 const isLoading = {
-    product: ref(true),
-    customer: ref(true),
-    supplier: ref(true),
     importShipments: ref(true),
     exportShipments: ref(true)
 };
 const chartObject = ref(new ChartObject({}));
 const importShipments = ref([new ImportShipment({})]);
 const exportShipments = ref([new ExportShipment({})]);
-const period = {start: ref(new Date()), end: ref(new Date()), range: ref([])};
 const isImport = ref(null);
 const totals = {import_total: ref(0), export_total: ref(0)};
-const products = ref([]);
-const customers = ref([]);
-const suppliers = ref([]);
 const titleChart = ref('');
 
 // var
-let filteredProductIds = [];
-let filteredCustomerIds = [];
-let filteredSupplierIds = [];
+const conditions = {start: null, end: null, product_id: null, supplier_id: null, customer_id: null};
 const cards = 
     [{
         cardHeader: 'Tổng nhập',
@@ -122,128 +82,11 @@ const cards =
         isLoading: isLoading.exportShipments,
         isVisiable: (isImport.value === false || isImport.value === null)
 }];
-const periods = [
-    {id: 'month', name: "Tháng hiện tại"},
-    {id: 'quarter', name: "Quý hiện tại"},
-    {id: 'year', name: "Năm hiện tại"},
-    {id: 'custom', name: "--Tự chọn--"},
-];
-const timeFields = [
-    { 
-        label: 'Khoảng thời gian',
-        type: "select",
-        modelValue: 'month',
-        placeholder: 'Chọn khoảng thời gian',
-        options: periods,
-        name: "period",
-        updateModelValue: (value) => {
-            handlePeriodField(value);
-        }
-    },
-    {
-        label: 'Thời gian bắt đầu',
-        type: "date",
-        modelValue: null,
-        placeholder: 'Chọn thời gian bắt đầu',
-        name: "start",
-        disabled: ref(true),
-        updateModelValue: (value) => {
-            period.start.value = value;
-        }
-        
-    },
-    {
-        label: 'Thời gian kết thúc',
-        type: "date",
-        modelValue: null,
-        placeholder: 'Chọn thời gian kết thúc',
-        name: "end",
-        disabled: ref(true),
-        updateModelValue: (value) => {
-            period.end.value = value;
-        }
-        
-    }
-];
-const checkboxFields = [
-    {
-        label: 'Sản phẩm',
-        type: 'checkbox',
-        isLoading: isLoading.product,
-        name: 'products',
-        options: products,
-        updateModelValue(selectedValue) {
-            const {value, index} = selectedValue;
-            filteredProductIds[index] = value;
-        }
-    },
-    {
-        label: 'Khách hàng',
-        type: 'checkbox',
-        isLoading: isLoading.customer,
-        name: 'customers',
-        options: customers,
-        updateModelValue(selectedValue) {
-            const {value, index} = selectedValue;
-            filteredCustomerIds[index] = value;
-        }
-    },
-    {
-        label: 'Nhà cung cấp',
-        type: 'checkbox',
-        isLoading: isLoading.supplier,
-        name: 'suppliers',
-        options: suppliers,
-        updateModelValue(selectedValue) {
-            const {value, index} = selectedValue;
-            filteredSupplierIds[index] = value;
-        }
-    },
-];
-const collapses = {
-    btnClasses: ['btn-light border', 'btn-light border', 'btn-light border'],
-    btnTexts: ['Sản phẩm', 'Khách hàng', 'Nhà cung cấp'],
-    ids: ['products', 'customers', 'suppliers']
-};
 
 // func loading
-async function getProducts() {
-    try {
-        isLoading.product.value = true;
-        const result = await productsController.queryAll({});
-        products.value = [{id: -1, name: 'Tất cả', checked: true}, ...result];
-    } catch (error) {
-        error?.showError();
-    } finally {
-        isLoading.product.value = false;
-    }
-}
-async function getCustomers() {
-    try {
-        isLoading.customer.value = true;
-        const result = await customersController.queryAll({});
-        customers.value = [{id: -1, name: 'Tất cả', checked: true}, ...result]
-    } catch (error) {
-        error?.showError();
-    } finally {
-        isLoading.customer.value = false;
-    }
-}
-async function getSuppliers() {
-    try {
-        isLoading.supplier.value = true;
-        const result = await suppliersController.queryAll({});
-        suppliers.value = [{id: -1, name: 'Tất cả', checked: true}, ...result];
-    } catch (error) {
-        error?.showError();
-    } finally {
-        isLoading.supplier.value = false;
-    }
-}
 async function getImportShipment() {
     try {
         isLoading.importShipments.value = true;
-        const conditions = getObjectCondition(true);
         importShipments.value = await importShipmentController.queryAll(conditions, true);
         totals.import_total.value = importShipments.value.reduce(
             (accumulator, currentValue) => Number(accumulator) + Number(currentValue.total), 0);
@@ -257,7 +100,6 @@ async function getImportShipment() {
 async function getExportShipment() {
     try {
         isLoading.exportShipments.value = true;
-        const conditions = getObjectCondition(false);
         exportShipments.value = await exportShipmentController.queryAll(conditions, true);
         totals.export_total.value = exportShipments.value.reduce(
             (accumulator, currentValue) => Number(accumulator) + Number(currentValue.total), 0);
@@ -268,81 +110,46 @@ async function getExportShipment() {
         isLoading.exportShipments.value = false;
     }
 }
-async function handleSubmit() {
-    titleChart.value = `Biểu đồ từ ${ date_helperUtil.getStringDate(period.start.value) } đến ${ date_helperUtil.getStringDate(period.end.value) }`;
-    if(isImport.value===true) {
+async function updateData(values = {}) {
+    try {
+        Object.keys(values).forEach((key) => {
+            if(values[key]) {
+                conditions[key] = values[key];
+            }
+        });
+        titleChart.value = `Biểu đồ từ ${conditions.start.split(' ')[0]} đến ${conditions.end.split(' ')[0]}`;
         await getImportShipment();
-    } else if(isImport.value===false) {
         await getExportShipment();
-    } else {
-        await getImportShipment();
-        await getExportShipment();
+    } catch (error) {
+        error?.showAlert();
     }
 }
 
 // func
-function getObjectCondition(isImport = false) {
-    let conditions = {};
-    // products
-    if (filteredProductIds[0]!==-1) {
-        conditions.product_id = filteredProductIds.map((id) => {
-            if(id) return id;});
-    }
-    // object
-    const key = isImport ? 'customer_id' : 'supplier_id';
-    const filteredObjectIds = isImport ? filteredSupplierIds : filteredCustomerIds;
-    if (filteredObjectIds[0]!==-1) {
-        conditions[key] = filteredObjectIds.value.map(id => id);
-    }
-    // date
-    conditions.start = date_helperUtil.formatDateForMySQL(period.start.value);
-    conditions.end = date_helperUtil.formatDateForMySQL(period.end.value);
-    return conditions;
-}
 function getChartObject() {
     let finalDataSets = [];
     let finalLabels = [];
     if(isImport.value===null || isImport.value===true) {
         const { dataSets, range } = date_helperUtil
-            .getDataSetByRange(importShipments.value, period.start.value, period.end.value, 'total', 'created_at');
+            .getDataSetByRange(importShipments.value, conditions.start, conditions.end, 'total', 'created_at');
         finalDataSets.push(new DataSets({label: 'Đơn nhập', data: dataSets, backgroundColor: 'blue'}));
         finalLabels = range;
     }
     if(isImport.value===null || isImport.value===false) {
         const { dataSets, range } = date_helperUtil
-            .getDataSetByRange(exportShipments.value, period.start.value, period.end.value, 'total', 'created_at');
+            .getDataSetByRange(exportShipments.value, conditions.start, conditions.end, 'total', 'created_at');
         finalDataSets.push(new DataSets({label: 'Đơn xuất', data: dataSets, backgroundColor: 'green'}));
         finalLabels = range;
     }
     chartObject.value.datasets = finalDataSets;
     chartObject.value.labels = finalLabels;
 }
-function handlePeriodField(value) {
-    if(value !== 'custom') {
-        const { start, end, range } = date_helperUtil.getPeriod(value);
-        period.start.value = start;
-        period.end.value = end;
-        period.range.value = range;
-        timeFields[1].disabled.value = true;
-        timeFields[2].disabled.value = true;
-    } else {
-        timeFields[1].disabled.value = false;
-        timeFields[2].disabled.value = false;
-    }
-}
 
 onMounted(async () => {
-    const { start, end, range } = date_helperUtil.getPeriod('month');
-    period.start.value = start;
-    period.end.value = end;
-    period.range.value = range;
-    titleChart.value = `Biểu đồ từ ${ date_helperUtil.getStringDate(period.start.value) } đến ${ date_helperUtil.getStringDate(period.end.value) }`;
-    await getProducts();
-    filteredProductIds[0] = -1;
-    await getCustomers();
-    filteredCustomerIds[0] = -1;
-    await getSuppliers();
-    filteredSupplierIds[0] = -1;
+    const { start, end } = date_helperUtil.getPeriod('month');
+    conditions.start = date_helperUtil.formatDateForMySQL(start);
+    conditions.end = date_helperUtil.formatDateForMySQL(end);
+    titleChart.value = `Biểu đồ từ ${conditions.start.split(' ')[0]} đến ${conditions.end.split(' ')[0]}`
     await getImportShipment();
     await getExportShipment()
 });

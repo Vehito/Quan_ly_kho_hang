@@ -1,7 +1,7 @@
 export class ChartObject {
     constructor(data) {
         this.labels = data?.labels ?? [];
-        this.datasets = data?.dataset ?? [new DataSets()];
+        this.datasets = data?.datasets ?? [new DataSets()];
     }
 }
 

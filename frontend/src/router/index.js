@@ -120,6 +120,11 @@ const routes = [
         name: "report",
         component: views.ReportView
     },
+    {
+        path: "/product_report",
+        name: "product_report",
+        component: views.ProductReportView
+    },
 
     {
         path: "/:pathMatch(.*)*",
