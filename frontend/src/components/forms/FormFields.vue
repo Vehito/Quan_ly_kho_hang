@@ -1,6 +1,7 @@
 <script setup>
 import { Field } from "vee-validate";
 import LoadingField from "../loading/LoadingField.vue";
+import { onMounted, watch, ref } from "vue";
 const props = defineProps({
     label: { default: "", type: String },
     options: { default: [], type: Array },
@@ -8,7 +9,8 @@ const props = defineProps({
     type: {
         default: "text",
         type: String,
-        validator: (type) => ['text', 'date', 'number', 'tel', 'password', 'select', 'textarea', 'checkbox', 'hidden'].includes(type)
+        validator: (type) => ['text', 'date', 'number', 'tel', 'password',
+            'select', 'textarea', 'checkbox', 'hidden', 'img'].includes(type)
     },
     modelValue: {
         required: false,
@@ -22,6 +24,18 @@ const props = defineProps({
 });
 
 const emits = defineEmits(["update:modelValue"]);
+
+const imagePreview = ref(props.modelValue);
+
+function reviewImage(newValue) {
+        if (newValue instanceof File) {
+            imagePreview.value = URL.createObjectURL(newValue);
+        } else if (typeof newValue === 'string') {
+            imagePreview.value = newValue; // Đã là URL
+        } else {
+            imagePreview.value = null; 
+        }
+}
 </script>
 
 <template>
@@ -92,6 +106,31 @@ const emits = defineEmits(["update:modelValue"]);
                 </div>
             </div>
 
+            <div v-else-if="type === 'img'">
+                <div class="row">
+                    <Field
+                        class="form-control shadow"
+                        type="file"
+                        :name="name"
+                        :value="modelValue"
+                        :disabled="disabled"
+                        v-slot="{ field }"
+                    >
+                        <input 
+                            @input="e => {
+                                field.value = e.target.files[0];
+                                reviewImage(e.target.files[0]);
+                                emits('update:modelValue',  e.target.files[0] )
+                            }"
+                            type="file" accept="image/*"/>
+                    </Field>
+                </div>
+                
+                <div v-if="imagePreview" class="mt-2 text-center">
+                    <img :src="imagePreview" alt="Xem trước ảnh" style="max-height: 150px; border: 1px solid #ccc; padding: 5px;" />
+                </div>
+            </div>
+
             <div v-else>
                 <Field
                     class="form-control shadow"
@@ -113,5 +152,8 @@ const emits = defineEmits(["update:modelValue"]);
     border: solid 1px rgb(128, 128, 128, .3);
     border-radius: 30px;
     padding: 8px;
+}
+.form-control {
+    max-width: 350px;
 }
 </style>

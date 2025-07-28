@@ -7,10 +7,15 @@ class ProductsService extends Service {
 
     #extractProductData(payload) {
         const product = {
-            id: payload.id,
+            id: payload.id ?? undefined,
             name: payload.name,
             sale_price: payload.sale_price,
             manufacturer: payload.manufacturer,
+            img_name: payload.img_name,
+            type: payload.type,
+            unit: payload.unit,
+            origin: payload.origin,
+            description: payload.description ?? null,
             quantity: payload.quantity ?? 0,
             created_at: payload.created_at ?? new Date(),
         };
@@ -23,9 +28,9 @@ class ProductsService extends Service {
     async insert(payload, conn) {
         const product = this.#extractProductData(payload);
         const [result] = await conn.query(
-            `INSERT INTO ${this.tableName} (name, sale_price, manufacturer, quantity, created_at)
-            VALUES (?, ?, ?, ?, ?)`,
-            [product.name, product.sale_price, product.manufacturer, product.quantity, product.created_at]
+            `INSERT INTO ${this.tableName} (name, sale_price, manufacturer, img_name, type, unit, origin, description, quantity, created_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            Object.values(product)
         );
         return {
             id: result.insertId,

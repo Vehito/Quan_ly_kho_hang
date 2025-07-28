@@ -18,6 +18,8 @@ app.get("/", (req, res) => {
     res.json({message: "Welcome"});
 });
 
+app.use(express.static('public'));
+
 app.use("/api/products" , auth.authenticateToken, routers.productsRouter);
 app.use("/api/customers", auth.authenticateToken, routers.customersRouter);
 app.use("/api/positions", auth.authenticateToken, routers.positionsRouter);

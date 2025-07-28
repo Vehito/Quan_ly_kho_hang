@@ -7,7 +7,7 @@ class Model {
             baseURL,
             withCredentials: true,
             headers: {
-                "Content-Type": "application/json",
+                // "Content-Type": isMultipart ? "multipart/form-data" : "application/json",
                 Accept: "application/json"
             }
         });

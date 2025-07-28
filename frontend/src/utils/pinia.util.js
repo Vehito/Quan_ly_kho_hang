@@ -27,4 +27,4 @@ export const useUserStore = defineStore('user', {
             this.username = null;
         }
     }
-})
+});
