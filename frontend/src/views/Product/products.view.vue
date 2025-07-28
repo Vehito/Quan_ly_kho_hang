@@ -51,12 +51,26 @@ import LoadingScreen from '@/components/loading/LoadingScreen.vue';
 
 const tableHeaders = [
     { name: "Mã sản phẩm", key: "id"},
+    { name: "Hình ảnh sản phẩm", key: "img_url", type: 'img'},
     { name: "Tên sản phẩm", key: "name"},
-    { name: "Giá bán", key: "formatted_sale_price"},
+    { name: "Đơn giá bán", key: "formatted_sale_price"},
+    { name: "Loại sản phẩm", key: "type"},
+    { name: "Nhà sản xuất", key: "manufacturer"},
+    { name: "Đơn vị", key: "unit"},
+    { name: "Nguồn gốc", key: "origin"},
     { name: "Tồn kho", key: "quantity"}
 ];
 const PDF_Btn_content = {
-    tableHeaders: tableHeaders,
+    tableHeaders: [
+        { name: "Mã sản phẩm", key: "id"},
+        { name: "Tên sản phẩm", key: "name"},
+        { name: "Đơn giá bán", key: "formatted_sale_price"},
+        { name: "Loại sản phẩm", key: "type"},
+        { name: "Nhà sản xuất", key: "manufacturer"},
+        { name: "Đơn vị", key: "unit"},
+        { name: "Nguồn gốc", key: "origin"},
+        { name: "Tồn kho", key: "quantity"}
+    ],
     fileName: 'Danh_sach_san_pham.pdf',
     tableTitle: 'Danh sách sản phẩm',
     loadFunc: async () => await productsController

@@ -3,7 +3,7 @@
         name: { type: String, default: "" },
 
 //      tableHeaders: [
-//          { name: "ID", key: "id" },
+//          { name: "ID", key: "id", type: 'img' },
 //          { name: "Tên sản phẩm", key: "name" },
 //          { name: "Giá", key: "price" }
 //      ]
@@ -51,8 +51,13 @@
                         v-for="(header, index) in tableHeaders.slice(1)"
                         :key="index"
                     >
+                        <div v-if="header.type==='img'" class="text-center">
+                            <img  :src="tableRow[header.key]" alt="Ảnh"
+                                style="max-height: 100px; max-width: 150px;"
+                            >
+                        </div>
                         <span 
-                            :class="checkCondition(header.key, tableRow[header.key])"
+                            v-else :class="checkCondition(header.key, tableRow[header.key])"
                         >
                             {{ tableRow[header.key] }}
                         </span>
