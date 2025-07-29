@@ -83,15 +83,14 @@ const isLoading = ref(true);
 const numberOfItems = ref(0);
 const pageLoading = ref(true);
 
-const conditions = {id: undefined, name: undefined, origin: undefined, manufacturer: undefined, types: undefined, limit: 10, offset: 0};
+const conditions = {id: undefined, name: undefined, origin: undefined, manufacturer: undefined, type: undefined, limit: 10, offset: 0};
 
 async function searchSubmit(values) {
-    const searchText = values.searchText;
     conditions.offset = 0;
-    conditions.name = searchText;
-    // conditions.origin = searchText;
-    conditions.manufacturer = searchText;
-    // conditions.types = values.types;
+    conditions.name = values.name;
+    conditions.origin = values.origin;
+    conditions.manufacturer = values.manufacturer;
+    conditions.type = values.types;
     await getCount();
     await getProducts();
 }
@@ -112,7 +111,10 @@ async function getProducts() {
 async function getCount() {
     try {
         pageLoading.value = false;
-        numberOfItems.value = (await productsController.queryCount({name: conditions.name}));
+        numberOfItems.value = (await productsController.queryCount(
+            {name: conditions.name, origin: conditions.origin,
+                manufacturer: conditions.manufacturer, type: conditions.type}
+        ));
     } catch (error) {
         error?.showAlert();
     } finally {

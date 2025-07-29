@@ -49,6 +49,22 @@ class ProductsService extends Service {
         const result = await conn.query(update, [quantity, quantity, id]);
         return result;
     }
+
+    getQueryClauses(filter, tableName= '', keys = []) {
+        const type = [];
+        if(Array.isArray(filter['type[]'])) {
+            type.push(...filter['type[]']);
+        } else {
+            type.push(filter['type[]']);
+        }
+        const { ['type[]']: _ignored, ...conditions } = filter;
+        const result = super.getQueryClauses(conditions, tableName, keys);
+        if(Array.isArray(type) && type.length>0) {
+            result.clauses += ` AND products.type IN (${type.map(() => '?').join(', ')})`;
+            result.values.push(...type);
+        }
+        return result;
+    }
 }
 
 export default ProductsService;
