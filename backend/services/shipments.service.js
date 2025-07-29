@@ -144,6 +144,10 @@ class ShipmentsService extends Service {
             clauses += ` ${clauses ? 'AND' : ''} import_items.mfg BETWEEN ? AND ?`;
             values.push(filter.mfg.start, filter.mfg.end);
         }
+        if(filter.product_id) {
+            clauses += ` ${clauses ? 'AND' : ''} import_items.product_id = ?`;
+            values.push(filter.product_id);
+        }
         return {
             clauses: clauses,
             values

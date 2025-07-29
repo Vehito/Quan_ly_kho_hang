@@ -23,7 +23,7 @@
                 >
                     <template #custom="{ row }">
                         <DropdownBtn
-                            :dropdown-items="['Thay đổi sản phẩm', 'Xóa sản phẩm']"
+                            :dropdown-items="['Chi tiết', 'Thay đổi sản phẩm', 'Xóa sản phẩm']"
                             @select:value="(selectedAction) => handleAction(selectedAction, row)"
                         >
                             <template #label>
@@ -40,7 +40,6 @@
 
 <script setup>
 import CustomTable from '@/components/CustomTable.vue';
-import InputSearch from '@/components/InputSearch.vue';
 import { DropdownBtn } from '@/utils/buttons.util';
 import Pagination from '@/components/Pagination.vue';
 import PDF_Btn from '@/components/PDF_Btn.vue';
@@ -123,6 +122,9 @@ async function getCount() {
 
 async function handleAction(selectedAction, row) {
     switch(selectedAction) {
+        case "Chi tiết":
+            router.push({ name: 'product.detail', params: {id: row.id}})
+        break;
         case "Thay đổi sản phẩm":
             router.push({ name: 'product.edit', params: {id: row.id}})
         break;

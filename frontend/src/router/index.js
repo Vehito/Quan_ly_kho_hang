@@ -36,6 +36,12 @@ const routes = [
         component: views.ExpireProductView,
     },
     {
+        path: "/products/detail/:id",
+        name: "product.detail",
+        component: views.ProductDetailView,
+        props: true
+    },
+    {
         path: "/employees",
         name: "employees",
         component: views.EmployeeView,
