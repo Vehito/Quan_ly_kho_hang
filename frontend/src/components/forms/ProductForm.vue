@@ -159,6 +159,7 @@ const rightFields = [
     },
     {
         label: 'Mô tả:',
+        type: 'textarea',
         modelValue: localProduct.description,
         placeholder: "Nhập mô tả",
         name: "description",

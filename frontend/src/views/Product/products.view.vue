@@ -1,7 +1,8 @@
 <template>
     <div class="page row">
         <div class="col -12">
-            <InputSearch v-model="searchText" v-on:submit="searchSubmit"/>
+            <!-- <InputSearch v-model="searchText" v-on:submit="searchSubmit"/> -->
+             <ProductFilterMenu :input-search="true" :types="true" @update:values="searchSubmit"/>
         </div>
 
         <div class="col-12">
@@ -43,6 +44,7 @@ import InputSearch from '@/components/InputSearch.vue';
 import { DropdownBtn } from '@/utils/buttons.util';
 import Pagination from '@/components/Pagination.vue';
 import PDF_Btn from '@/components/PDF_Btn.vue';
+import ProductFilterMenu from '@/components/ProductFilterMenu.vue';
 
 import productsController from '@/controllers/products.controller';
 import router from '@/router';
@@ -77,17 +79,20 @@ const PDF_Btn_content = {
         .queryAll({name: conditions.name})
 }
 
-const searchText = ref('');
 const products = ref([]);
 const isLoading = ref(true);
 const numberOfItems = ref(0);
 const pageLoading = ref(true);
 
-const conditions = {name: '', limit: 10, offset: 0};
+const conditions = {id: undefined, name: undefined, origin: undefined, manufacturer: undefined, types: undefined, limit: 10, offset: 0};
 
-async function searchSubmit(text) {
+async function searchSubmit(values) {
+    const searchText = values.searchText;
     conditions.offset = 0;
-    conditions.name = text;
+    conditions.name = searchText;
+    // conditions.origin = searchText;
+    conditions.manufacturer = searchText;
+    // conditions.types = values.types;
     await getCount();
     await getProducts();
 }

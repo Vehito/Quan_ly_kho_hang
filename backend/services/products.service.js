@@ -2,7 +2,7 @@ import Service from "./service.js";
 
 class ProductsService extends Service {
     constructor() {
-        super('products', ['id', 'name']);
+        super('products', ['name', 'origin', 'manufacturer']);
     }
 
     #extractProductData(payload) {

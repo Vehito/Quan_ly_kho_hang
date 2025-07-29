@@ -1,6 +1,10 @@
 <script setup>
 const searchText = defineModel();
 
+const props = defineProps({
+    placeholder: { type:String, default: 'Nhập thông tin cần tìm' }
+})
+
 const emit = defineEmits(['submit']);
 
 function submit() {
@@ -13,7 +17,7 @@ function submit() {
         <input 
             type="text"
             class="form-control"
-            placeholder="Nhập thông tin cần tìm"
+            :placeholder="placeholder"
             v-model="searchText"
             @keyup.enter="submit"
         />
