@@ -26,6 +26,8 @@ app.use("/api/positions", auth.authenticateToken, routers.positionsRouter);
 app.use("/api/employees", auth.authenticateToken, routers.employeesRouter);
 app.use("/api/suppliers", auth.authenticateToken, routers.suppliersRouter);
 app.use("/api/shipments", auth.authenticateToken, routers.shipmentsRouter);
+app.use("/api/employee_payrolls", auth.authenticateToken, routers.employeePayrollsRouter);
+app.use("/api/monthly_payrolls", auth.authenticateToken, routers.monthlyPayrollsRouter);
 app.use("/api/auth", routers.authRouter);
 
 app.use((req, res, next) => {
