@@ -25,6 +25,9 @@ export class MonthlyPayroll {
         this.employee_payrolls = this.#buildEmployeePayRolls(data.employee_payrolls);
     }
     
+    get name() {
+        return `Bảng lương ${this.text_payroll_month}`;
+    }
     get formatted_total_amount() {
         return number_heplerUtil.getFormattedNumber(this.total_amount);
     }
