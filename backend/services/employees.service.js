@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 class EmployeesService extends Service {
     #saltRound;
     constructor() {
-        super('employees');
+        super('employees', ['name', 'working_days', 'username']);
         this.#saltRound = 10;
     }
 
@@ -16,11 +16,14 @@ class EmployeesService extends Service {
         const employee = {
             id: payload.id,
             name: payload.name,
+            basic_salary: payload.basic_salary,
+            responsibility_allowance: payload.responsibility_allowance,
             position_id: payload.position_id,
+            working_days: payload.working_days,
             birth: payload.birth,
             phone: payload.phone,
-            username: payload.username,
-            password: await this.#hashPassword(payload.password),
+            username: payload.username ?? null,
+            password: payload.password ? await this.#hashPassword(payload.password) : null,
             address: payload.address,
         }
 
@@ -33,8 +36,8 @@ class EmployeesService extends Service {
     async insert(payload, conn) {
         const employee = await this.#extractEmployeeData(payload);
         const [result] = await conn.query(
-            `INSERT INTO ${this.tableName} (name, position_id, birth, phone, username, password, address)
-            VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            `INSERT INTO ${this.tableName} (name, basic_salaty, responsibility_allowance, position_id, working_days, birth, phone, username, password, address)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             Object.values(employee)
         );
         return {
@@ -45,8 +48,10 @@ class EmployeesService extends Service {
 
     async query(filter, conn) {
         const { clauses, values } = this.getQueryClauses(filter, this.tableName);
-        let query = `SELECT employees.id, employees.name, employees.position_id,
-            employees.birth, employees.phone, employees.username, employees.address,
+        let query = `SELECT employees.id, employees.name, employees.basic_salary,
+            employees.responsibility_allowance, employees.position_id,
+            employees.working_days, employees.birth, employees.phone,
+            employees.username, employees.address,
             positions.name AS position_name, positions.level AS level 
             FROM ${this.tableName}`;
         query += ' JOIN positions ON employees.position_id = positions.id'
