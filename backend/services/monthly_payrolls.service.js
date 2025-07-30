@@ -32,18 +32,6 @@ class MonthlyPayrollsService extends Service {
             ...result
         };
     }
-
-    async query(filter, conn) {
-        const { clauses, values } = this.getQueryClauses(filter, this.tableName);
-        let query = `SELECT ${this.tableName}.*
-            FROM ${this.tableName}`;
-        // query += `\nJOIN employee_payrolls ON ${this.tableName}.payroll_month = employee_payrolls.payroll_month`;
-        if(clauses) {
-            query += ` WHERE ${clauses}`;
-        }
-        const [rows] = await conn.query(query, values);
-        return rows;
-    }
 }
 
 export default MonthlyPayrollsService;
