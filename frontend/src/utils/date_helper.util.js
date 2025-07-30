@@ -7,6 +7,13 @@ export default {
         return stringDate;
     },
 
+    getStringMonth(isoDate) {
+        const date = new Date(isoDate);
+        const stringDate = (date.getMonth() + 1).toString().padStart(2, '0') + "/" +
+                           date.getFullYear().toString();
+        return stringDate;
+    },
+
     getStringDateTime(isoDate) {
         const date = new Date(isoDate);
         const stringDateTime = date.getDate().toString().padStart(2, '0') + "/" +

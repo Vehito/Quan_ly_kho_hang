@@ -55,7 +55,8 @@ class EmployeePayrollsService extends Service {
                 employees.responsibility_allowance AS responsibility_allowance,
                 employees.working_days AS working_days,
                 SUM(basic_salary*workdays + overtime_weekday_hours*1.5 + overtime_weekend_hours*2
-                    + overtime_holiday_hours*3 + lunch_allowance + other_allowance) AS total_income
+                    + overtime_holiday_hours*3 + lunch_allowance + responsibility_allowance + other_allowance) 
+                    AS total_income
                 SUM(social_insurance + heath_insurance + unemployment_insurance
                     + orther_deductions) AS total_deduction
                 SUM(total_income - total_deduction) AS net_salary
