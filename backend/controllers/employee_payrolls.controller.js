@@ -26,6 +26,8 @@ export async function query(req, res, next) {
                 const employeePayrollsService = new EmployeePayrollsService();
                 if(req.params) {
                     return await employeePayrollsService.query(req.params, conn);
+                } else if(req.query?.itemLength==='true') {
+                    return await employeePayrollsService.queryCount(req.query, conn);
                 } else {
                     return await employeePayrollsService.query(req.query, conn);
                 }

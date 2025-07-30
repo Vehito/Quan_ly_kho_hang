@@ -29,6 +29,8 @@ export async function query(req, res, next) {
                 let monthly_payrolls = [];
                 if(req.params) {
                     monthly_payrolls = await monthlyPayrollsService.query(req.params, conn);
+                } else if(req.query?.itemLength) {
+                    return await monthlyPayrollsService.queryCount(filter, conn);
                 } else {
                     monthly_payrolls = await monthlyPayrollsService.query(filter, conn);
                 }

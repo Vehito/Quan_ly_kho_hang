@@ -7,6 +7,18 @@ class MonthlyPayrollsController extends Controller {
         super(monthly_payrollsModel);
     }
 
+    async queryAll(filter, needItem = false) {
+        return await super.queryAll({needItem, ...filter});
+    }
+
+    async queryById(id, filter, needItem = false) {
+        return await super.queryById(id, {needItem, ...filter});
+    }
+
+    async queryCount(filter, needItem = false) {
+        return await super.queryCount({needItem, ...filter});
+    }
+
     async insert(data) {
         data.payroll_month = date_helperUtil.formatDateForMySQL(data.payroll_month);
         const editedData = super.deleteAttribute(data, ['employee_payrolls']);
