@@ -18,4 +18,5 @@ export {default as ReportView} from './Reports/Report.view.vue'
 export {default as ProductReportView} from './Reports/ProductReport.view.vue'
 export {default as LoginView} from './Auth/Login.view.vue'
 export {default as ChangePasswordView} from './Auth/ChangePassword.view.vue'
+export {default as MonthlyPayrollView} from './MonthlyPayroll/MonthlyPayroll.view.vue'
 export {default as notFound} from './NotFound.vue';

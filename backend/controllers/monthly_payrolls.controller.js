@@ -27,7 +27,7 @@ export async function query(req, res, next) {
                 const monthlyPayrollsService = new MonthlyPayrollsService();
                 const {needItem, ...filter} = req.query;
                 let monthly_payrolls = [];
-                if(req.params) {
+                if(req.params?.id) {
                     monthly_payrolls = await monthlyPayrollsService.query(req.params, conn);
                 } else if(req.query?.itemLength) {
                     return await monthlyPayrollsService.queryCount(filter, conn);

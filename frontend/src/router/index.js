@@ -131,6 +131,11 @@ const routes = [
         name: "product_report",
         component: views.ProductReportView
     },
+    {
+        path: "/monthly_payrolls",
+        name: "monthly_payrolls",
+        component: views.MonthlyPayrollView
+    },
 
     {
         path: "/:pathMatch(.*)*",

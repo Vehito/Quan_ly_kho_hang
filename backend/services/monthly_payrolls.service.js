@@ -12,6 +12,8 @@ class MonthlyPayrollsService extends Service {
             total_amount: payload.total_amount ?? 0,
             finalized_day: payload.finalized_day ?? null,
             is_finalized: payload.is_finalized ?? false,
+            created_at: payload.created_at ?? new Date(),
+            created_by: payload.created_by
         }
 
         Object.keys(employee_payrolls).forEach(
@@ -20,17 +22,44 @@ class MonthlyPayrollsService extends Service {
         return employee_payrolls;
     }
 
+    async query(filter, conn) {
+        const { limit, offset, ...conditions } = filter;
+        const {clauses, values} = this.getQueryClauses(conditions, this.tableName, this.likeClauses);
+        let query = `SELECT ${this.tableName}.*, employees.name AS employee_name
+            FROM ${this.tableName}`;
+        query += ` JOIN employees ON ${this.tableName}.created_by = employees.id`
+        if(clauses) {
+            query += ` WHERE ${clauses}`;
+        }
+        if(limit > 0) {
+            query += `\nLIMIT ${limit} ${offset>0 ? ('OFFSET ' + offset) : ''}`
+        }
+        const [rows] = await conn.query(query, values);
+        return rows;
+    }
+
     async insert(payload, conn) {
         const employee_payrolls = await this.#extractEmployeePayrollData(payload);
         const [result] = await conn.query(
-            `INSERT INTO ${this.tableName} (payroll_month, total_amount, finalized_day, is_finalized)
-            VALUES (?, ?, ?, ?)`,
+            `INSERT INTO ${this.tableName} (payroll_month, total_amount, finalized_day, is_finalized, created_at, created_by)
+            VALUES (?, ?, ?, ?, ?, ?)`,
             Object.values(employee_payrolls)
         );
         return {
             id: result.insertId,
             ...result
         };
+    }
+
+    getQueryClauses(filter, tableName, likeClause) {
+        const { start, end, ...conditions } = filter;
+        if(start && end) {
+            const values = super.getQueryClauses(conditions, tableName, likeClause);
+            values.clauses += ` ${values.clauses ? 'AND' : ''} payroll_month BETWEEN ? AND ?`
+            values.values.push(...[start, end]);
+            return values;
+        }
+        return super.getQueryClauses(filter, tableName, likeClause);
     }
 }
 

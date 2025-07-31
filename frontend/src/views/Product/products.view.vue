@@ -83,14 +83,16 @@ const isLoading = ref(true);
 const numberOfItems = ref(0);
 const pageLoading = ref(true);
 
-const conditions = {id: undefined, name: undefined, origin: undefined, manufacturer: undefined, type: undefined, limit: 10, offset: 0};
+const conditions = {id: undefined, name: undefined, origin: undefined, manufacturer: undefined, type: [], limit: 10, offset: 0};
 
 async function searchSubmit(values) {
     conditions.offset = 0;
     conditions.name = values.name;
     conditions.origin = values.origin;
     conditions.manufacturer = values.manufacturer;
-    conditions.type = values.types;
+    if(Array.isArray(values.types)) {
+        conditions.type = values.types;
+    }
     await getCount();
     await getProducts();
 }

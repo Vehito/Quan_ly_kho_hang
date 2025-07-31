@@ -1,5 +1,5 @@
 import express from "express";
-import * as monthlyPayrolls from "../controllers/monthly_payrolls.controller";
+import * as monthlyPayrolls from "../controllers/monthly_payrolls.controller.js";
 
 const route = express.Router();
 

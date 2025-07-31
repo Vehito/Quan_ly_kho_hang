@@ -1,5 +1,5 @@
 import express from "express";
-import * as employeePayrolls from "../controllers/employee_payrolls.controller";
+import * as employeePayrolls from "../controllers/employee_payrolls.controller.js";
 
 const route = express.Router();
 

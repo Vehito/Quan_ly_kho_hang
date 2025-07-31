@@ -32,6 +32,11 @@ export default {
         return stringDate;
     },
 
+    getFirstOfMonth(isoDate) {
+        const date = new Date(isoDate);
+        return new Date(date.getFullYear(), date.getMonth(), 1);
+    },
+
     formatDateForMySQL(date) {
         // if(!date) return null;
         const d = new Date(date);

@@ -15,12 +15,12 @@ class EmployeePayrollsService extends Service {
             overtime_weekend_hours: payload.overtime_weekend_hours ?? 0,
             overtime_holiday_hours: payload.overtime_holiday_hours ?? 0,
             lunch_allowance: payload.lunch_allowance ?? 0,
-            orther_allowances: payload.orther_allowances ?? 0,
-            orther_allowances_description: payload.orther_allowances_description ?? null,
+            other_allowances: payload.other_allowances ?? 0,
+            other_allowances_description: payload.other_allowances_description ?? null,
             social_insurance: payload.social_insurance ?? 0,
-            heath_insurance: payload.heath_insurance ?? 0,
-            orther_dedutions: payload.orther_dedutions ?? 0,
-            orther_dedutions_description: payload.orther_dedutions_description ?? null,
+            health_insurance: payload.health_insurance ?? 0,
+            other_dedutions: payload.other_dedutions ?? 0,
+            other_dedutions_description: payload.other_dedutions_description ?? null,
             unemloyment_insurance: payload.unemloyment_insurance ?? 0,
             recorded_payment: payload.recorded_payment ?? false,
         }
@@ -36,8 +36,8 @@ class EmployeePayrollsService extends Service {
         const [result] = await conn.query(
             `INSERT INTO ${this.tableName} 
                 (employee_id, payroll_month, workdays, overtime_weekday_hours, overtime_weekend_hours,
-                overtime_holiday_hours, lunch_allowance, orther_allowances, orther_allowances_description,
-                social_insurance, heath_insurance, orther_dedutions, orther_dedutions_description,
+                overtime_holiday_hours, lunch_allowance, other_allowances, other_allowances_description,
+                social_insurance, health_insurance, other_dedutions, other_dedutions_description,
                 unemloyment_insurance, recorded_payment)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             Object.values(employee_payrolls)
@@ -55,16 +55,20 @@ class EmployeePayrollsService extends Service {
                 employees.responsibility_allowance AS responsibility_allowance,
                 employees.working_days AS working_days,
                 SUM(basic_salary*workdays + overtime_weekday_hours*1.5 + overtime_weekend_hours*2
-                    + overtime_holiday_hours*3 + lunch_allowance + responsibility_allowance + orther_allowances) 
-                    AS total_income
-                SUM(social_insurance + heath_insurance + unemployment_insurance
-                    + orther_deductions) AS total_deduction
-                SUM(total_income - total_deduction) AS net_salary
+                    + overtime_holiday_hours*3 + lunch_allowance + responsibility_allowance + other_allowances) 
+                    AS total_income,
+                SUM(social_insurance + health_insurance + unemployment_insurance
+                    + other_deductions) AS total_deduction,
+                SUM((basic_salary*workdays + overtime_weekday_hours*1.5 + overtime_weekend_hours*2
+                        + overtime_holiday_hours*3 + lunch_allowance + responsibility_allowance + other_allowances)
+                    - (social_insurance + health_insurance + unemployment_insurance
+                        + other_deductions)) AS net_salary
             FROM ${this.tableName}`;
         query += ' JOIN employees ON employee_payrolls.employee_id = employees.id'
         if(clauses) {
             query += ` WHERE ${clauses}`;
         }
+        query += `\nGROUP BY ${this.tableName}.id`
         const [rows] = await conn.query(query, values);
         return rows;
     }

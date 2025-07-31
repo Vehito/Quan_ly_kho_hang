@@ -54,7 +54,7 @@ class ProductsService extends Service {
         const type = [];
         if(Array.isArray(filter['type[]'])) {
             type.push(...filter['type[]']);
-        } else {
+        } else if(filter['type[]']) {
             type.push(filter['type[]']);
         }
         const { ['type[]']: _ignored, ...conditions } = filter;

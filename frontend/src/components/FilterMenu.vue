@@ -53,6 +53,9 @@ import { computed, ref, onMounted } from 'vue';
 // setup
 const props = defineProps({
     timeFields: {type: Boolean, default: false},
+    initTime: { type: String, default: 'month', 
+        validator: val => ['month', 'quarter', 'year'].includes(val)
+    },
     customerFields: {type: Boolean, default: false},
     supplierFields: {type: Boolean, default: false},
     productFields: {type: Boolean, default: false},
