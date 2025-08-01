@@ -44,6 +44,7 @@ import monthly_payrollsController from '@/controllers/monthly_payrolls.controlle
 // more
 import { onMounted, ref } from 'vue';
 import date_helperUtil from '@/utils/date_helper.util';
+import router from '@/router';
 
 // ref
 const monthlyPayrolls = ref([]);
@@ -68,8 +69,16 @@ const tableHeaders = [
 ];
 const dropdownBtn = {
     items: ['Xem chi tiết', 'Xóa bảng lương'],
-    handleAction(selectedAction, monthly_payroll) {
-        return;
+    handleAction(selectedAction, row) {
+        switch(selectedAction) {
+            case 'Xem chi tiết':
+                const year = row.payroll_month.slice(0, 4);
+                const month = Number(row.payroll_month.slice(5, 7))+1;
+                router.push({ 
+                    name: 'employee_payrolls',
+                    params: {payroll_month: `${year}-${month}`}
+                })
+        }
     }
 };
 

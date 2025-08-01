@@ -1,7 +1,6 @@
 <template>
     <div class="page row">
         <div class="col -12">
-            <!-- <InputSearch v-model="searchText" v-on:submit="searchSubmit"/> -->
              <ProductFilterMenu :input-search="true" :types="true" @update:values="searchSubmit"/>
         </div>
 

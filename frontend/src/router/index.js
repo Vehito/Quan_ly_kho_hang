@@ -136,6 +136,12 @@ const routes = [
         name: "monthly_payrolls",
         component: views.MonthlyPayrollView
     },
+    {
+        path: "/employee_payrolls/:payroll_month",
+        name: "employee_payrolls",
+        component: views.EmployeePayrollView,
+        props: true
+    },
 
     {
         path: "/:pathMatch(.*)*",

@@ -36,14 +36,14 @@ import { Form, ErrorMessage } from 'vee-validate';
 const emits = defineEmits(['submit:login']);
 
 const loginInfo = {
-    username: 'ABC',
+    username: 'nguyen123',
     password: 'abcde12345'
 };
 
 const fields = [
     { 
         label: 'Tên đăng nhập:',
-        modelValue: 'ABC',
+        modelValue: 'nguyen123',
         placeholder: "Nhập tên đăng nhập",
         name: "username",
         updateModelValue: (value) => {
