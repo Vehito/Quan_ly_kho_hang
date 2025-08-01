@@ -22,7 +22,7 @@ app.use(express.static('public'));
 
 app.use("/api/products" , auth.authenticateToken, routers.productsRouter);
 app.use("/api/customers", auth.authenticateToken, routers.customersRouter);
-app.use("/api/positions", auth.authenticateToken, routers.positionsRouter);
+app.use("/api/departments", auth.authenticateToken, routers.departmentsRouter);
 app.use("/api/employees", auth.authenticateToken, routers.employeesRouter);
 app.use("/api/suppliers", auth.authenticateToken, routers.suppliersRouter);
 app.use("/api/shipments", auth.authenticateToken, routers.shipmentsRouter);

@@ -17,8 +17,9 @@ class EmployeesService extends Service {
             id: payload.id,
             name: payload.name,
             basic_salary: payload.basic_salary,
+            position: payload.position ?? 'Employee',
             responsibility_allowance: payload.responsibility_allowance,
-            position_id: payload.position_id,
+            department_id: payload.department_id,
             working_days: payload.working_days,
             birth: payload.birth,
             phone: payload.phone,
@@ -36,8 +37,8 @@ class EmployeesService extends Service {
     async insert(payload, conn) {
         const employee = await this.#extractEmployeeData(payload);
         const [result] = await conn.query(
-            `INSERT INTO ${this.tableName} (name, basic_salaty, responsibility_allowance, position_id, working_days, birth, phone, username, password, address)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            `INSERT INTO ${this.tableName} (name, basic_salary, position, responsibility_allowance, department_id, working_days, birth, phone, username, password, address)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             Object.values(employee)
         );
         return {
@@ -49,12 +50,12 @@ class EmployeesService extends Service {
     async query(filter, conn) {
         const { clauses, values } = this.getQueryClauses(filter, this.tableName);
         let query = `SELECT employees.id, employees.name, employees.basic_salary,
-            employees.responsibility_allowance, employees.position_id,
+            employees.responsibility_allowance, employees.department_id,
             employees.working_days, employees.birth, employees.phone,
-            employees.username, employees.address,
-            positions.name AS position_name, positions.level AS level 
+            employees.username, employees.address, employees.position,
+            departments.name AS department_name
             FROM ${this.tableName}`;
-        query += ' JOIN positions ON employees.position_id = positions.id'
+        query += ' JOIN departments ON employees.department_id = departments.id'
         if(clauses) {
             query += ` WHERE ${clauses}`;
         }

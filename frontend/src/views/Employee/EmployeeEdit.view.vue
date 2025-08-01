@@ -4,9 +4,9 @@
             Hiệu chỉnh nhân viên
         </h4>
         <EmployeeForm 
-            v-if="employee && positions"
+            v-if="employee && departments"
             :employee="employee"
-            :positions="positions"
+            :departments="departments"
             @submit:employee="updateEmployee"
             @delete:employee="deleteEmployee"
         />
@@ -17,9 +17,9 @@
             Tạo nhân viên
         </h4>
         <EmployeeForm 
-            v-if="positions"
+            v-if="departments"
             :employee="null"
-            :positions="positions"
+            :departments="departments"
             @submit:employee="createEmployee"
         />
     </div>
@@ -28,7 +28,7 @@
 <script setup>
 import EmployeeForm from '@/components/forms/EmployeeForm.vue';
 import employeesController from '@/controllers/employees.controller';
-import positionController from '@/controllers/position.controller';
+import departmentController from '@/controllers/department.controller';
 import router from '@/router';
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
@@ -40,7 +40,7 @@ const props = defineProps({
 const route = useRoute();
 
 const employee = ref(null);
-const positions = ref(null);
+const departments = ref(null);
 
 async function getEmployee(id) {
     try {
@@ -60,7 +60,7 @@ async function getEmployee(id) {
 
 async function getPostions() {
     try {
-        positions.value = await positionController.queryAll();
+        departments.value = await departmentController.queryAll();
     } catch (error) {
         error.showAlert();
         router.push({

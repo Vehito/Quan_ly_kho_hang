@@ -21,17 +21,23 @@ export class Employee {
         this.basic_salary = data.basic_salary;
         this.responsibility_allowance = data.responsibility_allowance;
         this.working_days = data.working_days;
-        this.position_id = data.position_id;
+        this.department_id = data.department_id;
         this.birth = data.birth;
         this.phone = data.phone;
+        this.position = data.position;
         this.username = data.username ?? null;
         this.password = data.password ?? null;
         this.address = data.address;
-        this.position_name= data.position_name ?? null;
+        this.department_name= data.department_name ?? null;
     }
 
     get arr_working_days() {
         return this.working_days.split(', ');
+    }
+    get arr_working_days_status() {
+        const date = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
+        const workingDaysSet = new Set(this.arr_working_days);
+        return date.map((day) => workingDaysSet.has(day));
     }
     get text_birth() {
         return date_helperUtil.getStringDate(this.birth);
@@ -39,15 +45,19 @@ export class Employee {
     get formatted_basic_salary() {
         return number_heplerUtil.getFormattedNumber(this.basic_salary);
     }
+    get text_position() {
+        return this.position==='Admin' ? "Quản lý" : "Nhân viên";
+    }
 
     static getEmptyObject() {
         return new Employee({
-            name: '',
-            position_id: 1,
-            birth: new Date(),
-            phone: '',
-            username: '',
-            address: '',
+            name: '', department_id: 1,
+            birth: new Date(), phone: '',
+            username: null, address: '',
+            position: 'Employee',
+            working_days: 'T2, T3, T4, T5, T6, T7'
         });
     }
+
+    static arrDateInWeek = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
 }

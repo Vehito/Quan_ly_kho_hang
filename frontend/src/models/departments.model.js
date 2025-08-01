@@ -1,18 +1,18 @@
 import Model from "./model";
 
-class PositionsModel extends Model {
+class DepartmentsModel extends Model {
     constructor() {
-        super("/api/positions");
+        super("/api/departments");
     }
 
     createIntance(data) {
-        return new Position(data);
+        return new Department(data);
     }
 }
 
-export default new PositionsModel();
+export default new DepartmentsModel();
 
-export class Position {
+export class Department {
     constructor(data) {
         this.id = data.id ?? null,
         this.name = data.name,

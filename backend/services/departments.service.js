@@ -2,29 +2,29 @@ import Service from "./service.js";
 
 class PositionsService extends Service {
     constructor() {
-        super('positions');
+        super('departments');
     }
 
     #extractPositionData(payload) {
-        const position = {
+        const department = {
             id: payload.id,
             name: payload.name,
             level: payload.level,
             description: payload.description ?? null
         }
 
-        Object.keys(position).forEach(
-            (key) => position[key] === undefined && delete position[key]
+        Object.keys(department).forEach(
+            (key) => department[key] === undefined && delete department[key]
         );
-        return position;
+        return department;
     }
 
     async insert(payload, conn) {
-        const position = this.#extractPositionData(payload);
+        const department = this.#extractPositionData(payload);
         const [result] = await conn.query(
-            `INSERT INTO ${this.tableName} (name, level, description)
+            `INSERT INTO ${this.tableName} (name, description)
             VALUES (?, ?, ?)`,
-            Object.values(position)
+            Object.values(department)
         );
         return {
             id: result.insertId,

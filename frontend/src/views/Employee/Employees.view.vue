@@ -14,7 +14,8 @@
                     <EmployeeGridSlot 
                         :class="{ active: isActive }"
                         :id="data.id" :name="data.name"
-                        :position_name="data.position_name" :index="key"
+                        :department_name="data.department_name"
+                        :text_position="data.text_position" :index="key"
                     />
                 </template>
             </GridView>
@@ -60,8 +61,8 @@ async function getEmployees() {
 
 function employeeStrings() {
     return employees.value.map((employee) => {
-        const { id, name, phone, address, position_name } = employee;
-        return [id, name, phone, address, position_name].join("");
+        const { id, name, phone, address, department_name } = employee;
+        return [id, name, phone, address, department_name].join("");
     });
 }
 

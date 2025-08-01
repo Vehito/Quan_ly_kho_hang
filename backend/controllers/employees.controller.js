@@ -8,9 +8,10 @@ dotenv.config();
 export async function insert(req, res, next) {
     sharedController.isValid(
         req.body, 
-        ['name', 'position_id', 'birth', 'phone', 'username', 'password', 'address'],
-        'employee'
-    );
+        ['name', 'department_id', 'birth', 'phone', 'position',
+            ...(req.body.position === 'Admin' ? ['username', 'password'] : []),
+            'address'],
+        'employee');
     try {
         const result = await sharedController
         .withTransaction(async (conn) => {
@@ -97,8 +98,8 @@ export async function login(req, res, next) {
             });
             const token = jwt.sign(
                 { id: user.id, name: user.name, 
-                position_name: user.position_name, 
-                level: user.level, username: user.username },
+                department_name: user.department_name, 
+                username: user.username },
                 process.env.SECRET,
                 { expiresIn: '60m' });
             const refreshToken = jwt.sign(
@@ -156,8 +157,8 @@ export function refreshToken(req, res, next) {
 
         const newAccessToken = jwt.sign(
             { id: decoded.id, name: decoded.name, 
-                position_name: decoded.position_name,
-                level: decoded.level, username: decoded.username },
+                department_name: decoded.department_name,
+                username: decoded.username },
             process.env.SECRET,
             { expiresIn: '15m' }
         );

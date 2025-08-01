@@ -7,7 +7,8 @@ const props = defineProps({
     employee: { required: true, type: Employee }
 });
 const data = [
-    {key: 'position_name', value: 'Vị trí'},
+    {key: 'department_name', value: 'Phòng ban'},
+    {key: 'text_position', value: 'Vị trí'},
     {key: 'username', value: 'Tên đăng nhập'},
     {key: 'phone', value: 'Số điện thoại'},
     {key: 'address', value: 'Địa chỉ'}

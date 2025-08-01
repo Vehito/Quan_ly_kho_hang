@@ -3,7 +3,8 @@
 const props = defineProps({
     id: {required: true, type: Number},
     name: {required: true, type: String},
-    position_name: {required: true, type: String},
+    department_name: {required: true, type: String},
+    text_position: { required: true, type: String },
     index: { required: true, type: Number }
 });
 
@@ -20,7 +21,8 @@ function onClick() {
         <img src="../assets/imgs/default-avatar.jpg" alt="Image" class="card-img-top">
         <div class="card-body">
             <h6 class="card-title">{{ name }}</h6>
-            <p class="card-text">{{ position_name }}</p>
+            <p class="card-text">{{ department_name }}</p>
+            <p class="card-text">{{ text_position }}</p>
         </div>
     </div>
 </template>
@@ -29,7 +31,7 @@ function onClick() {
 .card {
     display: flex;
     align-items: center;
-    width: 175px;
+    width: 200px;
     height: min-content;
     border: solid 2px;
     border-radius: 10px;
