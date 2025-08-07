@@ -4,6 +4,7 @@ import ImportItemsService from "../services/import_items.service.js";
 import ExportItemsService from "../services/export_items.service.js";
 import * as sharedController from "./controller.shared.js";
 import ProductsService from "../services/products.service.js";
+import CustomersService from "../services/customers.service.js";
 
 function getObject(isImport) {
     return isImport ? "supplier_id" : "customer_id";
@@ -22,17 +23,22 @@ function checkValidShipmentItems(listItem = [], isImport) {
     }
 }
 
-async function insertShipmentItems(shipmentId, listItem = [], isImport, conn) {
+async function insertShipmentItems(shipmentId, customer_id, listItem = [], isImport, conn) {
     const shipmentItemService = getShipmentItemService(isImport);
     const productService = new ProductsService();
-    let quantity = 0;
+    let total = 0;
     try {
         for (const item of listItem) {
             item.shipment_id = shipmentId;
+            total += (item.quantity*item.price);
             await shipmentItemService.insert(item, conn);
             await productService.adjustQuantity(
                 item.product_id, isImport ? item.quantity : -item.quantity, conn
             );
+        }
+        if(!isImport) {
+            const customersService = new CustomersService();
+            customersService.adjustDebt(customer_id, total, conn);
         }
     } catch (error) {
         throw new ApiError(500, `An error occurred while inserting the shipment item: ${error}`);
@@ -58,7 +64,7 @@ export async function insert(req, res, next) {
             .withTransaction(async (conn) => {
                 const shipmentService = new ShipmentsService(isImport);
                 const result = await shipmentService.insert(req.body, conn);
-                await insertShipmentItems(result.id, req.body.listItem, isImport, conn);
+                await insertShipmentItems(result.id, req.body.customer_id, req.body.listItem, isImport, conn);
                 return result;
             });
         return res.send(result);

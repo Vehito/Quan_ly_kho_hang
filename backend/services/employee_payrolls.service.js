@@ -25,6 +25,9 @@ class EmployeePayrollsService extends Service {
             other_deductions_description: payload.other_deductions_description ?? null,
             unemployment_insurance: payload.unemployment_insurance ?? 0,
             recorded_payment: payload.recorded_payment ?? false,
+            monthly_payroll_id: payload.monthly_payroll_id,
+            position: payload.position,
+            department_id: payload.department_id
         }
 
         Object.keys(employee_payrolls).forEach(
@@ -40,8 +43,9 @@ class EmployeePayrollsService extends Service {
                 (employee_id, payroll_month, workdays, basic_salary, overtime_weekday_hours, overtime_weekend_hours,
                 overtime_holiday_hours, responsibility_allowance, lunch_allowance, other_allowances,
                 other_allowances_description, social_insurance, health_insurance, other_deductions,
-                other_deductions_description, unemployment_insurance, recorded_payment)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                other_deductions_description, unemployment_insurance, recorded_payment, monthly_payroll_id,
+                position, department_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             Object.values(employee_payrolls)
         );
         return {
@@ -53,11 +57,13 @@ class EmployeePayrollsService extends Service {
     async query(filter, conn) {
         const { clauses, values } = this.getQueryClauses(filter, this.tableName);
         let query = `SELECT employee_payrolls.*,
-                employees.name AS employee_name, employees.position AS position,
-                departments.name AS department_name
+                employees.name AS employee_name,
+                departments.name AS department_name,
+                monthly_payrolls.finalized_day AS finalized_day
             FROM ${this.tableName}`;
         query += ' JOIN employees ON employee_payrolls.employee_id = employees.id'
-        query += ' JOIN departments ON employees.department_id = departments.id'
+        query += ' JOIN departments ON employee_payrolls.department_id = departments.id'
+        query += ' JOIN monthly_payrolls ON employee_payrolls.monthly_payroll_id = monthly_payrolls.id'
         if(clauses) {
             query += ` WHERE ${clauses}`;
         }

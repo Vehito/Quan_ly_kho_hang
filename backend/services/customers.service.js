@@ -34,6 +34,18 @@ class CustomersService extends Service {
             ...result
         };
     }
+
+    async adjustDebt(id, debt, conn) {
+        const update = 
+            `UPDATE ${this.tableName} 
+            SET debt = CASE
+                WHEN (debt + ?) >= 0
+                THEN debt + ?
+            END
+            WHERE id = ?`;
+        const result = await conn.query(update, [debt, debt, id]);
+        return result;
+    }
 }
 
 export default CustomersService;

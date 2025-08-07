@@ -34,8 +34,10 @@ export class Product {
     }
 
     static types = ['Trái cây','Rau củ','Các loại thịt','Thực phẩm đóng hộp',
-        'Ngũ cốc', 'Cá và hải sản','Quả hạch và hạt'];
-    static units = ['Kg', 'Lít', 'Thùng', 'Hộp', 'Bao'];
+        'Ngũ cốc', 'Cá và hải sản','Quả hạch và hạt', 'Gạo và đồ khô', 'Gia vị', 'Sữa và thức uống',
+        'Thực phẩm chế biến khô'
+    ];
+    static units = ['Kg', 'Lít', 'Thùng', 'Hộp', 'Bao', 'Bịch'];
     static imgBaseURL = 'http://localhost:3000/imgs/product/';
     static getEmptyObject() {
         return new Product(

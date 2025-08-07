@@ -27,6 +27,8 @@ class MonthlyPayrollsController extends Controller {
 
     async update(id, data) {
         data.payroll_month = date_helperUtil.formatDateForMySQL(data.payroll_month);
+        data.created_at = date_helperUtil.formatDateForMySQL(data.created_at);
+        data.finalized_day = date_helperUtil.formatDateForMySQL(data.finalized_day);
         const editedData = super.deleteAttribute(data, ['employee_payrolls', 'employee_name']);
         return await super.update(id, editedData);
     }

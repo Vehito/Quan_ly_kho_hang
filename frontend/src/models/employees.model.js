@@ -46,7 +46,11 @@ export class Employee {
         return number_heplerUtil.getFormattedNumber(this.basic_salary);
     }
     get text_position() {
-        return this.position==='Admin' ? "Quản lý" : "Nhân viên";
+        switch(this.position) {
+            case 'Boss': return "Chủ kho";
+            case 'Admin': return "Quản lý";
+            case 'Employee': return "Nhân viên";
+        }
     }
 
     static getEmptyObject() {

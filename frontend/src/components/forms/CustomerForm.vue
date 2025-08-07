@@ -3,24 +3,47 @@
         <Form @submit="submitCustomer"
             :validation-schema="validationSchema"
         >
-            <div
-                v-for="field in fields"
-                :key="field.name"
-                class="form-group"
-            >
-                <FormFields 
-                    :label="field.label"
-                    :type="field.type"
-                    :model-value="field.modelValue ?? ''"
-                    :name="field.name"
-                    :options="field.options"
-                    :placeholder="field.placeholder"
-                    @update:model-value="field.updateModelValue"
+            <div class="row">
+                <div class="col">
+                    <div
+                        v-for="field in fields.slice(0, 3)"
+                        :key="field.name"
+                        class="form-group"
+                    >
+                        <FormFields 
+                            :label="field.label"
+                            :type="field.type"
+                            :model-value="field.modelValue ?? ''"
+                            :name="field.name"
+                            :options="field.options"
+                            :placeholder="field.placeholder"
+                            @update:model-value="field.updateModelValue"
 
-                />
-                <ErrorMessage :name="field.name" class="error-feedback" />
+                        />
+                        <ErrorMessage :name="field.name" class="error-feedback" />
+                    </div>
+                </div>
+                <div class="col">
+                    <div
+                        v-for="field in fields.slice(3, 6)"
+                        :key="field.name"
+                        class="form-group"
+                    >
+                        <FormFields 
+                            :label="field.label"
+                            :type="field.type"
+                            :model-value="field.modelValue ?? ''"
+                            :name="field.name"
+                            :options="field.options"
+                            :placeholder="field.placeholder"
+                            @update:model-value="field.updateModelValue"
+
+                        />
+                        <ErrorMessage :name="field.name" class="error-feedback" />
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
+            <div class="form-group text-center">
                 <button class="btn btn-primary" type="submit">
                     Lưu
                 </button>
@@ -59,6 +82,7 @@ const props = defineProps({
 const emits = defineEmits(['submit:customer', 'delete:customer']);
 
 let localCustomer = props.customer ?? Customer.getEmptyObject();
+let delete_debt = 0;
 
 const fields = [
     { 
@@ -89,8 +113,8 @@ const fields = [
             localCustomer.address = value;
         }
     },
-    ...(!props.customer ? [
-        {
+    ...(!props.customer 
+        ? [{
             label: 'Số nợ khách hàng:',
             type: 'number',
             modelValue: localCustomer.debt,
@@ -99,8 +123,17 @@ const fields = [
             updateModelValue: (value) => {
                 localCustomer.debt = value;
             }
-        }
-    ] : []),
+        }]
+        : [{
+            label: 'Số nợ muốn xóa:',
+            type: 'number',
+            modelValue: delete_debt,
+            placeholder: "Nhập số nợ muốn xóa",
+            name: "delete_debt",
+            updateModelValue: (value) => {
+                delete_debt = value;
+            }
+        }]),
     {
         label: 'Ngày trả:',
         type: 'date',
@@ -140,12 +173,24 @@ const validationSchema = yup.object().shape({
             .required("Địa chỉ phải có giá trị")
             .min(2, "Địa chỉ ít nhất 2 ký tự")
             .max(100, "Địa chỉ cao nhất 100 ký tự"),
-        debt: !props.customer?.id ?
-            yup.number()
-                .required("Số nợ phải có giá trị")
-                .typeError("Sai định dạng")
-                .min(0, "Số nợ nhỏ nhất là 0đ") :
-            yup.number().notRequired(),
+        ...(!props.customer?.id 
+            ? {
+                debt: yup.number()
+                    .required("Số nợ phải có giá trị")
+                    .typeError("Sai định dạng")
+                    .min(0, "Số nợ nhỏ nhất là 0đ")
+            }
+            : {
+                delete_debt: yup.number()
+                    .required("Số nợ muốn xóa không được trống")
+                    .typeError("Sai định dạng")
+                    .min(0, "Giá trị nhỏ nhất là 0đ")
+                    .test("delete_debt",
+                        `Không được vượt quá khoản nợ hiện tại\n${localCustomer.formatted_debt}`,
+                        value => value < localCustomer.debt
+                    )
+            }
+        ),
         due_date: yup
             .date()
             .transform((value, originalValue) => {
@@ -162,6 +207,12 @@ const validationSchema = yup.object().shape({
 });
 
 function submitCustomer() {
+    localCustomer.due_date===''
+        ? localCustomer.due_date = undefined 
+        : localCustomer.due_date;
+    if(delete_debt>0 && delete_debt<localCustomer.debt && props.customer?.id) {
+        localCustomer.debt -= delete_debt;
+    }
     emits('submit:customer', localCustomer);
 }
 

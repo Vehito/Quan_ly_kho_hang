@@ -292,9 +292,9 @@ onMounted(async () => {
                         {{ product.name }}
                     </h4>
 
-                    <div class="text-center">
+                    <div class="text-center img-border">
                         <img class="mt-2" :src="product.img_url" alt="Ảnh sản phẩm"
-                            style="max-height: 300px; max-width: 300px;"
+                            style="height: 300px; width: 300px;"
                         >
                     </div>
                 </div>
@@ -313,7 +313,7 @@ onMounted(async () => {
         </LoadingScreen>
     </div>
 
-    <div class="slot mt-5 shadow">
+    <div class="slot mt-2 shadow">
         <h3 class="text-center">Lịch sử nhập hàng</h3>
         <ButtonCollapse :btn-classes="['btn btn-outline-dark']" 
             :btn-texts="['Bộ lọc']" :ids="['import_shipments']"
@@ -336,7 +336,7 @@ onMounted(async () => {
                 </div>
             </template>
         </ButtonCollapse>
-        <div class="mt-5">
+        <div class="mt-2">
             <LoadingScreen :is-loading="isLoading.import_shipments.value">
                 <h6 class="text-center">{{ importTableTitle }}</h6>
                 <CustomTable
@@ -397,5 +397,9 @@ onMounted(async () => {
     border: .5px solid gray;
     border-radius: 20px;
     width: 100%;
+}
+.img-border{
+    border: .5px gray solid;
+    border-radius: 20px;
 }
 </style>

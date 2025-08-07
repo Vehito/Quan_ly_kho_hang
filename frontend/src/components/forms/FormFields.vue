@@ -87,7 +87,9 @@ function reviewImage(newValue) {
 
             <div v-else-if="type === 'checkbox'">
                 <div class="row">
-                    <div v-for="(option, index) in options" class="col" :key="index">
+                    <div v-for="(option, index) in options" class="col" :key="index"
+                        style="min-width: fit-content;"
+                    >
                         <Field
                             class="form-control shadow"
                             type="checkbox"

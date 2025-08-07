@@ -82,7 +82,7 @@ const emits = defineEmits(['submit:employee', 'delete:employee']);
 let localEmployee = props.employee ?? Employee.getEmptyObject();
 let confirmPassword = '';
 const arr_working_days_status = localEmployee.arr_working_days_status;
-const isAdmin = ref(localEmployee.position==='Admin');
+const isAdmin = ref(localEmployee.position==='Admin' || localEmployee.position==='Boss');
 const fields = [
     { 
         label: 'Tên nhân viên:',
@@ -130,13 +130,14 @@ const fields = [
         modelValue: localEmployee.position,
         placeholder: 'Chọn vị trí',
         options: [
+            {id: 'Boss', name: 'Chủ kho'},
+            {id: 'Admin', name: 'Quản lý'},
             {id: 'Employee', name: 'Nhân viên'},
-            {id: 'Admin', name: 'Quản lý'}
         ],
         name: "position",
         updateModelValue: (value) => {
             localEmployee.position = value;
-            isAdmin.value = localEmployee.position==='Admin';
+            isAdmin.value = localEmployee.position==='Admin' || localEmployee.position==='Boss';
         }
     },
     { 
@@ -251,6 +252,7 @@ const validationSchema = yup.object().shape({
         .test("position", "Vị trí không hợp lệ",
             value => localEmployee.position==='Admin' 
                 || localEmployee.position==='Employee'
+                || localEmployee.position==='Boss'
         ),
     department_id: yup
         .string()

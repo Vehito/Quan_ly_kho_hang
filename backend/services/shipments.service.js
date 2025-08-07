@@ -54,7 +54,7 @@ class ShipmentsService extends Service {
         const { clauses, values } = this.#getConditionsForReport(filter);
         const itemTable = this.isImport ? 'import_items' : 'export_items';
         const available = filter.available;
-        let query = `SELECT COUNT(*) AS length
+        let query = `SELECT COUNT(DISTINCT ${this.tableName}.id) AS length
             FROM ${this.tableName}
             JOIN ${itemTable} ON ${this.tableName}.id = ${itemTable}.shipment_id
             JOIN ${this.object}s ON ${this.tableName}.${this.object}_id = ${this.object}s.id
@@ -64,7 +64,7 @@ class ShipmentsService extends Service {
             query += `\nJOIN import_items ON export_items.product_id = import_items.product_id AND export_items.import_shipment_id = import_items.shipment_id`
         }
         if(clauses) {
-            query += ` WHERE ${clauses} ${available ? ' AND import_items.stoke > 0' : ''}`;
+            query += `\nWHERE ${clauses} ${available ? ' AND import_items.stoke > 0' : ''}`;
         }
         // query += `\nGROUP BY ${this.tableName}.id`
         const [rows] = await conn.query(query, values);
@@ -131,7 +131,12 @@ class ShipmentsService extends Service {
             }
         }
         const keys = ['product_id', 'customer_id', 'supplier_id'];
-        let {clauses, values} = this.getQueryArrClauses(filter, this.items, keys);
+        let {clauses, values} = this.getQueryArrClauses(filter, this.items, ['product_id']);
+        const obj_object = this.getQueryArrClauses(filter, this.tableName, [`${this.object}_id`]);
+        if(obj_object.clauses.length>0) {
+            clauses += `${clauses?.length>0 ? ' AND ':''}${obj_object.clauses}`;
+            values.push(...obj_object.values);
+        }
         if(filter.start && filter.end) {
             clauses += ` ${clauses ? 'AND' : ''} ${this.tableName}.created_at BETWEEN ? AND ?`;
             values.push(filter.start, filter.end);
@@ -144,10 +149,10 @@ class ShipmentsService extends Service {
             clauses += ` ${clauses ? 'AND' : ''} import_items.mfg BETWEEN ? AND ?`;
             values.push(filter.mfg.start, filter.mfg.end);
         }
-        if(filter.product_id) {
-            clauses += ` ${clauses ? 'AND' : ''} import_items.product_id = ?`;
-            values.push(filter.product_id);
-        }
+        // if(filter.product_id) {
+        //     clauses += ` ${clauses ? 'AND' : ''} import_items.product_id = ?`;
+        //     values.push(filter.product_id);
+        // }
         return {
             clauses: clauses,
             values

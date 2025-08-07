@@ -8,25 +8,23 @@
             @update:values="updateData"
         />
         <div class="row mt-2">
-            <div class="col-lg-3 col-12">
-                <div v-for="(card, index) in cards" :key="index">
-                    <LoadingScreen v-if="card.isVisiable" :is-loading="card.isLoading.value">
-                        <Card
-                            :header-title="card.cardHeader"
-                            :card-text="number_heplerUtil.getCurrencyFormat(card.cardText.value)"
-                            :class-card="card.cardClass"
-                            :class-text="card.classText"
-                        />
-                    </LoadingScreen>
-                </div>
-            </div>
-            <div class="col-lg-9 col-12 mb-3 shadow chart">
-                <div>
-                    <h6>{{ titleChart }}</h6>
-                    <BarChart :data="chartObject" 
-                        :is-loading="isLoading.importShipments.value || isLoading.exportShipments.value"
+            <div v-for="(card, index) in cards" class="col" :key="index">
+                <LoadingScreen v-if="card.isVisiable" :is-loading="card.isLoading.value">
+                    <Card
+                        :header-title="card.cardHeader"
+                        :card-text="number_heplerUtil.getCurrencyFormat(card.cardText.value)"
+                        :class-card="card.cardClass"
+                        :class-text="card.classText"
                     />
-                </div>
+                </LoadingScreen>
+            </div>
+        </div>
+        <div class="mb-3 shadow chart">
+            <div>
+                <h6 class="text-center">{{ titleChart }}</h6>
+                <BarChart :data="chartObject" 
+                    :is-loading="isLoading.importShipments.value || isLoading.exportShipments.value"
+                />
             </div>
         </div>
         <hr>

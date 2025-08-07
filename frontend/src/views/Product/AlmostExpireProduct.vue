@@ -14,13 +14,32 @@
                 />
             </span>
         </div> 
-
         <div class="mt-3">
             <loading-screen :is-loading="isLoading">
+                <h6 class="text-center">Danh sách sản phẩm</h6>
+                <CustomTable
+                    :table-headers="productTableHeader"
+                    :table-rows="productTableRows"
+                />
+            </loading-screen>
+        </div>
+        <div class="mt-3">
+            <loading-screen :is-loading="isLoading">
+                <h5 class="text-center">Bảng đơn nhập</h5>
                 <CustomTable
                     :table-headers="tableHeaders"
                     :table-rows="tableRows"
-                />
+                    :change-columns="changeColumns"
+                    :changing-condition="changingCondition"
+                >
+                    <template #custom="{ row }">
+                        <button class="btn btn-outline-dark" 
+                            @click="router.push({ name: 'import_shipment.detail', params: { id: row.shipment_id } })"
+                        >
+                            Xem chi tiết
+                        </button>
+                    </template>
+                </CustomTable>
             </loading-screen>
         </div>
     </div>
@@ -39,6 +58,8 @@ const importShipmentController = new ShipmentsController(true);
 
 // more
 import { ref, onMounted, computed } from 'vue';
+import router from '@/router';
+import date_helperUtil from '@/utils/date_helper.util';
 
 // ref
 const period = {start: ref(new Date()), end: ref(new Date())};
@@ -53,10 +74,48 @@ const tableHeaders = [
     { name: "Hạn sử dụng", key: "text_exp" },
 ];
 const tableRows = computed(() => {
-    return importShipments.value.map((shipment) => {
-        const {shipment_id, product_name, stoke, text_exp} = shipment.listItem[0];
-        return {shipment_id, product_name, stoke, text_exp};
+    return importShipments.value.flatMap((shipment) => {
+        return shipment.listItem.map((item) => {
+            const {shipment_id, product_name, stoke, text_exp} = item
+            return {shipment_id, product_name, stoke, text_exp};
+        })
     })
+});
+const changeColumns = ['text_exp'];
+function changingCondition(key, value) {
+    if(key==='text_exp') {
+        return 'text-warning'
+    }
+}
+
+const productTableHeader = [
+    {name: 'STT', key : 'index'},
+    {name: 'Mã sản phẩm', key : 'product_id'},
+    {name: 'Tên sản phẩm', key : 'product_name'},
+    {name: 'Tồn kho', key : 'stoke'},
+];
+const productTableRows = computed(() => {
+    const result = [];
+
+    importShipments.value.forEach((shipment) => {
+        shipment.listItem.forEach((item) => {
+            const { product_id, product_name, stoke, text_exp } = item;
+
+            const existing = result.find((p) => p.product_id === product_id);
+            if (existing) {
+                existing.stoke += stoke;
+            } else {
+                result.push({
+                    index: result.length+1,
+                    product_id,
+                    product_name,
+                    stoke,
+                });
+            }
+        });
+    });
+
+    return result;
 });
 const options = [
     {id: 0, name: 'HSD còn 3 tháng'},
@@ -78,7 +137,10 @@ async function getImportShipment() {
     try {
         isLoading.value = true;
         importShipments.value = await importShipmentController.queryAll(
-            {exp : {start: period.start.value, end: period.end.value}, available: true},
+            {exp : {
+                start: date_helperUtil.formatDateForMySQL(period.start.value), 
+                end: date_helperUtil.formatDateForMySQL(period.end.value)
+                }, available: true},
             true
         );
     } catch (error) {
@@ -112,7 +174,6 @@ async function handlePeriodSelect(selected) {
 }
 
 onMounted(async () => {
-    handlePeriodSelect(0);
-    await getImportShipment();
+    await handlePeriodSelect(0);
 });
 </script>

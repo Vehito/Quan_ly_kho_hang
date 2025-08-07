@@ -28,11 +28,9 @@
             </div>
             <div class="form-group">
                 <LoadingButton :is-loading="isLoadingSubmit" btn-text="Lưu">
-                    <template #custom-btn>
-                        <button class="btn btn-primary" type="submit">
-                            Lưu
-                        </button>
-                    </template>
+                    <button class="btn btn-primary" type="submit">
+                        Lưu
+                    </button>
                 </LoadingButton>
                 <button
                     class="btn btn-warning ml-2"
@@ -51,12 +49,12 @@ import * as yup from 'yup';
 import FormFields from './FormFields.vue';
 import { Form, ErrorMessage } from 'vee-validate';
 import { ExportShipment } from '@/models/shipments.model';
-import { ExportItem } from '@/models/shipment_items.model';
 import router from '@/router/index.js';
 import { onMounted, ref } from 'vue';
 import ExportItemField from './ItemShipmentForm/ExportItemField.vue';
 import customersController from '@/controllers/customers.controller';
 import LoadingButton from '../loading/LoadingButton.vue';
+import { shipmentPdfExport } from '@/utils/PDF_export';
 
 const emits = defineEmits(['submit:exportShipment']);
 
@@ -89,7 +87,7 @@ const fields = [
             localExportShipment.description = value;
         }
     },
-]
+];
 
 const validationSchema = yup.object().shape({
     customer_id: yup

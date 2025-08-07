@@ -24,7 +24,7 @@
         </LoadingScreen>
         <Pagination :is-loading="isLoading.quantity.value" :item-quantity="numberOfItems" @on-click:index="changePage" />
     </div>
-    <MonthlyPayrollForm @on-create="updateValues"/>
+    <MonthlyPayrollForm @on-create="reload"/>
 </div>
 </template>
 
@@ -64,7 +64,7 @@ const tableHeaders = [
     { name: 'Ngày thanh toán', key: 'text_finalized_day' },
     { name: 'Tạo bởi', key: 'employee_name' },
     { name: 'Thời gian tạo', key: 'text_created_at' },
-    { name: 'Số nhân viên', key: 'employee_payroll_quantity' },
+    // { name: 'Số nhân viên', key: 'employee_payroll_quantity' },
     { name: 'Số tiền thực nhận', key: 'formatted_total_amount' },
 ];
 const dropdownBtn = {
@@ -76,7 +76,7 @@ const dropdownBtn = {
                 const month = Number(row.payroll_month.slice(5, 7))+1;
                 router.push({ 
                     name: 'employee_payrolls',
-                    params: {payroll_month: `${year}-${month}`}
+                    params: {id: row.id}
                 })
         }
     }
@@ -105,6 +105,11 @@ async function loadQuantity() {
     } finally {
         isLoading.quantity.value = false;
     }
+}
+async function reload() {
+    conditions.offset = 0;
+    await loadQuantity();
+    await loadMonthlyPayrolls();
 }
 async function updateValues(values) {
     conditions.offset = 0;

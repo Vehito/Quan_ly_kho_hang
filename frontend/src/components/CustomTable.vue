@@ -10,9 +10,12 @@
         tableHeaders: { type: Array, required: true, default: [] },
         tableRows: { type: Array, required: true, default: [] },
 
-//      changeContents: { keyA: 'valueA', keyB: 'valueB',... }
         changeColumns: { type: Array, required: false, default: [] },
-        changingCondition: { type: Function, required: false }
+        changingCondition: { type: Function, required: false },
+
+//      totalColumns: [1, 2, 6]
+        totalColumns: { type: Array, required: false },
+        total: { type: Object, required: false },
     });
     const emits = defineEmits(['clickBtn']);
 
@@ -63,7 +66,18 @@
                         </span>
                     </td>
 
-                    <slot name="custom" :row="tableRow"></slot>
+                    <td class="text-center" style="border: none; padding: 0;">
+                        <slot name="custom" :row="tableRow"></slot>
+                    </td>
+                </tr>
+                <tr v-if="totalColumns?.length>0">
+                    <th scope="row" class="text-center">
+                        <strong>Tổng cộng</strong>
+                    </th>
+
+                    <td v-for="cell_number in tableHeaders.length-1">
+                        {{ total[cell_number] ?? '' }}
+                    </td>
                 </tr>
             </tbody>
         </table>

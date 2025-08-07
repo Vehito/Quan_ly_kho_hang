@@ -2,6 +2,7 @@ import ApiError from "../api-error.js";
 import ProductService from "../services/products.service.js";
 import * as sharedController from "./controller.shared.js";
 import multer from "multer";
+import fsSync from "fs";
 import path from 'path';
 import fs from 'fs/promises';
 
@@ -73,18 +74,21 @@ export async function update(req, res, next) {
                 const productService = new ProductService();
                 return await productService.update(req.params.id, filter, conn);
             });
-            if(img!=='undefined' && img!==undefined) {
-            const imgName = req.body.img_name;
-            const tempPath = path.join('public', 'imgs' ,'temp_uploads', imgName);
-            const finalPath = path.join('public', 'imgs', 'product', imgName);
+            if (req.body.img_name) {
+                const imgName = req.body.img_name;
+                const tempPath = path.join('public', 'imgs', 'temp_uploads', imgName);
+                const finalPath = path.join('public', 'imgs', 'product', imgName);
 
-            try {
-                await fs.rename(tempPath, finalPath);
-            } catch (error) {
-                console.error(error);
-                throw new ApiError(500, 'Không thể lưu ảnh');
+                // Kiểm tra xem file tạm có tồn tại thật không
+                if (fsSync.existsSync(tempPath)) {
+                    try {
+                        await fs.rename(tempPath, finalPath);
+                    } catch (error) {
+                        console.error(error);
+                        throw new ApiError(500, 'Không thể lưu ảnh');
+                    }
+                }
             }
-        }
         return res.send(result);
     } catch (error) {
         if(img) {

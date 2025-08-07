@@ -10,13 +10,13 @@ class EmployeePayrollController extends Controller {
     async insert(data) {
         data.payroll_month = date_helperUtil.formatDateForMySQL(data.payroll_month);
         const editedData = super.deleteAttribute(data,
-            ['employee_name', 'department_name', 'position']);
+            ['employee_name', 'department_name', 'finalized_day']);
         return await super.insert(editedData);
     }
 
     async update(id, data) {
         data.payroll_month = date_helperUtil.formatDateForMySQL(data.payroll_month);
-        const editedData = super.deleteAttribute(data, ['employee_name', 'department_name', 'position']);
+        const editedData = super.deleteAttribute(data, ['employee_name', 'department_name', 'finalized_day']);
         return await super.update(id, editedData);
     }
 }

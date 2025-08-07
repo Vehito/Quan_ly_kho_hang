@@ -1,5 +1,6 @@
 import date_helperUtil from "@/utils/date_helper.util";
 import Model from "./model";
+import number_heplerUtil from "@/utils/number_hepler.util";
 
 class ShipmentItemModel extends Model {
     constructor(isImport) {
@@ -27,7 +28,10 @@ export class ShipmentItem {
         this.product_name = data.product_name;
         this.quantity = data.quantity;
         this.price = data.price;
-        this.formatted_price = this.price?.toLocaleString('vi-VN');
+    }
+
+    get formatted_price() {
+        return number_heplerUtil.getFormattedNumber(this.price);
     }
 }
 

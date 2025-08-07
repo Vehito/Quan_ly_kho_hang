@@ -42,7 +42,7 @@
                                 {{ cellValue[key] }}
                             </span>
                         </td>
-                        <slot name="custom" :row="tableRow"></slot>
+                        <slot name="custom" :row="cellValue"></slot>
                     </tr>
                     <tr v-if="tableContent.tableRows.lower">
                         <td
@@ -55,6 +55,17 @@
                         </td>
                     </tr>
                 </template>
+                <tr v-if="totalColumns?.length>0">
+                    <th scope="row" class="text-center lower hai-ben">
+                        <strong>Tổng cộng</strong>
+                    </th>
+
+                    <td v-for="cell_number in tableContent.tableHeaders?.upper.length-1"
+                        class="lower hai-ben text-center"
+                    >
+                        <strong>{{ total[cell_number] ?? '' }}</strong>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
@@ -93,6 +104,10 @@ const props = defineProps({
 
     changeColumns: { type: Array, required: false, default: [] },
     changingCondition: { type: Function, required: false },
+
+    //      totalColumns: [1, 2, 6]
+    totalColumns: { type: Array, required: false },
+    total: { type: Object, required: false },
 });
 function checkCondition(key, cellValue) {
     if(props.changeColumns.find((col) => col === key) === undefined) return;

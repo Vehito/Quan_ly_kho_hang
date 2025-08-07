@@ -3,7 +3,11 @@
         <div class="col">
             <InputSearch v-model="searchText" v-on:submit="searchSubmit"/>
         </div>
-
+        <div class="col-12 mt-1">
+                <div class="float-right">
+                    <PDF_Btn />
+                </div>
+            </div>
         <div class="col-12 mt-3">
             <CustomTable 
                 :table-headers="tableHeaders"
@@ -20,6 +24,7 @@
                     </DropdownBtn>
                 </template>
             </CustomTable>
+            <Pagination :is-loading="quantityIsLoading" :item-quantity="numOfItem" />
         </div>
     </div>
 </template>
@@ -31,14 +36,19 @@ import { DropdownBtn } from '@/utils/buttons.util';
 import suppliersController from '@/controllers/suppliers.controller';
 import router from '@/router';
 import { onMounted, ref } from 'vue';
+import Pagination from '@/components/Pagination.vue';
+import PDF_Btn from '@/components/PDF_Btn.vue';
 
 const tableHeaders = [
     { name: "Mã hiệu", key: "id"},
     { name: "Tên nhà cung cấp", key: "name"},
     { name: "Địa chỉ", key: "address"},
     { name: "Số điện thoại", key: "phone"},
-]
+];
 
+const isLoading = ref(true);
+const quantityIsLoading = ref(true);
+const numOfItem = ref(0);
 const searchText = ref('');
 const suppliers = ref([]);
 
@@ -46,11 +56,32 @@ function searchSubmit(text) {
     console.log(text);
 }
 
+const PDF_Btn_content = {
+    tableHeaders: tableHeaders,
+    fileName: 'Danh_sach_nha_cung_cap.pdf',
+    tableTitle: 'Danh sách nhà cung cấp',
+    loadFunc: async () => await suppliersController
+        .queryAll()
+}
+
+async function getQuantity() {
+    try {
+        quantityIsLoading.value = true;
+        numOfItem.value = (await suppliersController.queryCount());
+    } catch (error) {
+        error.showAlert();
+    } finally {
+        quantityIsLoading.value = false;
+    }
+}
 async function getSuppliers() {
     try {
+        isLoading.value = true;
         suppliers.value = (await suppliersController.queryAll());
     } catch (error) {
         error.showAlert();
+    } finally {
+        isLoading.value = false
     }
 }
 
@@ -72,6 +103,7 @@ async function handleAction(selectedAction, supplier) {
 }
 
 onMounted(async () => {
+    await getQuantity();
     await getSuppliers();
 })
 

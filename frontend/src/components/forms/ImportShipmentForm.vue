@@ -27,12 +27,10 @@
                 </div>
             </div>
             <div class="form-group">
-                <LoadingButton :is-loading="isLoadingSubmit" btn-text="Lưu">
-                    <template #custom-btn>
-                        <button class="btn btn-primary" type="submit">
-                            Lưu
-                        </button>
-                    </template>
+                <LoadingButton :is-loading="isLoadingSubmit" btn-text="Lưu" class-content="btn btn-primary">
+                    <button class="btn btn-primary" type="submit">
+                        Lưu
+                    </button>
                 </LoadingButton>
                 <button
                     class="btn btn-warning ml-2"

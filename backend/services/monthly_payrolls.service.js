@@ -61,6 +61,18 @@ class MonthlyPayrollsService extends Service {
         }
         return super.getQueryClauses(filter, tableName, likeClause);
     }
+
+    async adjustTotalAmount(id, total_amount, conn) {
+        const update = 
+            `UPDATE ${this.tableName} 
+            SET total_amount = CASE
+                WHEN (total_amount + ?) >= 0
+                THEN total_amount + ?
+            END
+            WHERE id = ?`;
+        const result = await conn.query(update, [total_amount, total_amount, id]);
+        return result;
+    }
 }
 
 export default MonthlyPayrollsService;

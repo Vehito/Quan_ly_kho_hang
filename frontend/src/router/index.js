@@ -47,6 +47,11 @@ const routes = [
         component: views.EmployeeView,
     },
     {
+        path: "/employee_calendar",
+        name: "employee.calendar",
+        component: views.EmployeeCalendarView,
+    },
+    {
         path: "/employees/create",
         name: "employee.create",
         component: views.EmployeeEditView,
@@ -137,9 +142,15 @@ const routes = [
         component: views.MonthlyPayrollView
     },
     {
-        path: "/employee_payrolls/:payroll_month",
+        path: "/employee_payrolls/:id",
         name: "employee_payrolls",
         component: views.EmployeePayrollView,
+        props: true
+    },
+    {
+        path: "/employee_payrolls/:id",
+        name: "employee_payroll.edit",
+        component: views.EmployeePayrollEditView,
         props: true
     },
 

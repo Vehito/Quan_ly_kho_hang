@@ -24,8 +24,10 @@ export async function query(req, res, next) {
         result = await sharedController
             .withTransaction(async (conn) => {
                 const supplierService = new SuppliersService();
-                if(req.params) {
+                if(req.params?.id) {
                     return await supplierService.query(req.params, conn);
+                } else if(req.query?.itemLength) {
+                    return await supplierService.queryCount(req.query, conn);
                 } else {
                     return await supplierService.query(req.query, conn);
                 }

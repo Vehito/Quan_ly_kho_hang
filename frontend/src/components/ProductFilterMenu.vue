@@ -1,45 +1,46 @@
 <template>
-    <div class=" mt-1">
-        <ButtonCollapse
-            :btn-texts="['Bộ lọc']"
-            :btn-classes="['btn btn-outline-dark']"
-            :ids="['filter_collapse']"
-        >
-            <template #default="{index}">
-                <div class="row">
-                    <div v-for="field in searchFields" class="col-md mt-2">
-                        <FormFields
-                            :label="field.label"
-                            :name="field.name"
-                            :model-value="field.modelValue"
-                            :placeholder="field.placeholder"
-                            @update:model-value="field.updateModelValue"
-                        />
-                    </div>
-                </div>
-                <hr>
+    <div class=" mt-1 mb-2">
+        <div class="row">
+            <div class="col-md-10">
                 <ButtonCollapse
-                    :btn-texts="collapses.btnTexts"
-                    :btn-classes="collapses.btnClasses"
-                    :ids="collapses.ids">
-                    <template #default="{ index }">
-                        <FormFields
-                            :label="checkboxField[index].label"
-                            :type="checkboxField[index].type"
-                            :name="checkboxField[index].name"
-                            :options="checkboxField[index].options"
-                            @update:model-value="checkboxField[index].updateModelValue"
-                        />
+                    :btn-texts="['Bộ lọc']"
+                    :btn-classes="['btn btn-outline-dark']"
+                    :ids="['filter_collapse']"
+                >
+                    <template #default="{index}">
+                        <div class="row">
+                            <div v-for="field in searchFields" class="col-md mt-2">
+                                <FormFields
+                                    :label="field.label"
+                                    :name="field.name"
+                                    :model-value="field.modelValue"
+                                    :placeholder="field.placeholder"
+                                    @update:model-value="field.updateModelValue"
+                                />
+                            </div>
+                        </div>
+                        <hr>
+                        <ButtonCollapse
+                            :btn-texts="collapses.btnTexts"
+                            :btn-classes="collapses.btnClasses"
+                            :ids="collapses.ids">
+                            <template #default="{ index }">
+                                <FormFields
+                                    :label="checkboxField[index].label"
+                                    :type="checkboxField[index].type"
+                                    :name="checkboxField[index].name"
+                                    :options="checkboxField[index].options"
+                                    @update:model-value="checkboxField[index].updateModelValue"
+                                />
+                            </template>
+                    </ButtonCollapse>
                     </template>
-            </ButtonCollapse>
-            </template>
-        </ButtonCollapse>
-        <button @click="updateValues"
-                class="btn btn-outline-success mt-2 lietke col-lg-2 col" type="button">
-            Liệt kê
-        </button>
-        <div class="col-12 mt-3">
-            
+                </ButtonCollapse>
+            </div>
+            <button @click="updateValues"
+                    class="btn btn-outline-success mt-2 lietke col-lg-2 col-md-2" type="button">
+                Liệt kê
+            </button>
         </div>
     </div>
 </template>

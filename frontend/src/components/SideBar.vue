@@ -29,6 +29,7 @@ const menuItems = [
             {label: 'Danh sách nhân viên', icon: 'fa-solid fa-users', name: 'employees'},
             {label: 'Thêm nhân viên', icon: 'fa-solid fa-circle-plus', name: 'employee.create'},
             {label: 'Bảng lương nhân viên', icon: 'fa-solid fa-tablet', name: 'monthly_payrolls'},
+            {label: 'Lịch nhân viên', icon: 'fa-solid fa-calendar', name: 'employee.calendar'},
         ],
 	},
     { label: "Khách hàng", icon: "fas fa-shopping-cart", name: "customers",

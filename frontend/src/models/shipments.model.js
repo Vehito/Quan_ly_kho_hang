@@ -1,6 +1,7 @@
 import date_helperUtil from "@/utils/date_helper.util";
 import Model from "./model";
 import { ExportItem, ImportItem, ShipmentItem } from "./shipment_items.model";
+import number_heplerUtil from "@/utils/number_hepler.util";
 
 class ShipmentsModel extends Model {
     constructor(isImport, extend = '') {
@@ -58,8 +59,17 @@ export class Shipment {
         this.created_by = data.created_by;
         this.employee_name = data.employee_name;
         this.description = data.description ?? null;
-        this.total = data.total;
+        // this.total = data.total;
         this.listItem = this.buildListItems(data.listItem);
+    }
+
+    get total() {
+        return this.listItem.reduce(
+            (preVal, currVal) => Number(preVal) + (Number(currVal.price)*Number(currVal.quantity)), 0
+        );
+    }
+    get formatted_total() {
+        return number_heplerUtil.getFormattedNumber(this.total);
     }
 
     formatDateForMySql() {

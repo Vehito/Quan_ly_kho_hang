@@ -217,7 +217,9 @@ function updateValues() {
         if(checkboxValue[i].length > 0) {
             checkboxValue[i][0]===-1
                 ? values[checkboxKey[i]] = undefined
-                : values[checkboxKey[i]] = checkboxValue[i];
+                : values[checkboxKey[i]] = checkboxValue[i]
+                    .filter(id => !isNaN(Number(id)))
+                    .map(id => id);;
         }
     }
     emits('update:values', values);

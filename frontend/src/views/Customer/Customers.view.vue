@@ -56,7 +56,7 @@ const tableHeaders = [
     { name: "Tên khách hàng", key: "name"},
     { name: "Công ty", key: "company"},
     { name: "Địa chỉ", key: "address"},
-    { name: "Số nợ", key: "debt"},
+    { name: "Số nợ", key: "formatted_debt"},
     { name: "Ngày trả", key: "text_due_date"},
     { name: "Tình trạng", key: "text_status"},
 ]
