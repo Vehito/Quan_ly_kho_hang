@@ -1,20 +1,21 @@
 <template>
         <DropdownBtn
-            v-if="userStore.isLoggedIn"
+            v-if="local_storageUtil.isLoggedIn"
             :dropdown-items="dropdownBtnContent.dropdownItems"
             @select:value="(selectedAction) => dropdownBtnContent.selectValue(selectedAction)"
             id="avatar-btn"
         >
             <template #label>
                 <img src="../assets/imgs/default-avatar.jpg" class="rounded-circle" alt="Avatar">
-                {{ userStore.name }}
+                {{ local_storageUtil.getUser.name }}
             </template>
         </DropdownBtn>
 </template>
 
 <script setup>
-import { useUserStore } from '@/utils/pinia.util';
-const userStore = useUserStore();
+// import { useUserStore } from '@/utils/pinia.util';
+// const userStore = useUserStore();
+import local_storageUtil from '@/utils/local_storage.util';
 import router from '@/router';
 import { DropdownBtn } from '@/utils/buttons.util';
 import authController from '@/controllers/auth.controller';
@@ -27,7 +28,7 @@ const dropdownBtnContent = {
                 try {
                     const result = await authController.logout();
                     if(result) {
-                        userStore.logout();
+                        local_storageUtil.clearUser();
                         router.push({ name: 'login'});
                     }
                 } catch (error) {

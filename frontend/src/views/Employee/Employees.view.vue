@@ -5,20 +5,22 @@
         </div>
 
         <div class="mt-3 col-12 col-md-8">
-            <GridView
-                v-if="filteredEmployees"
-                :list-items="filteredEmployees"
-                v-model:active-index="activeIndex"
-            >
-                <template #custom="{ data, key, isActive }">
-                    <EmployeeGridSlot 
-                        :class="{ active: isActive }"
-                        :id="data.id" :name="data.name"
-                        :department_name="data.department_name"
-                        :text_position="data.text_position" :index="key"
-                    />
-                </template>
-            </GridView>
+            <ScrollableArea :height="500">
+                <GridView
+                    v-if="filteredEmployees"
+                    :list-items="filteredEmployees"
+                    v-model:active-index="activeIndex"
+                >
+                    <template #custom="{ data, key, isActive }">
+                        <EmployeeGridSlot 
+                            :class="{ active: isActive }"
+                            :id="data.id" :name="data.name"
+                            :department_name="data.department_name"
+                            :text_position="data.text_position" :index="key"
+                        />
+                    </template>
+                </GridView>
+            </ScrollableArea>
         </div>
         <div class="mt-3 col-12 col-md-4">
             <EmployeeCard
@@ -39,6 +41,7 @@ import EmployeeGridSlot from '@/components/EmployeeGridSlot.vue';
 import InputSearch from '@/components/InputSearch.vue';
 import employeesController from '@/controllers/employees.controller';
 import router from '@/router';
+import ScrollableArea from '@/components/ScrollableArea.vue';
 import { computed, onMounted, ref, watch } from 'vue';
 
 const searchText = ref('');

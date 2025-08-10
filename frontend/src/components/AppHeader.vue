@@ -1,6 +1,6 @@
 <template>
 <ul class="nav nav-tabs p-3 d-flex justify-content-between align-items-center">
-    <div v-if="userStore.isLoggedIn" class="d-flex">
+    <div v-if="local_storageUtil.isLoggedIn" class="d-flex">
         <li v-for="(item, index) in listItem" 
             :key="index"
             class="nav-item"
@@ -23,8 +23,9 @@
 <script setup>
 import { onMounted, ref, watch } from 'vue';
 import { RouterLink } from 'vue-router';
-import { useUserStore } from '@/utils/pinia.util';
-const userStore = useUserStore();
+// import { useUserStore } from '@/utils/pinia.util';
+// const userStore = useUserStore();
+import local_storageUtil from '@/utils/local_storage.util';
 import AvatarBtn from './AvatarBtn.vue';
 
 const props = defineProps({

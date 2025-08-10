@@ -8,15 +8,16 @@
 <script setup>
 import LoginForm from '@/components/forms/LoginForm.vue';
 import authController from '@/controllers/auth.controller';
-import { useUserStore } from '@/utils/pinia.util';
-const userStore = useUserStore();
+// import { useUserStore } from '@/utils/pinia.util';
+// const userStore = useUserStore();
+import local_storageUtil from '@/utils/local_storage.util';
 import router from '@/router';
 
 async function login(data) {
     try {
         const { success, user } = await authController.login(data);
         if(success && user) {
-            userStore.login(user);
+            local_storageUtil.setUser(user);
             router.push({ name: "products" });
         }
     } catch (error) {

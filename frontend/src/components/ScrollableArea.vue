@@ -1,5 +1,5 @@
 <template>
-<div :style="{ height: height + 'px', width: width + 'px', overflowY: 'auto', border: '1px solid #ccc' }"
+<div :style="{ height: height + 'px', width: width + 'px', overflowY: 'auto' }"
     class="shadow">
     <slot></slot>
 </div>

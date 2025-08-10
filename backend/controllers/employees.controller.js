@@ -97,18 +97,20 @@ export async function login(req, res, next) {
                 return (await employeeService.query({username: req.body.username}, conn))[0];
             });
             const token = jwt.sign(
-                { id: user.id, name: user.name, 
+            {
+                id: user.id, name: user.name, 
                 department_name: user.department_name, 
-                username: user.username },
+                username: user.username, position: user.position,
+            },
                 process.env.SECRET,
-                { expiresIn: '60m' });
+                { expiresIn: '8h' });
             const refreshToken = jwt.sign(
                 {id: user.id}, process.env.SECRET,
                 { expiresIn: '7d' });
             res.cookie('token', token, {
                 httpOnly: true,
                 sameSite: 'Strict',
-                maxAge: 60 * 60 * 1000 // 60 phút
+                maxAge: 8 * 60 * 60 * 1000 // 8h
             });
 
             res.cookie('refreshToken', refreshToken, {
@@ -116,6 +118,7 @@ export async function login(req, res, next) {
                 sameSite: 'Strict',
                 maxAge: 7 * 24 * 60 * 60 * 1000 // 7 ngày
             });
+            user.ttl =  8 * 60 * 60 * 1000;
             res.status(200).json({ success: true, user });
         } else {
             return next(

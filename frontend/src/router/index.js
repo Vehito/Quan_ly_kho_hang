@@ -1,6 +1,7 @@
 import { createWebHistory, createRouter } from "vue-router";
 import * as views from '../views/views.js'
 import { useUserStore } from "@/utils/pinia.util.js";
+import local_storageUtil from "@/utils/local_storage.util.js";
 
 const routes = [
     {
@@ -170,9 +171,9 @@ router.beforeEach((to, from, next) => {
     const publicPages = ['/login'];
     const authRequired = !publicPages.includes(to.path);
     
-    const userStore = useUserStore();
+    // const userStore = useUserStore();
 
-    if(authRequired && !userStore.isLoggedIn) {
+    if(authRequired && !local_storageUtil.isLoggedIn) {
         return next({name: 'login'});
     }
 
