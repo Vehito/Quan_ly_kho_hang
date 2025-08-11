@@ -1,7 +1,10 @@
 <script setup>
 import { useRoute } from 'vue-router';
 import { watch, computed } from 'vue';
+import { useUserStore } from '@/utils/pinia.util';
+const userStore = useUserStore();
 const route = useRoute();
+
 const emits = defineEmits(['click:listItem']);
 
 const menuItems = [
@@ -24,13 +27,13 @@ const menuItems = [
             {label: 'Tạo đơn xuất', icon: 'fa-solid fa-circle-plus', name: 'export_shipment.create'},
         ],
 	},
-    { label: "Nhân viên", icon: "fa-solid fa-users", name: "employees",
+	{ label: "Nhân viên", icon: "fa-solid fa-users", name: "employees",
 		listItem: [
-            {label: 'Danh sách nhân viên', icon: 'fa-solid fa-users', name: 'employees'},
-            {label: 'Thêm nhân viên', icon: 'fa-solid fa-circle-plus', name: 'employee.create'},
-            {label: 'Bảng lương nhân viên', icon: 'fa-solid fa-tablet', name: 'monthly_payrolls'},
-            {label: 'Lịch nhân viên', icon: 'fa-solid fa-calendar', name: 'employee.calendar'},
-        ],
+			{label: 'Danh sách nhân viên', icon: 'fa-solid fa-users', name: 'employees'},
+			{label: 'Thêm nhân viên', icon: 'fa-solid fa-circle-plus', name: 'employee.create'},
+			{label: 'Bảng lương nhân viên', icon: 'fa-solid fa-tablet', name: 'monthly_payrolls'},
+			{label: 'Lịch nhân viên', icon: 'fa-solid fa-calendar', name: 'employee.calendar'},
+		],
 	},
     { label: "Khách hàng", icon: "fas fa-shopping-cart", name: "customers",
 		listItem: [
@@ -44,12 +47,12 @@ const menuItems = [
             {label: 'Thêm nhà cung cấp', icon: 'fa-solid fa-circle-plus', name: 'supplier.create'},
         ],
 	},
-    { label: "Thống kê", icon: "fa-solid fa-chart-simple", name: "report",
+	{ label: "Thống kê", icon: "fa-solid fa-chart-simple", name: "report",
 		listItem: [
-            {label: 'Xuất/Nhập', icon: 'fa-solid fa-money-bill-transfer', name: 'report'},
-            {label: 'Sản phẩm', icon: 'fa-solid fa-boxes-packing', name: 'product_report'},
-        ],
-	},
+			{label: 'Xuất/Nhập', icon: 'fa-solid fa-money-bill-transfer', name: 'report'},
+			{label: 'Sản phẩm', icon: 'fa-solid fa-boxes-packing', name: 'product_report'},
+		],
+	}    
 ];
 const activeIndex = computed(() => {
 	const index = menuItems.findIndex(item => item.name === route.name);
@@ -57,6 +60,19 @@ const activeIndex = computed(() => {
 		return index;
 	}
 });
+
+function checkPosition(name) {
+	let result = true;
+	switch(name) {
+		case 'employees':
+			userStore.position==='Boss' ? result=true : result=false
+		break;
+		case 'report':
+			userStore.position==='Boss' ? result=true : result=false
+		break;
+	}
+	return result;
+}
 
 watch(activeIndex, (newIndex) => {
 	if(newIndex > -1) {
@@ -90,9 +106,10 @@ watch(activeIndex, (newIndex) => {
 					:to="{ name: item.name }"
 					v-slot="{ isActive }"
 				>
-					<li :class="{ active: isActive }">
+					<li v-if="checkPosition(item.name)"
+						:class="{ active: isActive }">
 						<a class="nav-link">
-						<strong><i :class="item.icon"></i> {{ item.label }}</strong>
+							<strong><i :class="item.icon"></i> {{ item.label }}</strong>
 						</a>
 					</li>
 				</RouterLink>

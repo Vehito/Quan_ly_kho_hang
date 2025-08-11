@@ -1,6 +1,6 @@
 <template>
         <DropdownBtn
-            v-if="local_storageUtil.isLoggedIn"
+            v-if="userStore.isLoggedIn"
             :dropdown-items="dropdownBtnContent.dropdownItems"
             @select:value="(selectedAction) => dropdownBtnContent.selectValue(selectedAction)"
             id="avatar-btn"
@@ -13,8 +13,8 @@
 </template>
 
 <script setup>
-// import { useUserStore } from '@/utils/pinia.util';
-// const userStore = useUserStore();
+import { useUserStore } from '@/utils/pinia.util';
+const userStore = useUserStore();
 import local_storageUtil from '@/utils/local_storage.util';
 import router from '@/router';
 import { DropdownBtn } from '@/utils/buttons.util';
@@ -28,7 +28,7 @@ const dropdownBtnContent = {
                 try {
                     const result = await authController.logout();
                     if(result) {
-                        local_storageUtil.clearUser();
+                        userStore.logout();
                         router.push({ name: 'login'});
                     }
                 } catch (error) {
@@ -36,11 +36,12 @@ const dropdownBtnContent = {
                 }
             break;
             case "Đổi mật khẩu":
-                router.push({name: 'change_password', params: { id: userStore.id }});
+                router.push({name: 'change_password', params: { id: local_storageUtil.getUser.id }});
             break;
         }
     }
 }
+
 </script>
 
 <style scoped>

@@ -5,7 +5,12 @@
         </div>
         <div class="col-12 mt-1">
                 <div class="float-right">
-                    <PDF_Btn />
+                    <PDF_Btn
+                        :table-headers="PDF_Btn_content.tableHeaders"
+                        :load-func="PDF_Btn_content.loadFunc"
+                        :file-name="PDF_Btn_content.fileName"
+                        :table-title="PDF_Btn_content.tableTitle"
+                    />
                 </div>
             </div>
         <div class="col-12 mt-3">
@@ -24,7 +29,8 @@
                     </DropdownBtn>
                 </template>
             </CustomTable>
-            <Pagination :is-loading="quantityIsLoading" :item-quantity="numOfItem" />
+            <Pagination :is-loading="quantityIsLoading"
+                :item-quantity="numOfItem" @on-click:index="changePage" />
         </div>
     </div>
 </template>
@@ -52,8 +58,11 @@ const numOfItem = ref(0);
 const searchText = ref('');
 const suppliers = ref([]);
 
-function searchSubmit(text) {
-    console.log(text);
+async function searchSubmit(text) {
+    conditions.offset = 0;
+    conditions.name = text;
+    await getQuantity();
+    await getSuppliers();
 }
 
 const PDF_Btn_content = {
@@ -63,11 +72,18 @@ const PDF_Btn_content = {
     loadFunc: async () => await suppliersController
         .queryAll()
 }
+const conditions = {name: '', limit: 10, offset: 0};
 
+async function changePage(index) {
+    conditions.offset = 10 + (index-1);
+    await getSuppliers();
+}
 async function getQuantity() {
     try {
         quantityIsLoading.value = true;
-        numOfItem.value = (await suppliersController.queryCount());
+        numOfItem.value = (await suppliersController.queryCount(
+            {name: conditions.name}
+        ));
     } catch (error) {
         error.showAlert();
     } finally {
@@ -77,14 +93,13 @@ async function getQuantity() {
 async function getSuppliers() {
     try {
         isLoading.value = true;
-        suppliers.value = (await suppliersController.queryAll());
+        suppliers.value = (await suppliersController.queryAll(conditions));
     } catch (error) {
         error.showAlert();
     } finally {
         isLoading.value = false
     }
 }
-
 async function handleAction(selectedAction, supplier) {
     switch(selectedAction) {
         case"Thay đổi nhà cung cấp":

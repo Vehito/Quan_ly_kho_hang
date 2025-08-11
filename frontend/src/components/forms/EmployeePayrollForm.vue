@@ -147,10 +147,10 @@ const minus_table = {
         {name: 'Bảo hiểm xã hội', description: '',
             amount: ref(localEmployeePayroll.formatted_social_insurance)},
         {name: 'Bảo hiểm thất nghiệp', description: '',
-            amount: ref(localEmployeePayroll.formatted_unemloyment_insurance)},
+            amount: ref(localEmployeePayroll.formatted_unemployment_insurance)},
         {name: 'Thuế thu nhập cá nhân', description: '',
             amount: ref(localEmployeePayroll.formatted_persenal_tax_deduction)},
-        {name: 'Khấu trừ khác', description: ref(localEmployeePayroll.other_dedutions_description),
+        {name: 'Khấu trừ khác', description: ref(localEmployeePayroll.other_deductions_description),
             amount: ref(localEmployeePayroll.formatted_other_deductions)},
     ],
     totalColumns: [2], total: {2: ref(localEmployeePayroll.formatted_total_deduction)},
@@ -162,8 +162,8 @@ const minus_table = {
         this.tableRows[1].amount.value = localEmployeePayroll.formatted_social_insurance;
         this.total[2].value = localEmployeePayroll.formatted_total_deduction;
     },
-    update_unemloyment_insurance() {
-        this.tableRows[2].amount.value = localEmployeePayroll.formatted_unemloyment_insurance;
+    update_unemployment_insurance() {
+        this.tableRows[2].amount.value = localEmployeePayroll.formatted_unemployment_insurance;
         this.total[2].value = localEmployeePayroll.formatted_total_deduction;
     },
     update_other_deductions() {
@@ -174,8 +174,8 @@ const minus_table = {
         this.tableRows[4].amount.value = localEmployeePayroll.formatted_persenal_tax_deduction;
         this.total[2].value = localEmployeePayroll.formatted_total_deduction;
     },
-    // update_other_dedutions_description() {
-    //     this.tableRows[4].description.value = localEmployeePayroll.other_dedutions_description;
+    // update_other_deductions_description() {
+    //     this.tableRows[4].description.value = localEmployeePayroll.other_deductions_description;
     // },
 };
 const basic_info_fields = [
@@ -307,23 +307,23 @@ const minus_fields = [
     {
         label: 'Khấu trừ khác:',
         type: 'number',
-        modelValue: localEmployeePayroll.other_dedutions,
+        modelValue: localEmployeePayroll.other_deductions,
         placeholder: "Nhập số tiền",
         name: "other_deductions",
         updateModelValue: (value) => {
-            localEmployeePayroll.other_dedutions = value;
+            localEmployeePayroll.other_deductions = value;
             minus_table.update_other_deductions();
         }
     },
     {
         label: 'Mô tả khấu trừ:',
         type: 'textarea',
-        modelValue: localEmployeePayroll.other_dedutions_description,
+        modelValue: localEmployeePayroll.other_deductions_description,
         placeholder: "Nhập mô tả",
         name: "other_deductions_description",
         updateModelValue: (value) => {
-            localEmployeePayroll.other_dedutions_description = value;
-            // minus_table.update_other_dedutions_description();
+            localEmployeePayroll.other_deductions_description = value;
+            // minus_table.update_other_deductions_description();
         }
     },
 ];

@@ -40,6 +40,7 @@
                         </button>
                     </template>
                 </CustomTable>
+                <Pagination :item-quantity="importShipments.length" @on-click:index="changePage" />
             </loading-screen>
         </div>
     </div>
@@ -50,6 +51,7 @@
 import CustomTable from '@/components/CustomTable.vue';
 import LoadingScreen from '@/components/loading/LoadingScreen.vue';
 import FormFields from '@/components/forms/FormFields.vue';
+import Pagination from '@/components/Pagination.vue';
 
 // controllers
 import ShipmentsController from '@/controllers/shipments.controller';
@@ -67,6 +69,7 @@ const isLoading = ref(true);
 const importShipments = ref([new ImportShipment({})]);
 
 // var
+const pageIndex = { start: 0, end: 10 }
 const tableHeaders = [
     { name: "Mã đơn hàng", key: "shipment_id" },
     { name: "Sản phẩm", key: "product_name" },
@@ -74,12 +77,15 @@ const tableHeaders = [
     { name: "Hạn sử dụng", key: "text_exp" },
 ];
 const tableRows = computed(() => {
-    return importShipments.value.flatMap((shipment) => {
-        return shipment.listItem.map((item) => {
-            const {shipment_id, product_name, stoke, text_exp} = item
-            return {shipment_id, product_name, stoke, text_exp};
+    // console.log(1111);
+    return importShipments.value
+        .slice(pageIndex.start, pageIndex.end)
+        .flatMap((shipment) => {
+            return shipment.listItem.map((item) => {
+                const {shipment_id, product_name, stoke, text_exp} = item
+                return {shipment_id, product_name, stoke, text_exp};
+            });
         })
-    })
 });
 const changeColumns = ['text_exp'];
 function changingCondition(key, value) {
@@ -87,7 +93,10 @@ function changingCondition(key, value) {
         return 'text-warning'
     }
 }
-
+function changePage(index) {
+    pageIndex.start = 10 * (index-1);
+    pageIndex.end = pageIndex.start + 10;
+}
 const productTableHeader = [
     {name: 'STT', key : 'index'},
     {name: 'Mã sản phẩm', key : 'product_id'},

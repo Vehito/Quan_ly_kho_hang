@@ -47,6 +47,13 @@ class EmployeesService extends Service {
         };
     }
 
+    async update(id, payload, conn) {
+        if(payload.password) {
+            payload.password = await this.#hashPassword(payload.password);
+        }
+        return await super.update(id, payload, conn);
+    }
+
     async query(filter, conn) {
         const { clauses, values } = this.getQueryClauses(filter, this.tableName);
         let query = `SELECT employees.id, employees.name, employees.basic_salary,

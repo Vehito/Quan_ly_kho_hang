@@ -170,14 +170,31 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
     const publicPages = ['/login'];
     const authRequired = !publicPages.includes(to.path);
-    
-    // const userStore = useUserStore();
 
-    if(authRequired && !local_storageUtil.isLoggedIn) {
-        return next({name: 'login'});
+    // Kiểm tra đăng nhập
+    if (authRequired && !local_storageUtil.isLoggedIn) {
+        return next({ name: 'login' });
+    }
+
+    // Lấy user
+    const user = local_storageUtil.getUser;
+    const position = user?.position;
+
+    // Kiểm tra quyền truy cập
+    if (
+        to.name &&
+        (
+            to.name.startsWith('employee') ||
+            to.name.startsWith('monthly') ||
+            to.name.includes('report')
+        ) &&
+        position !== 'Boss'
+    ) {
+        return from.name ? next({ name: 'notfound' }) : next(false);
     }
 
     next();
 });
+
 
 export default router;

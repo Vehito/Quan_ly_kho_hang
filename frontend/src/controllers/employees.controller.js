@@ -14,7 +14,7 @@ class EmployeesController extends Controller {
 
     async update(id, data) {
         data.birth = date_helperUtil.formatDateForMySQL(data.birth);
-        const editedData = super.deleteAttribute(data, ['department_name', 'password']);
+        const editedData = super.deleteAttribute(data, ['department_name']);
         await super.update(id, editedData);
     }
 }

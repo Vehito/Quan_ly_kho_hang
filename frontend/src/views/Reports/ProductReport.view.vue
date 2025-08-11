@@ -12,7 +12,7 @@
                 <LoadingScreen v-if="card.isVisiable" :is-loading="card.isLoading.value">
                     <Card
                         :header-title="card.cardHeader"
-                        :card-text="number_heplerUtil.getCurrencyFormat(card.cardText.value)"
+                        :card-text="number_heplerUtil.getFormattedNumber(card.cardText.value)"
                         :class-card="card.cardClass"
                         :class-text="card.classText"
                     />
@@ -195,9 +195,7 @@ async function getExportShipment() {
 async function updateData(values = {}) {
     try {
         Object.keys(values).forEach((key) => {
-            if(values[key]) {
-                conditions[key] = values[key];
-            }
+            conditions[key] = values[key];
         });
         titleChart.value = `Biểu đồ từ ${conditions.start.split(' ')[0]} đến ${conditions.end.split(' ')[0]}`;
         await getImportShipment();
@@ -268,6 +266,7 @@ function getChartObject() {
                 //datasets
                 exportDataSets.data[index] += item.price*item.quantity;
                 // table
+                table_data[index].ex_quantity += item.quantity;
                 table_data[index].ex_apperent++;
                 table_data[index].ex_average_price += item.price;
                 table_data[index].ex_total += item.price*item.quantity;

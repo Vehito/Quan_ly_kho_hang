@@ -1,6 +1,6 @@
 <template>
 <ul class="nav nav-tabs p-3 d-flex justify-content-between align-items-center">
-    <div v-if="local_storageUtil.isLoggedIn" class="d-flex">
+    <div v-if="userStore.isLoggedIn" class="d-flex">
         <li v-for="(item, index) in listItem" 
             :key="index"
             class="nav-item"
@@ -13,7 +13,6 @@
             </RouterLink>
         </li>
     </div>
-    
     <div>
         <AvatarBtn/>
     </div>
@@ -23,9 +22,10 @@
 <script setup>
 import { onMounted, ref, watch } from 'vue';
 import { RouterLink } from 'vue-router';
-// import { useUserStore } from '@/utils/pinia.util';
-// const userStore = useUserStore();
-import local_storageUtil from '@/utils/local_storage.util';
+import { useRoute } from 'vue-router';
+const route = useRoute();
+import { useUserStore } from '@/utils/pinia.util';
+const userStore = useUserStore();
 import AvatarBtn from './AvatarBtn.vue';
 
 const props = defineProps({
@@ -45,6 +45,15 @@ watch(
     },
     { immediate: false, deep: false }
 );
+
+watch(
+    () => route.name,
+    () => {
+        active.value = props.listItem.findIndex((item) => 
+            item.name === route.name
+        )
+    }
+)
 
 onMounted(() => {
     active.value = 0;

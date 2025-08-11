@@ -47,9 +47,6 @@ export async function query(req, res, next) {
 }
 
 export async function update(req, res, next) {
-    if(req.body.password) {
-        return next(new ApiError(400, "Invalid Request"));
-    }
     let result = [];
     try {
         result = await sharedController
@@ -191,7 +188,7 @@ export async function changePassword(req, res, next) {
                 }
                 throw new ApiError(400, 'Invalid request');;
             } else {
-                throw new ApiError(400, 'Invalid input');
+                throw new ApiError(400, 'Sai mật khẩu');
             }
         });
         return res.send(result);
