@@ -101,7 +101,8 @@ async function updateData(values = {}) {
 }
 async function changePage(index) {
     conditions.offset = 10 * (index-1);
-    await updateData();
+    // await updateData();
+    shipments.value = await shipmentsController.queryAll(conditions, true);
 }
 async function getShipments() {
     try {

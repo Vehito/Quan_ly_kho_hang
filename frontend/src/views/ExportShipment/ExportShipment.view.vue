@@ -20,6 +20,7 @@
         </div>
         <div class="col-12 mt-3">
             <LoadingScreen :is-loading="isLoading">
+                <h6 class="text-center">{{ tableTitle }}</h6>
                 <CustomTable 
                     :table-headers="tableHeaders"
                     :table-rows="shipments"
@@ -81,6 +82,7 @@ const isLoading = ref(true);
 const shipments = ref([]);
 const numberOfItems = ref(0);
 const pageLoading = ref(true);
+const tableTitle = ref('');
 
 async function updateData(values = {}) {
     try {
@@ -98,11 +100,13 @@ async function updateData(values = {}) {
 }
 async function changePage(index) {
     conditions.offset = 10 * (index-1);
-    await updateData();
+    // await updateData();
+    shipments.value = await shipmentsController.queryAll(conditions, true);
 }
 async function getShipments() {
     try {
         shipments.value = (await shipmentsController.queryAll(conditions, true));
+        tableTitle.value = `Bảng đơn xuất từ ${conditions.start.split(' ')[0]} đến ${conditions.end.split(' ')[0]}`
     } catch (error) {
         error.showAlert();
     } finally {

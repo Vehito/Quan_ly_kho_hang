@@ -54,7 +54,6 @@ import { onMounted, ref } from 'vue';
 import ExportItemField from './ItemShipmentForm/ExportItemField.vue';
 import customersController from '@/controllers/customers.controller';
 import LoadingButton from '../loading/LoadingButton.vue';
-import { shipmentPdfExport } from '@/utils/PDF_export';
 
 const emits = defineEmits(['submit:exportShipment']);
 
@@ -141,7 +140,7 @@ function submitExportShipment() {
 
 async function getCustomer() {
     try {
-        customers.value = await customersController.queryAll();
+        customers.value = await customersController.queryAll({status: 1});
     } catch (error) {
         error.showAlert();
     } finally {

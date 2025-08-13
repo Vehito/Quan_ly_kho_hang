@@ -187,14 +187,15 @@ const validationSchema = yup.object().shape({
                     .min(0, "Giá trị nhỏ nhất là 0đ")
                     .test("delete_debt",
                         `Không được vượt quá khoản nợ hiện tại\n${localCustomer.formatted_debt}`,
-                        value => value < localCustomer.debt
+                        value => value <= localCustomer.debt
                     )
             }
         ),
         due_date: yup
             .date()
             .transform((value, originalValue) => {
-                return originalValue === "" ? undefined : value;
+                return originalValue === "" || originalValue==='NaN-NaN-NaN NaN:NaN:NaN'
+                    ? undefined : value;
             })
             .notRequired()
             .typeError("Sai định dạng"),
@@ -208,7 +209,10 @@ const validationSchema = yup.object().shape({
 
 function submitCustomer() {
     localCustomer.due_date===''
-        ? localCustomer.due_date = undefined 
+        ? localCustomer.due_date = null
+        : localCustomer.due_date;
+    localCustomer.due_date==='NaN-NaN-NaN NaN:NaN:NaN'
+        ? localCustomer.due_date = null
         : localCustomer.due_date;
     if(delete_debt>0 && delete_debt<localCustomer.debt && props.customer?.id) {
         localCustomer.debt -= delete_debt;

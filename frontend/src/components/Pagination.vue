@@ -14,7 +14,7 @@
 					:key="n"
 					@click="onClick(n)"
 					class="page-item"
-					:class="{ active: active === n }"
+					:class="{ active: isActive(n) }"
 				>
 					<a class="page-link" href="#">{{ n }}</a>
 				</li>
@@ -68,6 +68,11 @@ function nextPage() {
 	if (active.value < pageCount.value) {
 		onClick(active.value + 1);
 	}
+}
+
+function isActive(index) {
+	const a = index===active.value;
+	return a;
 }
 
 onMounted(() => {

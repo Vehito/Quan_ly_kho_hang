@@ -265,7 +265,7 @@ columnStyles: {
     const deductionInfo = [
         ["Bảo hiểm y tế", "", employeePayroll.formatted_health_insurance],
         ["Bảo hiểm xã hội", "", employeePayroll.formatted_social_insurance],
-        ["Bảo hiểm thất nghiệp", "", employeePayroll.formatted_unemloyment_insurance],
+        ["Bảo hiểm thất nghiệp", "", employeePayroll.formatted_unemployment_insurance],
         ["Thuế thu nhập cá nhân", "", employeePayroll.formatted_persenal_tax_deduction],
         [
             "Khấu trừ khác", 

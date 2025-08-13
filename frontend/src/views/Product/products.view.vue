@@ -89,9 +89,7 @@ async function searchSubmit(values) {
     conditions.name = values.name;
     conditions.origin = values.origin;
     conditions.manufacturer = values.manufacturer;
-    if(Array.isArray(values.types)) {
-        conditions.type = values.types;
-    }
+    conditions.type = values.types;
     await getCount();
     await getProducts();
 }

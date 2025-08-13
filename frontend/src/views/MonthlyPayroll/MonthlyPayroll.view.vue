@@ -68,7 +68,7 @@ const tableHeaders = [
     { name: 'Số tiền thực nhận', key: 'formatted_total_amount' },
 ];
 const dropdownBtn = {
-    items: ['Xem chi tiết', 'Xóa bảng lương'],
+    items: ['Xem chi tiết'],
     handleAction(selectedAction, row) {
         switch(selectedAction) {
             case 'Xem chi tiết':
