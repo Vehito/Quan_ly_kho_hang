@@ -9,6 +9,10 @@ export async function insert(req, res, next) {
         const result = await sharedController
         .withTransaction(async (conn) => {
             const monthlyPayrollsService = new MonthlyPayrollsService();
+            const isExistPayroll = (await monthlyPayrollsService.query({payroll_month: req.body.payroll_month}, conn))[0];
+            if(isExistPayroll.id) {
+                throw new ApiError(400, "Tháng này đã được tạo");
+            }
             return await monthlyPayrollsService.insert(req.body, conn);
         });
         return res.send(result);

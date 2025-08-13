@@ -1,6 +1,5 @@
 <template>
     <div class="page">
-        <h4 class="text-center">Danh sách sản phẩm</h4>
         <div class="clearfix">
             <span class="float-right fields">
                 <FormFields
@@ -16,7 +15,7 @@
         </div> 
         <div class="mt-3">
             <loading-screen :is-loading="isLoading">
-                <h6 class="text-center">Danh sách sản phẩm</h6>
+                <h5 class="text-center">Danh sách sản phẩm</h5>
                 <CustomTable
                     :table-headers="productTableHeader"
                     :table-rows="productTableRows"

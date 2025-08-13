@@ -1,6 +1,9 @@
 import ApiError from "../api-error.js";
 import jwt from "jsonwebtoken";
 import EmployeesService from "../services/employees.service.js";
+import EmployeePayrollsService from "../services/employee_payrolls.service.js";
+import MonthlyPayrollsService from "../services/monthly_payrolls.service.js";
+import dateUtil from "../utils/date.util.js";
 import * as sharedController from "./controller.shared.js";
 import dotenv from "dotenv";
 dotenv.config();
@@ -15,8 +18,31 @@ export async function insert(req, res, next) {
     try {
         const result = await sharedController
         .withTransaction(async (conn) => {
+            // insert employee
             const employeeService = new EmployeesService();
-            return await employeeService.insert(req.body, conn);
+            const result = await employeeService.insert(req.body, conn);
+
+            // insert employee_payroll
+            const today = new Date();
+            const payroll_month = `${today.getFullYear()}-${today.getMonth()+1}-01`;
+            const monthlyPayrollsService = new MonthlyPayrollsService();
+            const monthly_payroll = (await monthlyPayrollsService.query(
+                {payroll_month}, conn
+            ))[0];
+            if(monthly_payroll && monthly_payroll.finalized_day===null) {
+                const employeePayrollsService = new EmployeePayrollsService();
+                const employee = req.body;
+                const workdays = dateUtil.countWeekdaysInMonth(
+                    employee.working_days.split(', '), today.getMonth()+1, today.getFullYear()
+                );
+                await employeePayrollsService.insert({
+                    employee_id: result.id, workdays, basic_salary: employee.basic_salary,
+                    payroll_month, department_id: employee.department_id,
+                    responsibility_allowance: employee.responsibility_allowance,
+                    monthly_payroll_id: monthly_payroll.id, position: employee.position
+                }, conn)
+            }
+            return result;
         });
         return res.send(result);
     } catch (error) {
